@@ -8,18 +8,18 @@ INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
 OUTPUTfilepath = '..\OUTPUTS\PUE\';
 YEARS = 1930:2017;
 
-livestockFolder = 'CropUptake_Agriculture_Agriculture_LU';
+cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
-cropFolder = 'Lvst_Agriculture_LU';
+livestockFolder = 'Lvst_Agriculture_LU';
 
-delete(gcp('nocreate')); % Close any pools that might already be running
-parpool('local',12);
-
+% delete(gcp('nocreate')); % Close any pools that might already be running
+% parpool('local',12);
+[~,georef] = readgeoraster([INPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
 Rinfo = geotiffinfo([INPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
 
 % calculate PUE and save the tif file
 
-parfor i = 1:length(YEARS)
+for i = 1:length(YEARS)
    
     YEAR_i = YEARS(i);
     %PUE_fert = Crop_var./allFetilizer;
@@ -29,17 +29,17 @@ parfor i = 1:length(YEARS)
     file_fert_i = dir([INPUTfilepath, fertilizerFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Fertilizer_i,~] = readgeoraster([INPUTfilepath, fertilizerFolder,'\',file_fert_i.name]);
     
-    Inputs = Livestock_i + Fertilizer_i;
+%     Inputs = Livestock_i + Fertilizer_i;
+%     
+%     Inputs(find(Inputs == 0)) = NaN; 
     
-    Inputs(find(Inputs == 0)) = NaN; 
+    file_crop_i = dir([INPUTfilepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
+    [Crop_i,~] = readgeoraster([INPUTfilepath, cropFolder,'\',file_crop_i.name]);
     
-    file_crop_i = dir([INPUTfilepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Crop_i,~] = readgeoraster([INPUTfilepath, livestockFolder,'\',file_crop_i.name]);
-    
-    % Convert ints32 to doubles. 
-    Livestock_i = single(Livestock_i);
-    Fertilizer_i = single(Fertilizer_i);
-    Crop_i = single(Crop_i);
+%     % Convert ints32 to doubles. 
+    Livestock_i = double(Livestock_i);
+    Fertilizer_i = double(Fertilizer_i);
+    Crop_i = double(Crop_i);
 
     % Calculating PUE with integers. 
     PUE = Crop_i ./(Livestock_i + Fertilizer_i);
