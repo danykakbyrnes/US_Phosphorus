@@ -31,9 +31,11 @@ for i = 1:length(YEARS)
     
     Inputs = Livestock_i + Fertilizer_i;
     
+    Inputs(find(Inputs == 0)) = NaN; 
+    
     file_crop_i = dir([INPUTfilepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Crop_i,~] = readgeoraster([INPUTfilepath, livestockFolder,'\',file_crop_i.name]);
-
+    
     PUE = Crop_i ./Inputs;
     
     geotiffwrite([OUTPUTfilepath, '\PUE_', num2str(YEAR_i),'.tif'], PUE, ...
