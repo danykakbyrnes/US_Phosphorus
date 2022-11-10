@@ -42,7 +42,7 @@ parfor i = 1:length(YEARS)
     Crop_i = single(Crop_i);
 
     % Calculating PUE with integers. 
-    PUE = Crop_i ./Inputs;
+    PUE = Crop_i ./(Livestock_i + Fertilizer_i);
     
     PUE = PUE*1000;
 
