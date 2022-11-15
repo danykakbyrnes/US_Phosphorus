@@ -65,7 +65,7 @@ figure(2)
 %xlim([-500, 2000])
 
 loadstar_CumSum = 0; %median(D(:,1),'omitnan');
-loadstar_PUE = 1;% median(D(:,3),'omitnan');
+loadstar_PUE = 1; %median(D(:,3),'omitnan');
 
 % 1980
 for i = 1:length(D)
