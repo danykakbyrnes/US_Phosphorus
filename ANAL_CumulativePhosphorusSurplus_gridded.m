@@ -1,6 +1,6 @@
 clc, clear
 
-%% Calculating PUE at the gridscale.
+%% Calculating Cumulative P Surplus at the gridscale.
 % Read in gif files
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
     'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];

@@ -6,7 +6,7 @@ library(raster)
 library(tidyverse)
 library(sf)
 
-setwd("B:/LabFiles/users/DanykaByrnes")
+setwd("D:/Danyka/")
 
 # ******************************************************************************
 # This script takes the N Surplus data and clips the watersheds with the data. 
@@ -17,9 +17,9 @@ setwd("B:/LabFiles/users/DanykaByrnes")
 # ******************************************************************************
 # Setting up filepaths
 YEARS = 1930:2017
-INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_103122/'
-OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
-NSURPLUS_OUTPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/OUTPUTS/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded (float)/'
+INPUT_folders = '9 Phopshorus Use Efficiency/INPUTS_103122/'
+OUTPUT_folders = '9 Phopshorus Use Efficiency/OUTPUTS/HUC2/'
+NSURPLUS_OUTPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/OUTPUTS/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded/'
 HUC2_loc = '0 General Data/HUC2/'
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
@@ -39,26 +39,28 @@ cl = makeCluster(UseCores)
 registerDoParallel(cl) 
 Comp_extc = data.frame()
 # Iterate through rasters and clip each watershed to all rasters 
-beginCluster()
+beginCluster(cl)
 par = foreach(a = 1:length(Components)) %dopar% {  
   
   library(raster)
   library(sf)
   for (i in 1:length(YEARS)) {
-    tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[j],'.tif')
+    tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[i],'.tif')
     #R = raster(tif_folder)
     R = terra::rast(tif_folders)
 
-    for (j in 1:length(HUC2)) {
+    for (j in 1:dim(HUC2)[1]) {
   
         clipped_raster = terra::crop(R,extent(HUC2[j,]))
-        temp = extract(clipped_raster, HUC2[j,], fun=mean, na.rm=TRUE, df=TRUE)
+        temp = terra::extract(clipped_raster, HUC2[j,], fun=mean, na.rm=TRUE, df=TRUE)
         
         Comp_extc[j,1] = HUC2[j,]$REG
-        Comp_extc[j,i+1] = temp[2]
+        Comp_extc[j,i+1] = temp[2]/1000
     }
   }
   colnames(Comp_extc)[1] ="REG"
-  write.csv2(Comp_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
+  write.table(Comp_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
                                       '_meanHUC2Components.txt'), row.names = FALSE)
 }
+
+stopCluster(cl)
