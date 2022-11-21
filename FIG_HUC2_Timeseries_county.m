@@ -4,18 +4,12 @@ clc, clear, close all
 % ------------------------------------------------------------------------
 % ########################################################################
 
-OUTPUT_folderName = '../OUTPUTS/TREND_P_Version_1.2/PUE/';  
+OUTPUT_folderName = '../OUTPUTS/HUC2/';  
 %  'LivestokPUE', 'CropPUE', 'FertPUE')
-HUC_PUE = readmatrix([OUTPUT_folderName, 'HUC2_TotalPUE.xlsx'],'Sheet', 'Median');
-HUC_PUE = sortrows(HUC_PUE,'descend');
+% HUC_PUE = readmatrix([OUTPUT_folderName, 'HUC2_TotalPUE.xlsx'],'Sheet', 'Median');
+% HUC_PUE = sortrows(HUC_PUE,'descend');
 
-CROPLAND = readmatrix([OUTPUT_folderName, 'HUC2_Cropland.xlsx'],'Sheet', 'Median');
-CROPLAND = sortrows(CROPLAND,'descend');
-
-PASTURELAND = readmatrix([OUTPUT_folderName, 'HUC2_Pastureland.xlsx'],'Sheet', 'Median');
-PASTURELAND = sortrows(PASTURELAND,'descend');
-
-MANURE_AGHA = readmatrix([OUTPUT_folderName, 'HUC2_Manure_AGHA.xlsx'],'Sheet', 'Median');
+MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_meanHUC2Components.txt']);
 MANURE_AGHA = sortrows(MANURE_AGHA,'ascend');
 
 FERT_AGHA = readmatrix([OUTPUT_folderName, 'HUC2_Fertilizer_AGHA.xlsx'],'Sheet', 'Median');

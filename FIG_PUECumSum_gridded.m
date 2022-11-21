@@ -2,6 +2,7 @@ clc, clear
 
 %% Aesthetic 
 fontSize_p = 10;
+fontSize_p2 = 12; 
 plot_dim_1 = [400,400,375,280];
 plot_dim_3 = [200,200,200,150];
 mSize = 10; 
@@ -206,7 +207,7 @@ plot([-2000,4000],[1,1],'--k','LineWidth',1)
 ylim([0,3])
 xlim([-300, 4000])
 
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
 box on
@@ -234,7 +235,7 @@ plot([-2000,4000],[1,1],'--k','LineWidth',1)
 ylim([0,3])
 xlim([-300, 4000])
 
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
 box on
@@ -244,5 +245,3 @@ set(gca,'ZColor',[0,0,0])
 
 xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
 ylabel('Phosphorus Use Efficiency')
-
-
