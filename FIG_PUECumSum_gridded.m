@@ -4,6 +4,7 @@ clc, clear
 fontSize_p = 10;
 fontSize_p2 = 12; 
 plot_dim_1 = [400,400,375,280];
+plot_dim_2 = [200,200,170,125];
 plot_dim_3 = [200,200,200,150];
 mSize = 10; 
 
@@ -11,11 +12,16 @@ colourPalette = [1,102,94;
                 216,179,101; 
                  90,180,172;
                  140,81,10]./255;
+             
+colourPalette_extended = [1,102,94;1,102,94;
+                        216,179,101; 216,179,101; 
+                        90,180,172; 90,180,172;
+                        140,81,10; 140,81,10]./255;
 %% Read in gif files
 INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
-OUTPUTfilepath = '..\OUTPUTS\Figures\PUE_2017.tif';
+OUTPUTfilepath = '..\OUTPUTS\Quadrant\';
 
 % binscatter(x,y)
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
@@ -88,7 +94,7 @@ for i = 1:length(D)
     end
 end
 D_copy = D; 
-%% Removing NaNs
+%% Creating barchart of the fraction of the total dataset that belongs to what quadrant.
 D = D_copy;
 close all
 % Stats for each quadrant
@@ -123,6 +129,113 @@ ylim([0,0.2])
 
 set(gca,'xticklabel',{'1980', '2017'})
 
+%% Finding the distribution of dominant manure inputs (vs. tot fertilizer) for each quadrant.
+D = D_copy;
+% Read in the 2017 livestock and fertilzier rasters
+INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];
+OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
+YEARS = 1930:2017;
+
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
+livestockFolder = 'Lvst_Agriculture_LU\';
+
+[LVSTK2017,~] = readgeoraster([INPUTfilepath,livestockFolder,'Lvst_2017.tif']);
+[FERT2017,~] = readgeoraster([INPUTfilepath,fertilizerFolder,'Fertilizer_Ag_2017.tif']);
+
+[LVSTK1980,~] = readgeoraster([INPUTfilepath,livestockFolder,'Lvst_1980.tif']);
+[FERT1980,~] = readgeoraster([INPUTfilepath,fertilizerFolder,'Fertilizer_Ag_1980.tif']);
+
+LVSTK2017_v = double(LVSTK2017(:));
+FERT2017_v = double(FERT2017(:));
+
+LVSTK1980_v = double(LVSTK1980(:));
+FERT1980_v = double(FERT1980(:));
+
+
+% Removing the boxes that have no quadrant in 2018
+Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D,1),1)*2017; 
+                      LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5), ones(size(D,1),1)*1980];         
+Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
+
+Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
+%%
+figure(1)
+
+for i = 1:4
+    sLvsk_Fert_Quadrant= Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == i,:);
+    b = boxchart(sLvsk_Fert_Quadrant.Q,...
+        sLvsk_Fert_Quadrant.LvstkFertFract,'MarkerStyle',...
+        'none','BoxFaceColor',colourPalette(i,:),'GroupByColor',...
+        sLvsk_Fert_Quadrant.QYear);
+    hold on
+end
+
+box on
+set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gcf,'position',plot_dim_1)
+
+set(gca,'XColor',[0,0,0])
+set(gca,'YColor',[0,0,0])
+set(gca,'ZColor',[0,0,0])
+
+ylim([0,1.05])
+xticks([0, 0.5, 1, 1.5, 2, 2.5,3, 3.5,4])    
+xticklabels({'.','1980','2017','1980','2017','1980','2017','1980','2017'})
+%ylabel('% Manure of Total Fertilizer')
+
+%%
+figure(2)
+Lvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:);
+
+for i = 1:4
+    sLvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant_1980(Lvsk_Fert_Quadrant_1980.Q == i,:);
+    b_2017 = boxchart(sLvsk_Fert_Quadrant_1980.Q,...
+        sLvsk_Fert_Quadrant_1980.LvstkFertFract,'MarkerStyle',...
+        'none','BoxFaceColor',colourPalette(i,:));
+    hold on
+end
+
+box on
+set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gcf,'position',plot_dim_1)
+set(gca,'XColor',[0,0,0])
+set(gca,'YColor',[0,0,0])
+set(gca,'ZColor',[0,0,0])
+
+ylim([0,1.05])
+xticks([1,2,3,4])
+xticklabels({'Q1','Q2','Q3','Q4'})
+%ylabel('% Manure of Total Inputs')
+
+Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_1980_',datestr(datetime,'mmddyy'),'.png'];
+print('-dpng','-r600',[Figfolderpath])
+
+figure(3)
+Lvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:);
+
+for i = 1:4
+    sLvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant_2017(Lvsk_Fert_Quadrant_2017.Q == i,:);
+    b_2017 = boxchart(sLvsk_Fert_Quadrant_2017.Q,...
+        sLvsk_Fert_Quadrant_2017.LvstkFertFract,'MarkerStyle',...
+        'none','BoxFaceColor',colourPalette(i,:));
+    hold on
+end
+box on
+set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gcf,'position',plot_dim_1)
+
+set(gca,'XColor',[0,0,0])
+set(gca,'YColor',[0,0,0])
+set(gca,'ZColor',[0,0,0])
+
+ylim([0,1.05])
+xticks([1,2,3,4])
+xticklabels({'Q1','Q2','Q3','Q4'})
+%ylabel('% Manure of Total Inputs')
+
+Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_2017_',datestr(datetime,'mmddyy'),'.png'];
+print('-dpng','-r600',[Figfolderpath])
 
 %% Subsampling the data
 D = D_copy;
@@ -134,58 +247,58 @@ D = D(I,:);
 unQ = unique(D(:,6));
 unQ = unQ(find(unQ ~= 0));
 
-%% Figure
-close all
-
-figure(1)
-% 2017
-h = binscatter(D(:,2),D(:,4),  'YLimits',[0,3], 'XLimits', [-500, 4000]);
-h.NumBins = [100 100];
-caxis([1 2000]);
-hold on
-plot([0,0],[0,20],'--k','LineWidth',1)
-plot([-2000,4000],[1,1],'--k','LineWidth',1)
-
-ylim([0,3])
-xlim([-500, 4000])
-
-load([INPUTfilepath, 'orangeColormap.mat'])
-colormap(orangeColormap)
-
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim_1)
-
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
-
-xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-ylabel('Phosphorus Use Efficiency')
-
-figure(2)
-% 1980
-h = binscatter(D(:,1),D(:,3),  'YLimits',[0,3], 'XLimits', [-500, 4000]);
-h.NumBins = [100 100];
-caxis([1 2000]);
-hold on
-plot([0,0],[0,20],'--k','LineWidth',1)
-plot([-2000,4000],[1,1],'--k','LineWidth',1)
-
-ylim([0,3])
-xlim([-500, 4000])
-
-load([INPUTfilepath, 'orangeColormap.mat'])
-colormap(orangeColormap)
-
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim_1)
-
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
-
-xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-ylabel('Phosphorus Use Efficiency')
+% %% Figure
+% close all
+% 
+% figure(1)
+% % 2017
+% h = binscatter(D(:,2),D(:,4),  'YLimits',[0,3], 'XLimits', [-500, 4000]);
+% h.NumBins = [100 100];
+% caxis([1 2000]);
+% hold on
+% plot([0,0],[0,20],'--k','LineWidth',1)
+% plot([-2000,4000],[1,1],'--k','LineWidth',1)
+% 
+% ylim([0,3])
+% xlim([-500, 4000])
+% 
+% load([INPUTfilepath, 'orangeColormap.mat'])
+% colormap(orangeColormap)
+% 
+% set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+% set(gcf,'position',plot_dim_1)
+% 
+% set(gca,'XColor',[0,0,0])
+% set(gca,'YColor',[0,0,0])
+% set(gca,'ZColor',[0,0,0])
+% 
+% xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
+% ylabel('Phosphorus Use Efficiency')
+% 
+% figure(2)
+% % 1980
+% h = binscatter(D(:,1),D(:,3),  'YLimits',[0,3], 'XLimits', [-500, 4000]);
+% h.NumBins = [100 100];
+% caxis([1 2000]);
+% hold on
+% plot([0,0],[0,20],'--k','LineWidth',1)
+% plot([-2000,4000],[1,1],'--k','LineWidth',1)
+% 
+% ylim([0,3])
+% xlim([-500, 4000])
+% 
+% load([INPUTfilepath, 'orangeColormap.mat'])
+% colormap(orangeColormap)
+% 
+% set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+% set(gcf,'position',plot_dim_1)
+% 
+% set(gca,'XColor',[0,0,0])
+% set(gca,'YColor',[0,0,0])
+% set(gca,'ZColor',[0,0,0])
+% 
+% xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
+% ylabel('Phosphorus Use Efficiency')
 
 %% Scatter 
 close all
@@ -215,9 +328,11 @@ set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
-xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-ylabel('Phosphorus Use Efficiency')
+%xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
+%ylabel('Phosphorus Use Efficiency')
 
+Figfolderpath = [OUTPUTfilepath,'Quadrant_2017_',datestr(datetime,'mmddyy'),'.png'];
+print('-dpng','-r600',[Figfolderpath])
 % 1980
 figure(2)
 for i = 1:length(unQ)
@@ -243,5 +358,8 @@ set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
-xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-ylabel('Phosphorus Use Efficiency')
+%xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
+%ylabel('Phosphorus Use Efficiency')
+
+Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_',datestr(datetime,'mmddyy'),'.png'];
+print('-dpng','-r600',[Figfolderpath])
