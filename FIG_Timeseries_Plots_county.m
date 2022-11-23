@@ -4,7 +4,7 @@ clc, clear, close all
 % ------------------------------------------------------------------------
 % ########################################################################
 
-OUTPUT_folderName = '../OUTPUTS/TREND_P_Version_1.2/';  
+OUTPUT_folderName = '../../3 TREND_Nutrients/TREND_Nutrients/OUTPUTS/TREND_P_Version_1.2/';  
 
 load([OUTPUT_folderName, 'PSurplus_kgha.mat'])
 load([OUTPUT_folderName, 'Livestock_kgha.mat'])
