@@ -100,6 +100,8 @@ par = foreach(a = 1:length(Components)) %dopar% {
     temp <- as.data.frame(temp)
     
     values(R) = temp
+    
+    values(R) = temp
     for (j in 1:dim(HUC2)[1]) {
       
       clipped_raster = terra::crop(R,extent(HUC2[j,]))
