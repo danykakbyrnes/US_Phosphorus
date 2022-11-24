@@ -22,7 +22,7 @@ OUTPUT_folders = '9 Phopshorus Use Efficiency/OUTPUTS/HUC2/'
 HUC2_loc = '0 General Data/HUC2/'
 
 # read in HUC8 files
-HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'noLakes_merged_HUC2_5070_v3.shp'))
+HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
 
 files = dir(paste0(INPUT_folders,'/1 Land Use Data/'))
 
@@ -37,14 +37,6 @@ LU_extc = data.frame()
     YEAR_i = readr::parse_number(files[1])
     #R = raster(tif_folder)
     R = terra::rast(LUtif_folders)
-    
-    # Replacing 0s with NA
-    temp = values(R)
-    temp = as.matrix(temp)
-    temp[temp == 0] = NA
-    temp <- as.data.frame(temp)
-    
-    values(R) = temp
 
     for (j in 1:dim(HUC2)[1]) {
         
@@ -72,5 +64,5 @@ LU_extc = data.frame()
     }
   }
   colnames(LU_extc) =c("REG", 'YEAR',"AG_cells", 'Tot_cells', 'FracAgLU')
-  write.table(Comp_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
+  write.table(LU_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
                                       '_HUC2LandUse.txt'), row.names = FALSE)
