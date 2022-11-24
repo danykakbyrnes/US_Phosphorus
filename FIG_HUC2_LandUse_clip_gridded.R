@@ -64,5 +64,8 @@ LU_extc = data.frame()
     }
   }
   colnames(LU_extc) =c("REG", 'YEAR',"AG_cells", 'Tot_cells', 'FracAgLU')
+  
+  # Sort by Year then HUC
+  LU_extc = dplyr::arrange(LU_extc, YEAR, REG)
   write.table(LU_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
                                       '_HUC2LandUse.txt'), row.names = FALSE)
