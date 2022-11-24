@@ -22,17 +22,12 @@ OUTPUT_folders = '9 Phopshorus Use Efficiency/OUTPUTS/HUC2/'
 HUC2_loc = '0 General Data/HUC2/'
 
 # read in HUC8 files
-HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
+HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'noLakes_merged_HUC2_5070_v3.shp'))
 
 files = dir(paste0(INPUT_folders,'/1 Land Use Data/'))
-## Set up clusters - this will make things faster
-#UseCores <- detectCores() -2 #leaving 2
-#cl = makeCluster(UseCores)
-#registerDoParallel(cl)
-Comp_extc = data.frame()
-# Iterate through rasters and clip each watershed to all rasters
-#beginCluster(cl)
-#par = foreach(a = 1:length(Components)) %dopar% {
+
+LU_extc = data.frame()
+
 
   library(raster)
   library(sf)
@@ -52,17 +47,30 @@ Comp_extc = data.frame()
     values(R) = temp
 
     for (j in 1:dim(HUC2)[1]) {
-
+        
+        # summing the binary file to get all the cropland
         clipped_raster = terra::crop(R,extent(HUC2[j,]))
-        temp2 = terra::extract(clipped_raster, HUC2[j,], fun=sum, na.rm=TRUE, df=TRUE)
-
-        Comp_extc[j,1] = HUC2[j,]$REG
-        Comp_extc[j,i+1] = temp2[2]
+        AgLand = terra::extract(clipped_raster, HUC2[j,], fun=sum, na.rm=TRUE, df=TRUE)
+        
+        # replacing all the non-cropland (0) with 1 
+        temp = values(clipped_raster)
+        temp = as.matrix(temp)
+        temp[temp == 0] = 1 # replacing all the numbers with 1 so I can get total area.
+        temp <- as.data.frame(temp)
+        values(clipped_raster) = temp
+        
+        # Summing total cropland
+        TotalLand = terra::extract(clipped_raster, HUC2[j,], fun=sum, na.rm=TRUE, df=TRUE)
+        
+        # Column 1 is HUC, Column 2 is year, column 3 is AG, Col 4 is total
+        row = dim(LU_extc)[1]+1
+        LU_extc[row,1] = HUC2[j,]$REG
+        LU_extc[row,2] = YEAR_i
+        LU_extc[row,3] = as.numeric(AgLand[2])
+        LU_extc[row,4] = as.numeric(TotalLand[2])
+        LU_extc[row,5] = as.numeric(AgLand[2])/as.numeric(TotalLand[2])
     }
   }
-  colnames(Comp_extc)[1] ="REG"
+  colnames(LU_extc) =c("REG", 'YEAR',"AG_cells", 'Tot_cells', 'FracAgLU')
   write.table(Comp_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
-                                      '_meanHUC2LandUse.txt'), row.names = FALSE)
-#}
-
-#stopCluster(cl)
+                                      '_HUC2LandUse.txt'), row.names = FALSE)
