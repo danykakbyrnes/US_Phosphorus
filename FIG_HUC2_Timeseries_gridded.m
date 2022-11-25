@@ -77,11 +77,8 @@ COMB_AGHA = FERT_AGHA(:,1);
 COMB_AGHA(:,2:size(FERT_AGHA,2)) = MANURE_AGHA(:,2:end)+FERT_AGHA(:,2:end);
 
 writematrix(HUC_PUE, [OUTPUT_folderName, 'PUE_meanHUC2.txt'])
-% Reading in land use
-
 for i = 1:height(HUC_PUE)
-
-%% FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
+% FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
 
    %figure('Renderer', 'painters', 'Position', [100 100 200 150])
    figure(1) 
@@ -96,7 +93,7 @@ for i = 1:height(HUC_PUE)
 %     xlim([1930,2017])
 %     xticks([1930, 1970, 2017])
 %     yticks([0,0.5,1, 1.5])
-    %ylim([0.1,1])
+    ylim([0.1,1])
     xlim([1930,2017])
     %xticks([1930, 1970, 2017])
     %yticks([0,0.5, 1])
@@ -114,13 +111,13 @@ for i = 1:height(HUC_PUE)
    set(gca,'ZColor',[0,0,0])    
 
     yyaxis left
-%    movmeanCROPLAND = movmean(CROPLAND(i,2:end),smoothing_int);
-%    area([1930:2017]', [movmeanCROPLAND]', 'LineStyle', 'none')
-%    c = [119, 184, 136; 235, 220, 155]./255;
-%    colororder(c)
-%    ylim([0,0.75])
-%    yticks([]) 
-%    
+    movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int);
+    area([1930:2017]', [movmeanAGLAND]', 'LineStyle', 'none')
+    c = [119, 184, 136; 235, 220, 155]./255;
+    colororder(c)
+    ylim([0,0.75])
+    yticks([]) 
+    
    box on
    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
    set(gca,'XColor',[0,0,0])
@@ -207,23 +204,7 @@ for i = 1:height(HUC_PUE)
    set(gca,'XColor',[0,0,0])
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
-%    if i <= 6
-%        xticks([])
-%    else
-%        xticks([1930,1970,2010])
-%    end
-%    if i == 8
-%      yticks([0,25,50])
-%    end
-%    
-%    if i == 1
-%      ylim([0,40])
-%      yticks([0,20,40])
-%    end
-
-
-
-    
+   
 end
 
 figure(1)
