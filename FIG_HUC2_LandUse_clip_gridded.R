@@ -29,8 +29,6 @@ files = dir(paste0(INPUT_folders,'/1 Land Use Data/'))
 LU_extc = data.frame()
 
 
-  library(raster)
-  library(sf)
   for (i in 1:length(files)) {
     
     LUtif_folders = paste0(INPUT_folders,'1 Land Use Data/', files[i])
@@ -67,5 +65,5 @@ LU_extc = data.frame()
   
   # Sort by Year then HUC
   LU_extc = dplyr::arrange(LU_extc, YEAR, REG)
-  write.table(LU_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
-                                      '_HUC2LandUse.txt'), row.names = FALSE)
+  write.table(LU_extc, file = paste0(OUTPUT_folders,'HUC2LandUse.txt'), row.names = FALSE)
+  
