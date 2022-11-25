@@ -32,7 +32,7 @@ LU_extc = data.frame()
   for (i in 1:length(files)) {
     
     LUtif_folders = paste0(INPUT_folders,'1 Land Use Data/', files[i])
-    YEAR_i = readr::parse_number(files[1])
+    YEAR_i = readr::parse_number(files[i])
     #R = raster(tif_folder)
     R = terra::rast(LUtif_folders)
 

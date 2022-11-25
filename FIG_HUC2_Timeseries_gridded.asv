@@ -16,7 +16,7 @@ colourPalette = [1,102,94;
                  90,180,172;
                  140,81,10]./255;
 %% Opening files
-YEARS = 1930:2017;
+
 OUTPUT_folderName = '../OUTPUTS/HUC2/';  
 
 MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_meanHUC2Components.txt']);
@@ -29,36 +29,35 @@ CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
 % Read in land use
-HUCLU_diso = readmatrix([OUTPUT_folderName, 'oHUC2LandUse.txt']);
+HUCLU = readmatrix([OUTPUT_folderName, 'oHUC2LandUse.txt']);
 
 %% Reorganizing HUCLU and map the LU to the dates. 
-unHUC = unique(HUCLU_diso(:,1)); 
+unHUC = unique(HUCLU(:,1)); 
 for i = 1:length(unHUC)
     
-    HUCLU_i = HUCLU_diso(find(HUCLU_diso(:,1) == unHUC(i)),:);
+    HUCLU_i = HUCLU(find(HUCLU(:,1) == unHUC(i)),:);
     
-    for j = 1:length(YEARS)
-       YEAR_j = YEARS(j);
+    for j = 1930:2017
        
-        if YEAR_j <= 1938
+        if j <= 1938
             % Use 1938
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 1938),end);
-        elseif YEAR_j > 1938 && YEAR_j < 2006
+        elseif j > 1938 && j < 2006
             % Use the individual year
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == j),end);
-        elseif YEAR_j >= 2006 && YEAR_j < 2008
+        elseif j >= 2006 && j < 2008
             % Use 2006
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2006),end);
-        elseif  YEAR_j >= 2008 && YEAR_j < 2011
+        elseif  j >= 2008 && j < 2011
             % Use 2008
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2008),end);
-        elseif  YEAR_j >= 2011 && YEAR_j < 2013
+        elseif  j >= 2011 && j < 2013
             % Use 2011
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2011),end);
-        elseif  YEAR_j >= 2013 && YEAR_j < 2016
+        elseif  j >= 2013 && j < 2016
             % Use 2013
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2013),end);
-        elseif  YEAR_j >= 2016
+        elseif  j >= 2016
             % Use 2016
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2016),end);
         end
