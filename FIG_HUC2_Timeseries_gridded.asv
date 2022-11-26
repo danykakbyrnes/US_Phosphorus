@@ -137,14 +137,6 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
    box on
-   
-   if any(i == [1:6])
-       ylim([0.5, 1.5])
-   elseif any(i == [7:9])
-       ylim([0.2, 0.8])
-       yticks([0.2, 0.5, 0.8])
-   end
-
    colormap(summer)
 
 
@@ -159,14 +151,6 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
    box on
-   
-   if any(i == [1:6])
-       ylim([0.5, 1.5])
-   elseif any(i == [7:9])
-       ylim([0.2, 0.8])
-       yticks([0.2, 0.5, 0.8])
-   end
-
    colormap(summer)
 
 
@@ -197,7 +181,12 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
    box on
-   
+   if i == any([1:6])
+       ylim([0.5, 1.5])
+   elseif i == any([4,5,6])
+        ylim([1, 1.5])
+
+
    colormap(summer)
 
 %% FIGURE 6: MANURE, FERTILIZER, AND CROP TIMESERIES
@@ -216,14 +205,6 @@ for i = 1:height(HUC_PUE)
    movmeanFertilizer = movmean(FERT_AGHA(i,2:end),smoothing_int);
    plot([1930:2017],movmeanFertilizer,'-k', 'LineWidth',2,'Color',color_pick(3,:)) 
     
-  if i == 2
-       ylim([0, 30])
-       yticks([0, 15, 30])
-   else
-       ylim([0, 20])
-       yticks([0, 10, 20])
-   end
-
    set(gca,'FontSize',10,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
    set(gca,'XColor',[0,0,0])
    set(gca,'YColor',[0,0,0])
