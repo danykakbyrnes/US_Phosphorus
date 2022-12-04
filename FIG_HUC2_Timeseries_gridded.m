@@ -32,42 +32,42 @@ CROP_AGHA = sortrows(CROP_AGHA,'descend');
 HUCLU_diso = readmatrix([OUTPUT_folderName, 'oHUC2LandUse.txt']);
 
 %% Reorganizing HUCLU and map the LU to the dates. 
-% unHUC = unique(HUCLU_diso(:,1)); 
-% for i = 1:length(unHUC)
-%     
-%     HUCLU_i = HUCLU_diso(find(HUCLU_diso(:,1) == unHUC(i)),:);
-%     
-%     for j = 1:length(YEARS)
-%        YEAR_j = YEARS(j);
-%        
-%         if YEAR_j <= 1938
-%             % Use 1938
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 1938),end);
-%         elseif YEAR_j > 1938 && YEAR_j < 2006
-%             % Use the individual year
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == j),end);
-%         elseif YEAR_j >= 2006 && YEAR_j < 2008
-%             % Use 2006
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2006),end);
-%         elseif  YEAR_j >= 2008 && YEAR_j < 2011
-%             % Use 2008
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2008),end);
-%         elseif  YEAR_j >= 2011 && YEAR_j < 2013
-%             % Use 2011
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2011),end);
-%         elseif  YEAR_j >= 2013 && YEAR_j < 2016
-%             % Use 2013
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2013),end);
-%         elseif  YEAR_j >= 2016
-%             % Use 2016
-%             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2016),end);
-%         end
-% 
-%     HUCLU(i,1) = unHUC(i);
-%     HUCLU(i,j+1) = LUFrac;
-%     end
-%     
-% end
+unHUC = unique(HUCLU_diso(:,1)); 
+for i = 1:length(unHUC)
+    
+    HUCLU_i = HUCLU_diso(find(HUCLU_diso(:,1) == unHUC(i)),:);
+    
+    for j = 1:length(YEARS)
+       YEAR_j = YEARS(j);
+       
+        if YEAR_j <= 1938
+            % Use 1938
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 1938),end);
+        elseif YEAR_j > 1938 && YEAR_j < 2006
+            % Use the individual year
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == j),end);
+        elseif YEAR_j >= 2006 && YEAR_j < 2008
+            % Use 2006
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2006),end);
+        elseif  YEAR_j >= 2008 && YEAR_j < 2011
+            % Use 2008
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2008),end);
+        elseif  YEAR_j >= 2011 && YEAR_j < 2013
+            % Use 2011
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2011),end);
+        elseif  YEAR_j >= 2013 && YEAR_j < 2016
+            % Use 2013
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2013),end);
+        elseif  YEAR_j >= 2016
+            % Use 2016
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2016),end);
+        end
+
+    HUCLU(i,1) = unHUC(i);
+    HUCLU(i,j+1) = LUFrac;
+    end
+    
+end
 
 %% Calculating PUE and combined inputs
 HUC_PUE = CROP_AGHA(:,1);
@@ -104,10 +104,10 @@ for i = 1:height(HUC_PUE)
    set(gca,'ZColor',[0,0,0])    
 
      yyaxis left
-%     movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int);
-%     area([1930:2017]', [movmeanAGLAND]', 'LineStyle', 'none')
-%     c = [119, 184, 136; 235, 220, 155]./255;
-%     colororder(c)
+    movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int);
+    area([1930:2017]', [movmeanAGLAND]', 'LineStyle', 'none')
+    c = [119, 184, 136; 235, 220, 155]./255;
+    colororder(c)
 
     hl=gca;
     l_yaxis = hl.YTickLabel;
