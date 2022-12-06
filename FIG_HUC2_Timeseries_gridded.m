@@ -15,6 +15,8 @@ colourPalette = [1,102,94;
                 216,179,101; 
                  90,180,172;
                  140,81,10]./255;
+c = [119, 184, 136]./255;
+
 %% Opening files
 YEARS = 1930:2017;
 OUTPUT_folderName = '../OUTPUTS/HUC2/';  
@@ -29,7 +31,7 @@ CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
 % Read in land use
-HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse.txt']);
+HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
 
 %% Reorganizing HUCLU and map the LU to the dates. 
 unHUC = unique(HUCLU_diso(:,1)); 
@@ -90,9 +92,7 @@ for i = 1:height(HUC_PUE)
     movmeanPUE = movmean(HUC_PUE(i,2:end),smoothing_int);
     plot([1930:2017], movmeanPUE, '-k', 'LineWidth',4)
     plot([1930:2017], movmeanPUE, ':w', 'LineWidth',3)
-    ylim([0.1,2])
     xlim([1930,2017])
-    yticks([])
    if i <= 6
        xticks([])
    else
@@ -107,18 +107,20 @@ for i = 1:height(HUC_PUE)
 
      yyaxis left
     movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int);
-    area([1930:2017]', [movmeanAGLAND]', 'LineStyle', 'none')
-    c = [119, 184, 136; 235, 220, 155]./255;
-    colororder(c)
+    area([1930:2017]', [movmeanAGLAND]', 'LineStyle', 'none', 'FaceColor', c)
+    %colororder(c)
 
-    hl=gca;
-    l_yaxis = hl.YTickLabel;
+    %hl=gca;
+    %l_yaxis = hl.YTickLabel;
     yyaxis right
-    hr=gca;
-    r_yaxis = hr.YTickLabel;
-    hr.YTickLabel = l_yaxis;
+    %hr=gca;
+    %r_yaxis = hr.YTickLabel;
+    %hr.YTickLabel = l_yaxis;
+    ylim([0.1,1.5])
+    yticks([])
+
     yyaxis left
-    hl.YTickLabel = r_yaxis;
+    %hl.YTickLabel = r_yaxis;
     
     ylim([0,0.75])
     yticks([]) 
@@ -128,6 +130,7 @@ for i = 1:height(HUC_PUE)
    set(gca,'XColor',[0,0,0])
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])    
+   
 %% FIGURE 2: MANURE INPUT VERSUS PUE
 
    figure(2) 
