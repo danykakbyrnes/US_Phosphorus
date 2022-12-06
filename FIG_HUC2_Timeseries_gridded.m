@@ -29,7 +29,7 @@ CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
 % Read in land use
-HUCLU_diso = readmatrix([OUTPUT_folderName, 'oHUC2LandUse.txt']);
+HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse.txt']);
 
 %% Reorganizing HUCLU and map the LU to the dates. 
 unHUC = unique(HUCLU_diso(:,1)); 
@@ -45,7 +45,7 @@ for i = 1:length(unHUC)
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 1938),end);
         elseif YEAR_j > 1938 && YEAR_j < 2006
             % Use the individual year
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == j),end);
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == YEAR_j),end);
         elseif YEAR_j >= 2006 && YEAR_j < 2008
             % Use 2006
             LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2006),end);
@@ -68,6 +68,8 @@ for i = 1:length(unHUC)
     end
     
 end
+
+save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
 
 %% Calculating PUE and combined inputs
 HUC_PUE = CROP_AGHA(:,1);
