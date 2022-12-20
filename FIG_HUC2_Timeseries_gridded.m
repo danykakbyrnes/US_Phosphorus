@@ -15,8 +15,10 @@ colourPalette = [1,102,94;
                 216,179,101; 
                  90,180,172;
                  140,81,10]./255;
-%% Opening files
+c = [119, 184, 136]./255;
 
+%% Opening files
+YEARS = 1930:2017;
 OUTPUT_folderName = '../OUTPUTS/HUC2/';  
 
 MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_meanHUC2Components.txt']);
@@ -28,7 +30,50 @@ FERT_AGHA = sortrows(FERT_AGHA,'descend');
 CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
-% Calculating PUE and combined inputs
+% Read in land use
+HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
+
+%% Reorganizing HUCLU and map the LU to the dates. 
+unHUC = unique(HUCLU_diso(:,1)); 
+for i = 1:length(unHUC)
+    
+    HUCLU_i = HUCLU_diso(find(HUCLU_diso(:,1) == unHUC(i)),:);
+    
+    for j = 1:length(YEARS)
+       YEAR_j = YEARS(j);
+       
+        if YEAR_j <= 1938
+            % Use 1938
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 1938),end);
+        elseif YEAR_j > 1938 && YEAR_j < 2006
+            % Use the individual year
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == YEAR_j),end);
+        elseif YEAR_j >= 2006 && YEAR_j < 2008
+            % Use 2006
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2006),end);
+        elseif  YEAR_j >= 2008 && YEAR_j < 2011
+            % Use 2008
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2008),end);
+        elseif  YEAR_j >= 2011 && YEAR_j < 2013
+            % Use 2011
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2011),end);
+        elseif  YEAR_j >= 2013 && YEAR_j < 2016
+            % Use 2013
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2013),end);
+        elseif  YEAR_j >= 2016
+            % Use 2016
+            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2016),end);
+        end
+
+    HUCLU(i,1) = unHUC(i);
+    HUCLU(i,j+1) = LUFrac;
+    end
+    
+end
+
+save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
+
+%% Calculating PUE and combined inputs
 HUC_PUE = CROP_AGHA(:,1);
 HUC_PUE(:,2:size(CROP_AGHA,2)) = CROP_AGHA(:,2:end)./...
                     (MANURE_AGHA(:,2:end)+FERT_AGHA(:,2:end));
@@ -36,13 +81,9 @@ COMB_AGHA = FERT_AGHA(:,1);
 COMB_AGHA(:,2:size(FERT_AGHA,2)) = MANURE_AGHA(:,2:end)+FERT_AGHA(:,2:end);
 
 writematrix(HUC_PUE, [OUTPUT_folderName, 'PUE_meanHUC2.txt'])
-% Reading in land use
-
 for i = 1:height(HUC_PUE)
+% FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
 
-%% FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
-
-   %figure('Renderer', 'painters', 'Position', [100 100 200 150])
    figure(1) 
    subplot(3,3,i)
    
@@ -51,15 +92,7 @@ for i = 1:height(HUC_PUE)
     movmeanPUE = movmean(HUC_PUE(i,2:end),smoothing_int);
     plot([1930:2017], movmeanPUE, '-k', 'LineWidth',4)
     plot([1930:2017], movmeanPUE, ':w', 'LineWidth',3)
-%     ylim([0.25,1.5])
-%     xlim([1930,2017])
-%     xticks([1930, 1970, 2017])
-%     yticks([0,0.5,1, 1.5])
-    %ylim([0.1,1])
     xlim([1930,2017])
-    %xticks([1930, 1970, 2017])
-    %yticks([0,0.5, 1])
-    yticks([])
    if i <= 6
        xticks([])
    else
@@ -72,22 +105,33 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])    
 
+     yyaxis left
+    movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int);
+    area([1930:2017]', [movmeanAGLAND]', 'LineStyle', 'none', 'FaceColor', c)
+    %colororder(c)
+
+    %hl=gca;
+    %l_yaxis = hl.YTickLabel;
+    yyaxis right
+    %hr=gca;
+    %r_yaxis = hr.YTickLabel;
+    %hr.YTickLabel = l_yaxis;
+    ylim([0.1,1.5])
+    yticks([])
+
     yyaxis left
-%    movmeanCROPLAND = movmean(CROPLAND(i,2:end),smoothing_int);
-%    area([1930:2017]', [movmeanCROPLAND]', 'LineStyle', 'none')
-%    c = [119, 184, 136; 235, 220, 155]./255;
-%    colororder(c)
-%    ylim([0,0.75])
-%    yticks([]) 
-%    
+    %hl.YTickLabel = r_yaxis;
+    
+    ylim([0,0.75])
+    yticks([]) 
+    
    box on
    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
    set(gca,'XColor',[0,0,0])
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])    
-
-    
-%% FIGURE 2: TIMESERIES OF COMPONENTS VERSUS PUE
+   
+%% FIGURE 2: MANURE INPUT VERSUS PUE
 
    figure(2) 
    subplot(3,3,i)
@@ -98,6 +142,14 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
    box on
+   
+   if any(i == [1:6])
+       ylim([0.5, 1.5])
+   elseif any(i == [7:9])
+       ylim([0.2, 0.8])
+       yticks([0.2, 0.5, 0.8])
+   end
+
    colormap(summer)
 
 
@@ -112,6 +164,14 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
    box on
+   
+   if any(i == [1:6])
+       ylim([0.5, 1.5])
+   elseif any(i == [7:9])
+       ylim([0.2, 0.8])
+       yticks([0.2, 0.5, 0.8])
+   end
+
    colormap(summer)
 
 
@@ -142,8 +202,7 @@ for i = 1:height(HUC_PUE)
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
    box on
-   box on
-
+   
    colormap(summer)
 
 %% FIGURE 6: MANURE, FERTILIZER, AND CROP TIMESERIES
@@ -162,27 +221,19 @@ for i = 1:height(HUC_PUE)
    movmeanFertilizer = movmean(FERT_AGHA(i,2:end),smoothing_int);
    plot([1930:2017],movmeanFertilizer,'-k', 'LineWidth',2,'Color',color_pick(3,:)) 
     
+  if i == 2
+       ylim([0, 30])
+       yticks([0, 15, 30])
+   else
+       ylim([0, 20])
+       yticks([0, 10, 20])
+   end
+
    set(gca,'FontSize',10,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
    set(gca,'XColor',[0,0,0])
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
-%    if i <= 6
-%        xticks([])
-%    else
-%        xticks([1930,1970,2010])
-%    end
-%    if i == 8
-%      yticks([0,25,50])
-%    end
-%    
-%    if i == 1
-%      ylim([0,40])
-%      yticks([0,20,40])
-%    end
-
-
-
-    
+   
 end
 
 figure(1)

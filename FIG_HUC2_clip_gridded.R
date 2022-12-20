@@ -93,7 +93,15 @@ par = foreach(a = 1:length(Components)) %dopar% {
     tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[i],'.tif')
     #R = raster(tif_folder)
     R = terra::rast(tif_folders)
+    # Replacing 0s with NA
+    temp = values(R)
+    temp = as.matrix(temp)
+    temp[temp == 0] = NA
+    temp <- as.data.frame(temp)
     
+    values(R) = temp
+    
+    values(R) = temp
     for (j in 1:dim(HUC2)[1]) {
       
       clipped_raster = terra::crop(R,extent(HUC2[j,]))
