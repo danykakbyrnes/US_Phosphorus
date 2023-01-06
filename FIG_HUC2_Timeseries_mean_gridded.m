@@ -84,18 +84,14 @@ end
 HUCLU = sortrows(HUCLU,1,'descend');
 HUCAgHA = sortrows(HUCAgHA,1,'descend');
 
-save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
-save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
+%save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
+%save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
 
 
 %% Calculating PUE and combined inputs
-HUC_PUE = CROP_AGHA(:,1);
-HUC_PUE(:,2:size(CROP_AGHA,2)) = CROP_AGHA(:,2:end)./...
-                    (MANURE_AGHA(:,2:end)+FERT_AGHA(:,2:end));
-COMB_AGHA = FERT_AGHA(:,1);
-COMB_AGHA(:,2:size(FERT_AGHA,2)) = MANURE_AGHA(:,2:end)+FERT_AGHA(:,2:end);
-
-writematrix(HUC_PUE, [OUTPUT_folderName, 'PUE_meanHUC2.txt'])
+HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_meanHUC2_fromgrid.txt']);
+HUC_PUE(:,2:end) = HUC_PUE(:,2:end)*1000;
+HUC_PUE = sortrows(HUC_PUE,1,'descend');
 for i = 1:height(HUC_PUE)
 % FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
 
@@ -205,20 +201,20 @@ for i = 1:height(HUC_PUE)
    colormap(summer)
 
 
-%% FIGURE 5: COMBINED INPUTS VERSUS PUE
-
-   figure(5) 
-   subplot(3,3,i)
-
-    scatter(COMB_AGHA(i,2:end),HUC_PUE(i,2:end),mSize,[1930:2017],'filled', 'MarkerEdgeColor','k')
-   
-   set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-   set(gca,'XColor',[0,0,0])
-   set(gca,'YColor',[0,0,0])
-   set(gca,'ZColor',[0,0,0])
-   box on
-   
-   colormap(summer)
+% %% FIGURE 5: COMBINED INPUTS VERSUS PUE
+% 
+%    figure(5) 
+%    subplot(3,3,i)
+% 
+%     scatter(COMB_AGHA(i,2:end),HUC_PUE(i,2:end),mSize,[1930:2017],'filled', 'MarkerEdgeColor','k')
+%    
+%    set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+%    set(gca,'XColor',[0,0,0])
+%    set(gca,'YColor',[0,0,0])
+%    set(gca,'ZColor',[0,0,0])
+%    box on
+%    
+%    colormap(summer)
 
 %% FIGURE 6: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(6) 
@@ -253,30 +249,30 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_grid_panel.png'];
 print('-dpng','-r600',[Figfolderpath])
     
 figure(2)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(4)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel.png'];
 print('-dpng','-r600',[Figfolderpath])
 
-figure(5)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/COMB_PUE_panel.png'];
-print('-dpng','-r600',[Figfolderpath])
+% figure(5)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/COMB_PUE_grid_panel.png'];
+% print('-dpng','-r600',[Figfolderpath])
 
 figure(6)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/Component_timeseries.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/Component_grid_timeseries.png'];
 print('-dpng','-r600',[Figfolderpath])
