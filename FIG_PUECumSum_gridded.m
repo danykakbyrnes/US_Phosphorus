@@ -22,7 +22,7 @@ INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
 OUTPUTfilepath = '..\OUTPUTS\Quadrant\';
-
+HUC2filepath = '..\OUTPUTS\HUC2\';
 % binscatter(x,y)
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
 [CS2017,~] = readgeoraster(CUMSUMfilepath); % single
@@ -247,59 +247,6 @@ D = D(I,:);
 unQ = unique(D(:,6));
 unQ = unQ(find(unQ ~= 0));
 
-% %% Figure
-% close all
-% 
-% figure(1)
-% % 2017
-% h = binscatter(D(:,2),D(:,4),  'YLimits',[0,3], 'XLimits', [-500, 4000]);
-% h.NumBins = [100 100];
-% caxis([1 2000]);
-% hold on
-% plot([0,0],[0,20],'--k','LineWidth',1)
-% plot([-2000,4000],[1,1],'--k','LineWidth',1)
-% 
-% ylim([0,3])
-% xlim([-500, 4000])
-% 
-% load([INPUTfilepath, 'orangeColormap.mat'])
-% colormap(orangeColormap)
-% 
-% set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-% set(gcf,'position',plot_dim_1)
-% 
-% set(gca,'XColor',[0,0,0])
-% set(gca,'YColor',[0,0,0])
-% set(gca,'ZColor',[0,0,0])
-% 
-% xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-% ylabel('Phosphorus Use Efficiency')
-% 
-% figure(2)
-% % 1980
-% h = binscatter(D(:,1),D(:,3),  'YLimits',[0,3], 'XLimits', [-500, 4000]);
-% h.NumBins = [100 100];
-% caxis([1 2000]);
-% hold on
-% plot([0,0],[0,20],'--k','LineWidth',1)
-% plot([-2000,4000],[1,1],'--k','LineWidth',1)
-% 
-% ylim([0,3])
-% xlim([-500, 4000])
-% 
-% load([INPUTfilepath, 'orangeColormap.mat'])
-% colormap(orangeColormap)
-% 
-% set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-% set(gcf,'position',plot_dim_1)
-% 
-% set(gca,'XColor',[0,0,0])
-% set(gca,'YColor',[0,0,0])
-% set(gca,'ZColor',[0,0,0])
-% 
-% xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-% ylabel('Phosphorus Use Efficiency')
-
 %% Scatter 
 close all
 
@@ -350,6 +297,8 @@ plot([-2000,4000],[1,1],'--k','LineWidth',1)
 ylim([0,3])
 xlim([-300, 4000])
 
+%% Saving Files
+
 set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
@@ -363,3 +312,7 @@ set(gca,'ZColor',[0,0,0])
 
 Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_',datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',[Figfolderpath])
+
+%% Adding HUC2 to the quadrant plot
+HUC2_PUE = readtable[HUC2filepath,'PUE_meanHUC2_fromgrid.txt]';
+    

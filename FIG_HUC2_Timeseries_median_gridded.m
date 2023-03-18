@@ -20,17 +20,14 @@ c = [119, 184, 136]./255;
 YEARS = 1930:2017;
 OUTPUT_folderName = '../OUTPUTS/HUC2/';  
 
-MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_meanHUC2Components.txt']);
+MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
 MANURE_AGHA = sortrows(MANURE_AGHA,'descend');
 
-FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_meanHUC2Components.txt']);
+FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianHUC2Components.txt']);
 FERT_AGHA = sortrows(FERT_AGHA,'descend');
 
-CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
+CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
-
-COMB_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
-COMB_AGHA = sortrows(COMB_AGHA,'descend');
 
 % Read in land use
 HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
@@ -93,7 +90,7 @@ HUCAgHA = sortrows(HUCAgHA,1,'descend');
 
 
 %% Calculating PUE and combined inputs
-HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_meanHUC2_fromgrid.txt']);
+HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 HUC_PUE = sortrows(HUC_PUE,1,'descend');
 for i = 1:height(HUC_PUE)
 % FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
@@ -204,20 +201,20 @@ for i = 1:height(HUC_PUE)
    colormap(summer)
 
 
-%% FIGURE 5: COMBINED INPUTS VERSUS PUE
-
-   figure(5) 
-   subplot(3,3,i)
-
-    scatter(COMB_AGHA(i,2:end),HUC_PUE(i,2:end),mSize,[1930:2017],'filled', 'MarkerEdgeColor','k')
-   
-   set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-   set(gca,'XColor',[0,0,0])
-   set(gca,'YColor',[0,0,0])
-   set(gca,'ZColor',[0,0,0])
-   box on
-   
-   colormap(summer)
+% %% FIGURE 5: COMBINED INPUTS VERSUS PUE
+% 
+%    figure(5) 
+%    subplot(3,3,i)
+% 
+%     scatter(COMB_AGHA(i,2:end),HUC_PUE(i,2:end),mSize,[1930:2017],'filled', 'MarkerEdgeColor','k')
+%    
+%    set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+%    set(gca,'XColor',[0,0,0])
+%    set(gca,'YColor',[0,0,0])
+%    set(gca,'ZColor',[0,0,0])
+%    box on
+%    
+%    colormap(summer)
 
 %% FIGURE 6: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(6) 
@@ -252,22 +249,22 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_grid_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
     
 figure(2)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(4)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 % figure(5)
@@ -277,5 +274,5 @@ print('-dpng','-r600',[Figfolderpath])
 
 figure(6)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/Component_grid_timeseries.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])
