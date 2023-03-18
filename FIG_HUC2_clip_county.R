@@ -17,7 +17,7 @@ setwd("B:/LabFiles/users/DanykaByrnes")
 # ******************************************************************************
 # Setting up file paths
 OUTPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/OUTPUTS/TREND_P_Version_1.2/PUE/'
-INPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/INPUTS_061322/'
+INPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/INPUTS_102122/'
 
 # Reading in N Surplus
 Component = c('Total_PUE.shp', 'Manure_PUE.shp','Inorganic_Fert_PUE.shp', 
