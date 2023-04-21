@@ -10,18 +10,18 @@ OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
 rewriteMetricTable = 0;
 
 % Toggling Metrics
-runRemoveER = 1; 
-runLandUseMetrics = 1; 
-runPopulationDensity = 1;
-runTileDrainage = 1; 
-runStaticParameters = 1; 
+runRemoveER = 0; 
+runLandUseMetrics = 0; 
+runPopulationDensity = 0;
+runTileDrainage = 0; 
+runStaticParameters = 0; 
 
 if rewriteMetricTable == 1
-    opts = detectImportOptions([OUTPUT_folderName, 'ErRatio_20230309.txt']);
+    opts = detectImportOptions([OUTPUT_folderName, 'ErRatio_20230421.txt']);
     opts = setvartype(opts, 'StreamgageNumber', 'char');  %or 'char' if you prefer
     opts = setvartype(opts, 'WatershedNumber', 'char');  %or 'char' if you prefer
     
-    MetricTable = readtable([OUTPUT_folderName, 'ErRatio_20230309.txt'], opts);
+    MetricTable = readtable([OUTPUT_folderName, 'ErRatio_20230421.txt'], opts);
     
     MetricTable = movevars(MetricTable, "DrainageArea_km2", "Before", "Latitude");
     MetricTable = movevars(MetricTable, "Load_2010", "Before", "Latitude");
@@ -113,5 +113,6 @@ end
 MetricTable = outerjoin(MetricTable, STATIC_subset,'Type','left','MergeKey',1);
 
 save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
-    
 end
+
+writetable(MetricTable,[OUTPUT_folderName,'MetricTable',datestr(datetime("now","Format","_dd_MM_uu"),"_dd_mm_yy"),'.txt'])
