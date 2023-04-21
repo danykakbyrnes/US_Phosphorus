@@ -1,0 +1,15 @@
+clc, clear
+
+%% This script is used to run regression of watersheds between watershed metrics and loads. 
+
+OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
+load([OUTPUT_folderName, 'MetricTable.mat'])
+
+
+for i = 7:width(MetricTable)
+    
+    lm = fitlm(MetricTable.Load_2010, MetricTable{:,i});
+
+    scatter(MetricTable.Load_2010, MetricTable{:,i},10,'filled')
+    xlabel('Load (kg-N ha^-^1')
+end
