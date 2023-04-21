@@ -1,5 +1,7 @@
 clc, clear
 
+%% This script is used add watershed metrics
+
 %INPUT_folder = '../INPUTS_103122/';
 metricINPUT_folder = 'B:/LabFiles/users/DanykaByrnes/4 Memoryscapes/INPUTS_050522/';
 OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
