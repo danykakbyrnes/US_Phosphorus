@@ -22,6 +22,7 @@ if rewriteMetricTable == 1
     opts = setvartype(opts, 'WatershedNumber', 'char');  %or 'char' if you prefer
     
     MetricTable = readtable([OUTPUT_folderName, 'ErRatio_20230309.txt'], opts);
+    MetricTable = movevars(MetricTable, "DrainageArea_km2", "Before", "Latitude");
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
 else
     load([OUTPUT_folderName, 'MetricTable.mat'])

@@ -4,3 +4,8 @@ clc, clear
 
 OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
 load([OUTPUT_folderName, 'MetricTable.mat'])
+
+
+for i = 1:width(MetricTable)
+    
+end
