@@ -7,14 +7,14 @@ metricINPUT_folder = 'B:/LabFiles/users/DanykaByrnes/4 Memoryscapes/INPUTS_05052
 OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
 
 % Toggling MT rewrite
-rewriteMetricTable = 1;
+rewriteMetricTable = 0;
 
 % Toggling Metrics
 runRemoveER = 1; 
-runLandUseMetrics = 0; 
-runPopulationDensity = 0;
-runTileDrainage = 0; 
-runStaticParameters = 0; 
+runLandUseMetrics = 1; 
+runPopulationDensity = 1;
+runTileDrainage = 1; 
+runStaticParameters = 1; 
 
 if rewriteMetricTable == 1
     opts = detectImportOptions([OUTPUT_folderName, 'ErRatio_20230309.txt']);
@@ -22,7 +22,12 @@ if rewriteMetricTable == 1
     opts = setvartype(opts, 'WatershedNumber', 'char');  %or 'char' if you prefer
     
     MetricTable = readtable([OUTPUT_folderName, 'ErRatio_20230309.txt'], opts);
+    
     MetricTable = movevars(MetricTable, "DrainageArea_km2", "Before", "Latitude");
+    MetricTable = movevars(MetricTable, "Load_2010", "Before", "Latitude");
+    MetricTable = movevars(MetricTable, "PS_2010", "Before", "Latitude");
+    
+
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
 else
     load([OUTPUT_folderName, 'MetricTable.mat'])
