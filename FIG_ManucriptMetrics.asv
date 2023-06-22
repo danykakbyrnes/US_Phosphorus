@@ -215,6 +215,7 @@ fprintf(fileID,'Median manure 1930: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quantile
 fprintf(fileID,'Median manure 1980: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quantiles(3,idx_1980),AgSurplus_quantiles(2,idx_1980),AgSurplus_quantiles(4,idx_1980));
 fprintf(fileID,'Median manure 2017: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quantiles(3,end),AgSurplus_quantiles(2,end),AgSurplus_quantiles(4,end));
 
+
 % Reading in all tif files from 2017. 
 %% Calculating PUE at the gridscale.
 % Read in gif files
@@ -264,4 +265,4 @@ fprintf(fileID,'Median PUE 1930: %.3f (IQR: %.3f-%.3f) \n',PUE_quantiles(3,1),Li
 fprintf(fileID,'Median PUE 1980: %.3f (IQR: %.3f-%.3f) \n',PUE_quantiles(3,idx_1980),Livestock_quantiles(2,idx_1980),PUE_quantiles(4,idx_1980));
 fprintf(fileID,'Median PUE 2017: %.3f (IQR: %.3f-%.3f) \n',PUE_quantiles(3,end),Livestock_quantiles(2,end),PUE_quantiles(4,end));
 
-fclose(fileID);
+fclose(fileID)
