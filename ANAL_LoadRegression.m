@@ -6,37 +6,38 @@ OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
 load([OUTPUT_folderName, 'MetricTable.mat'])
 
 % Removing past LU.
-MetricTable = removevars(MetricTable, ["NLCD_Urb_01","NLCD_Ag_01","NLCD_For_01","NLCD_Barr_01","NLCD_Wtlnd_01","NLCD_Shrub_01","NLCD_Grass_01","NLCD_Water_01","NLCD_Urb_06","NLCD_Ag_06","NLCD_For_06","NLCD_Barr_06","NLCD_Wtlnd_06","NLCD_Shrub_06","NLCD_Grass_06","NLCD_Water_06"]);
+MetricTable = removevars(MetricTable, ["NLCD_Urb_01","NLCD_Ag_01","NLCD_For_01","NLCD_Barr_01","NLCD_Wtlnd_01","NLCD_Shrub_01","NLCD_Grass_01","NLCD_Water_01","NLCD_Urb_06","NLCD_Ag_06","NLCD_For_06","NLCD_Barr_06","NLCD_Wtlnd_06","NLCD_Shrub_06","NLCD_Grass_06","NLCD_Water_06", "HDEN_1950","HDEN_1960","HDEN_1970","HDEN_1980","HDEN_1990","HDEN_2000"]);
 
-for i = 8:width(MetricTable)
+for i = 12:width(MetricTable)
     
-    lm = fitlm(MetricTable.Load_2010, MetricTable{:,i});
+    var = MetricTable{:,i};
+    lm = fitlm(var, MetricTable.Load_2010);
 
     m = lm.Coefficients.Estimate(2);
     b = lm.Coefficients.Estimate(1);
 
-    y_model = m*[0,max(MetricTable.Load_2010)] + b; 
+    y_model = m*[0,max(var)] + b; 
    
     subplot(1,2,1)
-    plot([0,max(MetricTable.Load_2010)], y_model,'k--')
+    plot([0,max(var)], y_model,'k--')
     hold on
 
-    scatter(MetricTable.Load_2010, MetricTable{:,i}, 20,'filled')
+    scatter(var, MetricTable.Load_2010, 20,'filled')
     ColName = MetricTable.Properties.VariableNames{i}; 
-    xlabel('Load (kg-N ha^-^1 y^-^1)')
-    ylabel(ColName)
+    ylabel('Load (kg-N ha^-^1 y^-^1)')
+    xlabel(ColName)
     hold off
     
     title(['R^2 =', num2str(lm.Rsquared.Ordinary), ', pVal = ', num2str(lm.Coefficients.pValue(2))])
 
    subplot(1,2,2)
-   plot([0,max(MetricTable.Load_2010)], y_model,'k--')
+   plot([0,max(var)], y_model,'k--')
    hold on
     
-   scatter(MetricTable.Load_2010, MetricTable{:,i}, 20,'filled')
+   scatter(var, MetricTable.Load_2010, 20,'filled')
    ColName = MetricTable.Properties.VariableNames{i}; 
-   xlabel('Load (kg-N ha^-^1 y^-^1)')
-   ylabel(ColName)
+   ylabel('Load (kg-N ha^-^1 y^-^1)')
+   xlabel(ColName)
    hold off
    xlim([0,2])
    set(gcf,'position',[100,100,700,300])
@@ -45,6 +46,12 @@ for i = 8:width(MetricTable)
    print('-dpng','-r600',Figfolderpath)
 end
 
+% Multiple regression analysis
+X = [MetricTable.CLAYSILTAVE, MetricTable.NLCD_Ag_11,...
+MetricTable.NLCD_Wtlnd_11, MetricTable.PDEN_2010_BLOCK,...
+MetricTable.wwtp_dens];
+
+mdl = fitlm(X, MetricTable.Load_2010);
 
 Load_mean = mean(MetricTable.Load_2010);
 Load_minmax = [min(MetricTable.Load_2010), max(MetricTable.Load_2010)];

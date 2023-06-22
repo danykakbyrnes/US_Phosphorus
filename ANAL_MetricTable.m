@@ -5,28 +5,29 @@ clc, clear
 %INPUT_folder = '../INPUTS_103122/';
 metricINPUT_folder = 'B:/LabFiles/users/DanykaByrnes/4 Memoryscapes/INPUTS_050522/';
 OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
+ER_filename = 'ErRatio_20230609.txt'; 
 
 % Toggling MT rewrite
-rewriteMetricTable = 0;
+rewriteMetricTable = 1;
 
 % Toggling Metrics
-runRemoveER = 0; 
-runLandUseMetrics = 0; 
-runPopulationDensity = 0;
-runTileDrainage = 0; 
-runStaticParameters = 0; 
+runRemoveER = 1; 
+runLandUseMetrics = 1; 
+runPopulationDensity = 1;
+runTileDrainage = 1; 
+runStaticParameters = 1;
+runWWTPFeatures = 1;
 
 if rewriteMetricTable == 1
-    opts = detectImportOptions([OUTPUT_folderName, 'ErRatio_20230421.txt']);
+    opts = detectImportOptions([OUTPUT_folderName, ER_filename]);
     opts = setvartype(opts, 'StreamgageNumber', 'char');  %or 'char' if you prefer
     opts = setvartype(opts, 'WatershedNumber', 'char');  %or 'char' if you prefer
     
-    MetricTable = readtable([OUTPUT_folderName, 'ErRatio_20230421.txt'], opts);
+    MetricTable = readtable([OUTPUT_folderName, ER_filename],opts);
     
-    MetricTable = movevars(MetricTable, "DrainageArea_km2", "Before", "Latitude");
-    MetricTable = movevars(MetricTable, "Load_2010", "Before", "Latitude");
-    MetricTable = movevars(MetricTable, "PS_2010", "Before", "Latitude");
-    
+    MetricTable = movevars(MetricTable, "Load_2010", "Before", "PS_2010");
+    MetricTable = movevars(MetricTable, "ExportRatio_2010", "Before", "PS_2010");
+    MetricTable = movevars(MetricTable, "DrainageArea_km2", "Before", "PS_2010");
 
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
 else
@@ -38,7 +39,6 @@ if runRemoveER == 1
     MetricTable(isnan(MetricTable.ExportRatio_2010),:) = [];
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
 end
-
 
 %% Land use (NLCD)
 if runLandUseMetrics == 1
@@ -55,11 +55,10 @@ if runLandUseMetrics == 1
     MetricTable = outerjoin(MetricTable, NLCD,'Type','left','MergeKey',1);
     
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
- end
-
+end
 %% Population Density
  if runPopulationDensity == 1
-% Dataset 20: Population and Housing
+% Dataset 20: Population and Housing    
 load([OUTPUT_folderName, 'MetricTable.mat'])
 load([metricINPUT_folder, '1_GENERAL_DATA/Dataset20_Population-Housing/swt_Population-Housing.mat'])
     
@@ -70,7 +69,6 @@ load([metricINPUT_folder, '1_GENERAL_DATA/Dataset20_Population-Housing/swt_Popul
     MetricTable = outerjoin(MetricTable, POP,'Type','left','MergeKey',1);
 
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
-
 end
 
 %% Tile Drainage.
@@ -113,6 +111,24 @@ end
 MetricTable = outerjoin(MetricTable, STATIC_subset,'Type','left','MergeKey',1);
 
 save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
+end
+
+if runWWTPFeatures == 1
+    % Dataset 19: Point Source
+    load([OUTPUT_folderName, 'MetricTable.mat'])
+    load([metricINPUT_folder, '1_GENERAL_DATA/Dataset19_PointSource/swt_PointSource_wwtp.mat'])
+    % Taking just current WWTP density (2012)
+    cols = [1,54:57];
+    WWTP = WWTP(:,cols);
+    try
+        MetricTable = removevars(MetricTable, WWTP(:,[2:end]).Properties.VariableNames);
+    catch
+    end
+
+    MetricTable = outerjoin(MetricTable, WWTP,'Type','left','MergeKey',1);
+
+    save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
+
 end
 
 writetable(MetricTable,[OUTPUT_folderName,'MetricTable',datestr(datetime("now","Format","_dd_MM_uu"),"_dd_mm_yy"),'.txt'])
