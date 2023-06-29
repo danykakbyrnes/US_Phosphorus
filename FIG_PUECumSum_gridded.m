@@ -21,7 +21,7 @@ colourPalette_extended = [1,102,94;1,102,94;
 INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
-OUTPUTfilepath = '..\OUTPUTS\Quadrant\';
+OUTPUTfilepath = '..\OUTPUTS\Quadrant\'; [OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230623.mat']
 HUC2filepath = '..\OUTPUTS\HUC2\';
 % binscatter(x,y)
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
@@ -159,6 +159,7 @@ Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D
 Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
 
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
+save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230623.mat'], 'Lvsk_Fert_Quadrant')
 %%
 figure(1)
 
@@ -287,8 +288,6 @@ for i = 1:length(unQ)
     scatter(temp_D(:,1),temp_D(:,3), mSize, 'filled',...
               'MarkerFaceColor',colourPalette(i,:),...
               'MarkerFaceAlpha',0.05)
-%             'MarkerEdgeColor',none[0 0 0],...
-%              'LineWidth',0.5
     hold on
 end
 plot([0,0],[0,20],'--k','LineWidth',1)
@@ -310,9 +309,9 @@ set(gca,'ZColor',[0,0,0])
 %xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
 %ylabel('Phosphorus Use Efficiency')
 
-Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_',datestr(datetime,'mmddyy'),'.png'];
-print('-dpng','-r600',[Figfolderpath])
+Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_', datestr(datetime,'mmddyy'),'.png'];
+print('-dpng','-r600',Figfolderpath)
 
 %% Adding HUC2 to the quadrant plot
-HUC2_PUE = readtable[HUC2filepath,'PUE_meanHUC2_fromgrid.txt]';
+HUC2_PUE = readtable([HUC2filepath,'PUE_meanHUC2_fromgrid.txt']);
     
