@@ -107,7 +107,7 @@ for i = 1:height(HUC_PUE)
    if i <= 6
        xticks([])
    else
-       xticks([1930,1970,2010])
+       xticks([1950,2000])
    end
 
    box on
@@ -200,22 +200,6 @@ for i = 1:height(HUC_PUE)
    box on
    colormap(summer)
 
-
-% %% FIGURE 5: COMBINED INPUTS VERSUS PUE
-% 
-%    figure(5) 
-%    subplot(3,3,i)
-% 
-%     scatter(COMB_AGHA(i,2:end),HUC_PUE(i,2:end),mSize,[1930:2017],'filled', 'MarkerEdgeColor','k')
-%    
-%    set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-%    set(gca,'XColor',[0,0,0])
-%    set(gca,'YColor',[0,0,0])
-%    set(gca,'ZColor',[0,0,0])
-%    box on
-%    
-%    colormap(summer)
-
 %% FIGURE 6: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(6) 
    color_pick = [153, 114, 14;
@@ -252,20 +236,20 @@ set(gcf, 'Position',plot_dim_3)
 Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
     
-figure(2)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel_median.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(3)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel_median.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(4)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel_median.png'];
-print('-dpng','-r600',[Figfolderpath])
+% figure(2)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel_median.png'];
+% print('-dpng','-r600',[Figfolderpath])
+% 
+% figure(3)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel_median.png'];
+% print('-dpng','-r600',[Figfolderpath])
+% 
+% figure(4)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel_median.png'];
+% print('-dpng','-r600',[Figfolderpath])
 
 % figure(5)
 % set(gcf, 'Position',plot_dim_3)

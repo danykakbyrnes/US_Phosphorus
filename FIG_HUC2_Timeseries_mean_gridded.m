@@ -88,7 +88,7 @@ end
 HUCLU = sortrows(HUCLU,1,'descend');
 HUCAgHA = sortrows(HUCAgHA,1,'descend');
 
-%save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
+save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
 %save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
 
 
@@ -110,7 +110,7 @@ for i = 1:height(HUC_PUE)
    if i <= 6
        xticks([])
    else
-       xticks([1930,1970,2010])
+       xticks([1950,2000])
    end
 
    box on
@@ -130,7 +130,7 @@ for i = 1:height(HUC_PUE)
     %hr=gca;
     %r_yaxis = hr.YTickLabel;
     %hr.YTickLabel = l_yaxis;
-    ylim([0.1,1.5])
+    ylim([0.1,1.75])
     yticks([])
 
     yyaxis left
@@ -252,23 +252,23 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_grid_panel.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/HUC_PUE_grid_panel_mean.png'];
 print('-dpng','-r600',[Figfolderpath])
     
-figure(2)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(3)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(4)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel.png'];
-print('-dpng','-r600',[Figfolderpath])
+% figure(2)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/LV_PUE_grid_panel_mean.png'];
+% print('-dpng','-r600',[Figfolderpath])
+% 
+% figure(3)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/FERT_PUE_grid_panel_mean.png'];
+% print('-dpng','-r600',[Figfolderpath])
+% 
+% figure(4)
+% set(gcf, 'Position',plot_dim_3)
+% Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/CROP_PUE_grid_panel_mean.png'];
+% print('-dpng','-r600',[Figfolderpath])
 
 % figure(5)
 % set(gcf, 'Position',plot_dim_3)
@@ -277,5 +277,5 @@ print('-dpng','-r600',[Figfolderpath])
 
 figure(6)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/Component_grid_timeseries.png'];
+Figfolderpath = [OUTPUT_folderName,'PUE_HUC_timeseries/Component_grid_timeseries_mean.png'];
 print('-dpng','-r600',[Figfolderpath])
