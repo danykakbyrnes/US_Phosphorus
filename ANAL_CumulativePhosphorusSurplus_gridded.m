@@ -3,7 +3,7 @@ clc, clear
 %% Calculating Cumulative P Surplus at the gridscale.
 % Read in gif files
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
 OUTPUTfilepath = '..\OUTPUTS\Cumulative Phosphorus\';
 YEARS = 1930:2017;
 
@@ -29,11 +29,6 @@ for i = 1:length(YEARS)
     file_crop_i = dir([INPUTfilepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Crop_i,~] = readgeoraster([INPUTfilepath, cropFolder,'\',file_crop_i.name]);
     
-    % Convert ints32 to doubles. 
-    Livestock_i = single(Livestock_i)./1000;
-    Fertilizer_i = single(Fertilizer_i)./1000;
-    Crop_i = single(Crop_i)./1000;
-
     CumulativeP = CumulativeP + (Livestock_i + Fertilizer_i - Crop_i); 
 
    exportCumSum = CumulativeP; 

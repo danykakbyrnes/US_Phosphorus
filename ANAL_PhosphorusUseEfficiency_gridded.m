@@ -4,9 +4,8 @@ clc, clear
 
 % Read in gif files
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
 OUTPUTfilepath = '..\OUTPUTS\PUE\';
-OUTPUTfilepath2 = '..\OUTPUTS\SUST\';
 YEARS = 1930:2017;
 
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
@@ -14,13 +13,13 @@ fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
 
 delete(gcp('nocreate')); % Close any pools that might already be running
-parpool('local',4);
+parpool('local', 6);
 [~,georef] = readgeoraster([INPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
 Rinfo = geotiffinfo([INPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
 
 % calculate PUE and save the tif file
 
-for i = 1:length(YEARS)
+parfor i = 1:length(YEARS)
    
     YEAR_i = YEARS(i);
     %PUE_fert = Crop_var./allFetilizer;
@@ -30,28 +29,14 @@ for i = 1:length(YEARS)
     file_fert_i = dir([INPUTfilepath, fertilizerFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Fertilizer_i,~] = readgeoraster([INPUTfilepath, fertilizerFolder,'\',file_fert_i.name]);
     
-%     Inputs = Livestock_i + Fertilizer_i;
-%     
-%     Inputs(find(Inputs == 0)) = NaN; 
-    
     file_crop_i = dir([INPUTfilepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Crop_i,~] = readgeoraster([INPUTfilepath, cropFolder,'\',file_crop_i.name]);
-    
-%     % Convert ints32 to doubles. 
-    Livestock_i = double(Livestock_i);
-    Fertilizer_i = double(Fertilizer_i);
-    Crop_i = double(Crop_i);
 
     % Calculating PUE with integers. 
     PUE = Crop_i ./(Livestock_i + Fertilizer_i);
-    SUST = Crop_i ./ (Livestock_i + Fertilizer_i - Crop_i);
     PUE(isinf(PUE)) = 0;
     
     geotiffwrite([OUTPUTfilepath, '\PUE_', num2str(YEAR_i),'.tif'], PUE, ...
-    georef, 'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
-    'TiffTags',struct('Compression',Tiff.Compression.LZW));
-
-    geotiffwrite([OUTPUTfilepath2, '\SUST_', num2str(YEAR_i),'.tif'], SUST, ...
     georef, 'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
     'TiffTags',struct('Compression',Tiff.Compression.LZW));
 

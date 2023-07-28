@@ -14,6 +14,37 @@ fprintf(fileID,'----------------------------------------------------------------
 % -------------------------------------------------------------------------
 % Section 3.1.1 Fertilizer
 % -------------------------------------------------------------------------
+load([OUTPUT_folderName, 'Component Timeseries\ComponentQuantiles.mat']) %Fertilizer_quantiles','Crop_quantiles','','AgSurplus_quantiles')
+% Getting total fraction of crop uptake that is in the midwest. This can be
+% done with county mass since it's a fraction of mass and the boundaries
+% are clean. 
+CR = shaperead([INPUT_folderName, '0 General Data\CensusRegions\CensusRegions_5070_20230122.shp']);
+CR = struct2cell(CR);
+CR = CR(9:11,:)';
+
+load([TRENDOUTPUT_folderName, 'Crop_mass.mat'])
+
+StateID_Northeast = [9,23,25,33,34,36, 42,44,50]; 
+StateID_Midwest = [17,18,19,20,26,27,29,31,38,39,46,55]; 
+StateID_South = [1,5,10,11,12,13,21,22,24,28,37,40,45,47,48,51,54]; 
+StateID_West = [4,6,8,16,30,32,35,41,49,53,56];
+StateID_Eastern = [StateID_Northeast, StateID_South];
+
+for i = 1:length(County1)
+    County_temp = County1{i};
+    if length(County_temp) == 6
+        State_temp = County_temp(2:3);
+    elseif length(County_temp) == 5
+        State_temp = County_temp(2);
+    end
+    StateID(i) = str2num(State_temp);
+end
+
+idx_Northeast = find(ismember(StateID, StateID_Northeast));
+idx_Midwest = find(ismember(StateID, StateID_Midwest));
+idx_South = find(ismember(StateID, StateID_South));
+idx_West = find(ismember(StateID, StateID_West));
+idx_East = find(ismember(StateID, StateID_Eastern));
 
 YEAR = 1930:2017; 
 idx_maxfert = find(Fertilizer_quantiles(3,:) > max(Fertilizer_quantiles(3,:)));
@@ -96,43 +127,13 @@ fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n',TS90_lm.Coefficients.E
 % Section 3.1.3 Crop Uptake
 % -------------------------------------------------------------------------
 
-load([OUTPUT_folderName, 'Component Timeseries\ComponentQuantiles.mat']) %Fertilizer_quantiles','Crop_quantiles','','AgSurplus_quantiles')
 TS5_lm = fitlm([1930:2017], Crop_quantiles(1,:));
 TS25_lm = fitlm([1930:2017], Crop_quantiles(2,:));
 TS50_lm = fitlm([1930:2017], Crop_quantiles(3,:));
 TS75_lm = fitlm([1930:2017], Crop_quantiles(4,:));
 TS90_lm = fitlm([1930:2017], Crop_quantiles(5,:));
 
-% Getting total fraction of crop uptake that is in the midwest. This can be
-% done with county mass since it's a fraction of mass and the boundaries
-% are clean. 
-CR = shaperead([INPUT_folderName, '0 General Data\CensusRegions\CensusRegions_5070_20230122.shp']);
-CR = struct2cell(CR);
-CR = CR(9:11,:)';
 
-load([TRENDOUTPUT_folderName, 'Crop_mass.mat'])
-
-StateID_Northeast = [9,23,25,33,34,36, 42,44,50]; 
-StateID_Midwest = [17,18,19,20,26,27,29,31,38,39,46,55]; 
-StateID_South = [1,5,10,11,12,13,21,22,24,28,37,40,45,47,48,51,54]; 
-StateID_West = [4,6,8,16,30,32,35,41,49,53,56];
-StateID_Eastern = [StateID_Northeast, StateID_South];
-
-for i = 1:length(County1)
-    County_temp = County1{i};
-    if length(County_temp) == 6
-        State_temp = County_temp(2:3);
-    elseif length(County_temp) == 5
-        State_temp = County_temp(2);
-    end
-    StateID(i) = str2num(State_temp);
-end
-
-idx_Northeast = find(ismember(StateID, StateID_Northeast));
-idx_Midwest = find(ismember(StateID, StateID_Midwest));
-idx_South = find(ismember(StateID, StateID_South));
-idx_West = find(ismember(StateID, StateID_West));
-idx_East = find(ismember(StateID, StateID_Eastern));
 
 Crop_Regions_1930 = [sum(Crop_sum(1, idx_Northeast)); 
                      sum(Crop_sum(1, idx_Midwest));
@@ -259,7 +260,7 @@ RegionGH_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_GH),[2:e
 
 % Region I
 Reg_I = 1;
-RegionI_LU = HUCLU(HUCLU(:,1) == 1,[2:end]);
+RegionI_LU = HUCLU(HUCLU(:,1) == Reg_I,[2:end]);
 RegionI_Crop = Crop_Median_HUC2{ismember(Crop_Median_HUC2{:,1}, Reg_I),[2:end]};
 RegionI_Fert = Fert_Median_HUC2{ismember(Fert_Median_HUC2{:,1}, Reg_I),[2:end]};
 RegionI_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_I),[2:end]};
@@ -269,26 +270,108 @@ RegionI_LU_1930_2017 = [RegionI_LU(1),RegionI_LU(end)];
 fprintf(fileID,'3.2 Regional PUE and Components \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Region D-F Mean Ag Land: %.3f and %.3f \n', RegionI_Mean_LU_1930_2017*100);
-fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n', RegionI_LU_1930_2017*100);
+fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n\n', RegionI_LU_1930_2017*100);
 
 % -------------------------------------------------------------------------
 % Section 3.2.3 Cumulative Phosphorus Surplus
 % -------------------------------------------------------------------------
+% -------------------------------------------------------------------------
+% Section 3.2 Phosphorus Use Efficiency and Relevant to Regional Nutrient Management
+% -------------------------------------------------------------------------
+CSfilepath =  ['..\OUTPUTS\Cumulative Phosphorus\'];
+INPUTfilepath = ['..\OUTPUTS\HUC2\'];
+CS_HUC2 = readtable([INPUTfilepath, 'CumSum_meanHUC2_fromgrid.txt']);
 
+% Nationally Cumuliative P Surplus in 1980 and 2017
+[CS_1980,~] = readgeoraster([CSfilepath,'CumSum_1980.tif']);
+[CS_2017,~] = readgeoraster([CSfilepath,'CumSum_2017.tif']);
+
+CS_1980_v = CS_1980(:);
+CS_1980_v(isnan(CS_1980_v)) = [];
+CS_2017_v = CS_2017(:);
+CS_2017_v(isnan(CS_2017_v)) = [];
+
+Pos_CS_1980 = sum(CS_1980_v > 0)/length(CS_1980_v)*100;
+Pos_CS_2017 = sum(CS_2017_v > 0)/length(CS_2017_v)*100;
+Neg_CS_1980 = sum(CS_1980_v < 0)/length(CS_1980_v)*100;
+Neg_CS_2017 = sum(CS_2017_v < 0)/length(CS_2017_v)*100;
+
+% Region 17 = Region A
+% Region 14 = Region B
+% Region 12 = Region C
+% Region 10 = Region D
+% Region 8 = Region E
+% Region 7 = Region F
+% Region 3 = Region G
+% Region 2 = Region H
+% Region 1 = Region I
+
+% Region A-D
+YEARS_CS = [1940, 1980, 2017];
+idx_YEARS = ismember(YEAR, YEARS_CS);
+
+Reg_AC = [17, 14, 12];
+RegionAC_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_AC),[2:end]};
+
+% Region D-F
+[CS_RD_1980,~] = readgeoraster([INPUTfilepath,'RegionD_Cumulative_1980.tif']);
+CS_RD_1980(CS_RD_1980 == 0) = NaN;
+CS_RD_1980 = CS_RD_1980(:);
+
+[CS_RD_2017,~] = readgeoraster([INPUTfilepath,'RegionD_Cumulative_2017.tif']);
+CS_RD_2017(CS_RD_2017 == 0) = NaN; 
+CS_RD_2017 = CS_RD_2017(:);
+
+Neg_CS_RD_1980 = sum(CS_RD_1980 < 0)/length(CS_RD_1980)*100;
+Neg_CS_RD_2017 = sum(CS_RD_2017 < 0)/length(CS_RD_2017)*100;
+
+[CS_RF_1980,~] = readgeoraster([INPUTfilepath,'RegionF_Cumulative_1980.tif']);
+CS_RF_1980(CS_RF_1980 == 0) = NaN; 
+CS_RF_1980 = CS_RF_1980(:);
+
+[CS_RF_2017,~] = readgeoraster([INPUTfilepath,'RegionF_Cumulative_2017.tif']);
+CS_RF_2017(CS_RF_2017 == 0) = NaN;
+CS_RF_2017 = CS_RF_2017(:);
+
+Neg_CS_RF_1980 = sum(CS_RF_1980 < 0)/length(CS_RF_1980)*100;
+Neg_CS_RF_2017 = sum(CS_RF_2017 < 0)/length(CS_RF_2017)*100;
+
+Reg_DF = [10, 8, 7];
+RegionDF_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_DF),[2:end]};
+
+% Region G-H
+Reg_GH = [3, 2];
+RegionGH_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_GH),[2:end]};
+
+% Region I
+Reg_I = 1;
+RegionI_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_I),[2:end]};
+
+fprintf(fileID,'3.2 Regional Cumultive P Surplus \n'); 
+fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
+fprintf(fileID,'Percent of area with Positive CS in 1980 and 2017: %.1f and %.1f \n', Pos_CS_1980, Pos_CS_2017);
+fprintf(fileID,'Percent of area with Negative CS in 1980 and 2017: %.1f and %.1f \n', Neg_CS_1980, Neg_CS_2017);
+fprintf(fileID,'Percent of area with Negative CS in Region F 1980 and 2017: %.1f and %.1f \n', Neg_CS_RF_1980, Neg_CS_RF_2017);
+fprintf(fileID,'Region G CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionGH_CS(1, idx_YEARS));
+fprintf(fileID,'Region H CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionGH_CS(2, idx_YEARS));
+fprintf(fileID,'Region D CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionDF_CS(1, idx_YEARS));
+fprintf(fileID,'Region F CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionDF_CS(2, idx_YEARS));
+fprintf(fileID,'Region DF GH (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionGH_CS(idx_YEARS));
+fprintf(fileID,'Region I GH (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionI_CS(idx_YEARS));
 
 
 %% Section 3.3
 % -------------------------------------------------------------------------
 % Section 3.3 Phosphorus Management Quadrants
 % -------------------------------------------------------------------------
-INPUTfilepath = '..\OUTPUTS\Quadrants\Lv    stk_Fert_Ratio_Grid_20230623.mat';
+INPUTfilepath = '..\OUTPUTS\Quadrants\Lvstk_Fert_Ratio_Grid_20230623.mat';
 
 load(INPUTfilepath)
 
 % Quadrant 1
 Q1_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 1,:);
-Q1_LF_Quadrant_1980 = Q1_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:).LvstkFertFract;
-Q1_LF_Quadrant_2017 = Q1_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q1_LF_Quadrant_1980 = Q1_LF_Quadrant(Q1_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q1_LF_Quadrant_2017 = Q1_LF_Quadrant(Q1_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
 Q1_frac_1980 = height(Q1_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
 Q1_frac_2017 = height(Q1_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
 Q1_ManureFert_1980 = quantile(Q1_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
@@ -296,8 +379,8 @@ Q1_ManureFert_2017 = quantile(Q1_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
 % Quadrant 2
 Q2_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 2,:);
-Q2_LF_Quadrant_1980 = Q2_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:).LvstkFertFract;
-Q2_LF_Quadrant_2017 = Q2_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q2_LF_Quadrant_1980 = Q2_LF_Quadrant(Q2_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q2_LF_Quadrant_2017 = Q2_LF_Quadrant(Q2_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
 Q2_frac = height(Q2_LF_Quadrant)/height(Lvsk_Fert_Quadrant);
 Q2_frac_1980 = height(Q2_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
 Q2_frac_2017 = height(Q2_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
@@ -306,8 +389,8 @@ Q2_ManureFert_2017 = quantile(Q2_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
 % Quadrant 3
 Q3_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 3,:);
-Q3_LF_Quadrant_1980 = Q3_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:).LvstkFertFract;
-Q3_LF_Quadrant_2017 = Q3_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q3_LF_Quadrant_1980 = Q3_LF_Quadrant(Q3_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q3_LF_Quadrant_2017 = Q3_LF_Quadrant(Q3_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
 Q3_frac_1980 = height(Q3_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
 Q3_frac_2017 = height(Q3_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
 Q3_ManureFert_1980 = quantile(Q3_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
@@ -315,8 +398,8 @@ Q3_ManureFert_2017 = quantile(Q3_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
 % Quadrant 4
 Q4_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 4,:);
-Q4_LF_Quadrant_1980 = Q4_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:).LvstkFertFract;
-Q4_LF_Quadrant_2017 = Q4_LF_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q4_LF_Quadrant_1980 = Q4_LF_Quadrant(Q4_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q4_LF_Quadrant_2017 = Q4_LF_Quadrant(Q4_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
 Q4_frac_1980 = height(Q4_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
 Q4_frac_2017 = height(Q4_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
 Q4_ManureFert_1980 = quantile(Q4_LF_Quadrant_1980,[0.5, 0.25, 0.75]);

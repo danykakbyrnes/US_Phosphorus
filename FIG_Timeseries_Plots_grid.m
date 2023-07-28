@@ -7,7 +7,7 @@ clc, clear, close all
 runTiffs = 1;
 % Read in tif files
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
 INPUTfilepath2 = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
     'Grid_TREND_P_Version_1\TREND-P Agriculture Surplus\'];
 INPUTfilepathPUE = '..\OUTPUTS\PUE\';
@@ -39,7 +39,6 @@ for i = 1:length(YEARS)
     Tif_i = single(Tif_i); 
     
     Tif_i(Tif_i == 0) = NaN; 
-    Tif_i = Tif_i./1000;
     Tif_linear = Tif_i(:); 
         
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
@@ -58,7 +57,6 @@ for i = 1:length(YEARS)
     Tif_i = single(Tif_i); 
     
     Tif_i(Tif_i == 0) = NaN; 
-    Tif_i = Tif_i./1000;
     Tif_linear = Tif_i(:); 
         
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
@@ -77,7 +75,6 @@ for i = 1:length(YEARS)
     Tif_i = single(Tif_i); 
     
     Tif_i(Tif_i == 0) = NaN; 
-    Tif_i = Tif_i./1000;
     Tif_linear = Tif_i(:); 
         
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
