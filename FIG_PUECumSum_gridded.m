@@ -9,19 +9,19 @@ plot_dim_3 = [200,200,200,150];
 mSize = 10; 
 
 colourPalette = [1,102,94;
-                216,179,101; 
+                140,81,10; 
                  90,180,172;
-                 140,81,10]./255;
+                 216,179,101]./255;
              
-colourPalette_extended = [1,102,94;1,102,94;
-                        216,179,101; 216,179,101; 
-                        90,180,172; 90,180,172;
-                        140,81,10; 140,81,10]./255;
+% colourPalette_extended = [1,102,94;1,102,94;
+%                         216,179,101; 216,179,101; 
+%                         90,180,172; 90,180,172;
+%                         140,81,10; 140,81,10]./255;
 %% Read in gif files
 INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
-OUTPUTfilepath = '..\OUTPUTS\Quadrant\'; [OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230623.mat']
+%OUTPUTfilepath = '..\OUTPUTS\Quadrant\'; [OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230623.mat']
 HUC2filepath = '..\OUTPUTS\HUC2\';
 % binscatter(x,y)
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
@@ -65,11 +65,11 @@ for i = 1:length(D)
         if D(i,3) > loadstar_PUE
             D(i,5)  = 1; 
         elseif D(i,3) <= loadstar_PUE
-            D(i,5)  = 4; 
+            D(i,5)  = 2; 
         end
     elseif D(i,1) <= loadstar_CumSum
         if D(i,3) > loadstar_PUE
-            D(i,5)  = 2;
+            D(i,5)  = 4;
         elseif D(i,3) <= loadstar_PUE
             D(i,5)  = 3; 
         end
@@ -83,11 +83,11 @@ for i = 1:length(D)
         if D(i,4) > loadstar_PUE
             D(i,6)  = 1; 
         elseif D(i,4) <= loadstar_PUE
-            D(i,6)  = 4; 
+            D(i,6)  = 2; 
         end
     elseif D(i,2) <= loadstar_CumSum
         if D(i,4) > loadstar_PUE
-            D(i,6)  = 2;
+            D(i,6)  = 4;
         elseif D(i,4) <= loadstar_PUE
             D(i,6)  = 3; 
         end
@@ -159,7 +159,7 @@ Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D
 Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
 
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230623.mat'], 'Lvsk_Fert_Quadrant')
+save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230818.mat'], 'Lvsk_Fert_Quadrant')
 %%
 figure(1)
 
@@ -191,14 +191,14 @@ Lvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:)
 
 for i = 1:4
     sLvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant_1980(Lvsk_Fert_Quadrant_1980.Q == i,:);
-    b_2017 = boxchart(sLvsk_Fert_Quadrant_1980.Q,...
+    b_1980 = boxchart(sLvsk_Fert_Quadrant_1980.Q,...
         sLvsk_Fert_Quadrant_1980.LvstkFertFract,'MarkerStyle',...
         'none','BoxFaceColor',colourPalette(i,:));
     hold on
 end
 
 box on
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
@@ -207,7 +207,6 @@ set(gca,'ZColor',[0,0,0])
 ylim([0,1.05])
 xticks([1,2,3,4])
 xticklabels({'Q1','Q2','Q3','Q4'})
-%ylabel('% Manure of Total Inputs')
 
 Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_1980_',datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',[Figfolderpath])
@@ -223,7 +222,7 @@ for i = 1:4
     hold on
 end
 box on
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
 set(gca,'XColor',[0,0,0])
@@ -255,18 +254,18 @@ close all
 figure(1)
 for i = 1:length(unQ)
     temp_D = D(find(D(:,6) == unQ(i)),:); 
-    scatter(temp_D(:,2),temp_D(:,4), mSize, 'filled',...
+    scatter(temp_D(:,4), temp_D(:,2), mSize, 'filled',...
               'MarkerFaceColor',colourPalette(i,:),...
               'MarkerFaceAlpha',0.05)
 %             'MarkerEdgeColor',none[0 0 0],...
 %              'LineWidth',0.5
     hold on
 end
-plot([0,0],[0,20],'--k','LineWidth',1)
-plot([-2000,4000],[1,1],'--k','LineWidth',1)
+plot([0,20], [0,0],'--k','LineWidth',1)
+plot([1,1], [-2000,4000],'--k','LineWidth',1)
 
-ylim([0,3])
-xlim([-300, 4000])
+xlim([0,3])
+ylim([-300, 4000])
 
 set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
@@ -285,17 +284,16 @@ print('-dpng','-r600',[Figfolderpath])
 figure(2)
 for i = 1:length(unQ)
     temp_D = D(find(D(:,5) == unQ(i)),:); 
-    scatter(temp_D(:,1),temp_D(:,3), mSize, 'filled',...
+    scatter(temp_D(:,3),temp_D(:,1), mSize, 'filled',...
               'MarkerFaceColor',colourPalette(i,:),...
               'MarkerFaceAlpha',0.05)
     hold on
 end
-plot([0,0],[0,20],'--k','LineWidth',1)
-plot([-2000,4000],[1,1],'--k','LineWidth',1)
+plot([0,20], [0,0],'--k','LineWidth',1)
+plot([1,1], [-2000,4000],'--k','LineWidth',1)
 
-ylim([0,3])
-xlim([-300, 4000])
-
+xlim([0,3])
+ylim([-300, 4000])
 %% Saving Files
 
 set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
