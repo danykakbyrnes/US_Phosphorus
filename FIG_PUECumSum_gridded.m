@@ -1,4 +1,4 @@
-clc, clear
+clc, clear, close all
 
 %% Aesthetic 
 fontSize_p = 10;
@@ -133,7 +133,7 @@ set(gca,'xticklabel',{'1980', '2017'})
 D = D_copy;
 % Read in the 2017 livestock and fertilzier rasters
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 YEARS = 1930:2017;
 

@@ -7,7 +7,7 @@ library(tidyverse)
 library(sf)
 library(terra)
 
-setwd("D:/Danyka/")
+setwd("B:/LabFiles/users/DanykaByrnes/")
 
 # ******************************************************************************
 # This script takes the N Surplus data and clips the watersheds with the data. 
@@ -19,9 +19,9 @@ setwd("D:/Danyka/")
 # Setting up filepaths
 YEARS = 1930:2017
 
-HUC2INPUT_folders = '9 Phopshorus Use Efficiency/INPUTS_103122/'
-INPUT_folders = '9 Phopshorus Use Efficiency/OUTPUTS/PUE/'
-OUTPUT_folders = '9 Phopshorus Use Efficiency/OUTPUTS/HUC2/'
+HUC2INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_051523/'
+INPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/PUE/'
+OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
 
 #ComponentsName = c('Lvsk', 'Fert', 'Crop')
 #Components = c('Lvst_Agriculture_LU/Lvst_', 
@@ -41,7 +41,7 @@ Comp_extc2 = data.frame()
     for (j in 1:dim(HUC2)[1]) {
       
       clipped_raster = terra::crop(R,extent(HUC2[j,]))
-      temp2 = terra::extract(clipped_raster, HUC2[j,], fun=mean, na.rm=TRUE, df=TRUE)
+      temp2 = terra::extract(clipped_raster, HUC2[j,], fun=mean, na.rm=TRUE)
       
       Comp_extc[j,1] = HUC2[j,]$REG
       Comp_extc[j,i+1] = temp2[2]
@@ -50,7 +50,7 @@ Comp_extc2 = data.frame()
       maskDf1 = as.data.frame(medianMask)
       temp3 = apply(maskDf1,2,median)
       Comp_extc2[j,1] = HUC2[j,]$REG
-      Comp_extc2[j,i+1] = temp3/1000
+      Comp_extc2[j,i+1] = temp3
     }
   }
   colnames(Comp_extc)[1] ="REG"

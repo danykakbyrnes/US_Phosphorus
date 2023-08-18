@@ -5,7 +5,7 @@ INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
-RasterINPUTfilepath = 'H:\Grid_TREND_P_Version_1\TREND-P Gridded Outputs\';
+RasterINPUTfilepath = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\';
 
 [D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
 % Getting raster information
