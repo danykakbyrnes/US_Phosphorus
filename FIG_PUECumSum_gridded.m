@@ -310,6 +310,28 @@ set(gca,'ZColor',[0,0,0])
 Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_', datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',Figfolderpath)
 
+%% Creating a Sankey Flow Chart
+D(D(:,5) == 0,:) = [];
+D(D(:,6) == 0,:) = [];
+data = D(:,[5,6]);
+% Customizable options
+% Colormap: can be the name of matlab colormaps or a matrix of (N x 3).
+%   Important: N must be the max number of categories in a layer 
+%   multiplied by the number of layers. 
+
+options.color_map = [colourPalette; colourPalette];
+options.flow_transparency = 0.1;    % opacity of the flow paths
+options.bar_width = 40;             % width of the category blocks
+options.show_perc = false;          % show percentage over the blocks
+options.text_color = [1 1 1];       % text color for the percentages
+options.show_layer_labels = true;   % show layer names under the chart
+options.show_cat_labels = true;     % show categories over the blocks.
+options.categoryNames = [{'Year 1980'},'Year 2017'];
+options.show_legend = false;        % show legend with the category names. 
+                                    % if the data is not a table, then the
+                                    % categories are labeled as catX-layerY
+
+plotSankeyFlowChart(data,options);
+
 %% Adding HUC2 to the quadrant plot
-HUC2_PUE = readtable([HUC2filepath,'PUE_meanHUC2_fromgrid.txt']);
-    
+%HUC2_PUE = readtable([HUC2filepath,'PUE_meanHUC2_fromgrid.txt']);   
