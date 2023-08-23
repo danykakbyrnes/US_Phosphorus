@@ -1,9 +1,10 @@
 clc, clear
 
-%% Folder names and filespaths
+% Folder names and filespaths
 OUTPUT_folderName = '..\OUTPUTS\';
 INPUT_folderName = '..\INPUTS_051523\';
 TRENDOUTPUT_folderName = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\TREND_P_Version_1.2\';
+INPUTfolderName_2 = '..\OUTPUTS\Quadrants\';
 
 %% Calculating metrics for the paper
 fileID = fopen([OUTPUT_folderName,'ManuscriptMetrics.txt'],'w');
@@ -183,7 +184,7 @@ fprintf(fileID,'Median Ag Surplus 2017: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quan
 %% Calculating PUE at the gridscale.
 % Read in gif files
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded\'];
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
 
 PSfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
     'Grid_TREND_P_Version_1\TREND-P Agriculture Surplus'];
@@ -275,9 +276,6 @@ fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n\n', RegionI_LU_1930_2017*100)
 % -------------------------------------------------------------------------
 % Section 3.2.3 Cumulative Phosphorus Surplus
 % -------------------------------------------------------------------------
-% -------------------------------------------------------------------------
-% Section 3.2 Phosphorus Use Efficiency and Relevant to Regional Nutrient Management
-% -------------------------------------------------------------------------
 CSfilepath =  ['..\OUTPUTS\Cumulative Phosphorus\'];
 INPUTfilepath = ['..\OUTPUTS\HUC2\'];
 CS_HUC2 = readtable([INPUTfilepath, 'CumSum_meanHUC2_fromgrid.txt']);
@@ -364,16 +362,27 @@ fprintf(fileID,'Region I GH (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionI
 % -------------------------------------------------------------------------
 % Section 3.3 Phosphorus Management Quadrants
 % -------------------------------------------------------------------------
-INPUTfilepath = '..\OUTPUTS\Quadrants\Lvstk_Fert_Ratio_Grid_20230623.mat';
 
-load(INPUTfilepath)
+load([INPUTfolderName_2,'QuadrantMapping_20230822.mat']) % D
+load([INPUTfolderName_2,'Lvstk_Fert_Ratio_Grid_20230818.mat']) %Lvsk_Fert_Quadrant
+
+D(D(:,5) == 0,:) = [];
+D(D(:,6) == 0,:) = [];
+
+% 
+Q2_1980 = D(find(D(:,5) == 2),:);
+Q2_Q1 = D(find(D(:,5) == 2 & D(:,6) == 1),:);
+Perc_D2_D1 = size(D2_D1,1)/size(Q2_1980,1);
+
+TotalNumelLand_1980 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:);
+TotalNumelLand_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:);
 
 % Quadrant 1
 Q1_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 1,:);
 Q1_LF_Quadrant_1980 = Q1_LF_Quadrant(Q1_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
 Q1_LF_Quadrant_2017 = Q1_LF_Quadrant(Q1_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
-Q1_frac_1980 = height(Q1_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
-Q1_frac_2017 = height(Q1_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
+Q1_frac_1980 = height(Q1_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q1_frac_2017 = height(Q1_LF_Quadrant_2017)/height(TotalNumelLand_2017);
 Q1_ManureFert_1980 = quantile(Q1_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
 Q1_ManureFert_2017 = quantile(Q1_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
@@ -382,8 +391,8 @@ Q2_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 2,:);
 Q2_LF_Quadrant_1980 = Q2_LF_Quadrant(Q2_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
 Q2_LF_Quadrant_2017 = Q2_LF_Quadrant(Q2_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
 Q2_frac = height(Q2_LF_Quadrant)/height(Lvsk_Fert_Quadrant);
-Q2_frac_1980 = height(Q2_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
-Q2_frac_2017 = height(Q2_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
+Q2_frac_1980 = height(Q2_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q2_frac_2017 = height(Q2_LF_Quadrant_2017)/height(TotalNumelLand_2017);
 Q2_ManureFert_1980 = quantile(Q2_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
 Q2_ManureFert_2017 = quantile(Q2_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
@@ -391,8 +400,8 @@ Q2_ManureFert_2017 = quantile(Q2_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 Q3_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 3,:);
 Q3_LF_Quadrant_1980 = Q3_LF_Quadrant(Q3_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
 Q3_LF_Quadrant_2017 = Q3_LF_Quadrant(Q3_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
-Q3_frac_1980 = height(Q3_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
-Q3_frac_2017 = height(Q3_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
+Q3_frac_1980 = height(Q3_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q3_frac_2017 = height(Q3_LF_Quadrant_2017)/height(TotalNumelLand_2017);
 Q3_ManureFert_1980 = quantile(Q3_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
 Q3_ManureFert_2017 = quantile(Q3_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
@@ -400,8 +409,8 @@ Q3_ManureFert_2017 = quantile(Q3_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 Q4_LF_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == 4,:);
 Q4_LF_Quadrant_1980 = Q4_LF_Quadrant(Q4_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
 Q4_LF_Quadrant_2017 = Q4_LF_Quadrant(Q4_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
-Q4_frac_1980 = height(Q4_LF_Quadrant_1980)/height(Lvsk_Fert_Quadrant);
-Q4_frac_2017 = height(Q4_LF_Quadrant_2017)/height(Lvsk_Fert_Quadrant);
+Q4_frac_1980 = height(Q4_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q4_frac_2017 = height(Q4_LF_Quadrant_2017)/height(TotalNumelLand_2017);
 Q4_ManureFert_1980 = quantile(Q4_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
 Q4_ManureFert_2017 = quantile(Q4_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
@@ -412,13 +421,15 @@ fprintf(fileID,'Q2 Fraction 1980 and 2017: %.3f and %.3f \n', Q2_frac_1980, Q2_f
 fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017)
 fprintf(fileID,'Q4 Fraction 1980 and 2017: %.3f and %.3f \n\n', Q4_frac_1980, Q4_frac_2017)
 
-fprintf(fileID,'Q1 Median Manure Fraction 1980: %.3f (IQR = %.3f - %.3f)\n', Q1_ManureFert_1980)
-fprintf(fileID,'Q1 Median Manure Fraction 2017: %.3f (IQR = %.3f - %.3f)\n', Q1_ManureFert_2017)
-fprintf(fileID,'Q2 Median Manure Fraction 1980: %.3f (IQR = %.3f - %.3f)\n', Q2_ManureFert_1980)
-fprintf(fileID,'Q2 Median Manure Fraction 2017: %.3f (IQR = %.3f - %.3f)\n', Q2_ManureFert_2017)
-fprintf(fileID,'Q3 Median Manure Fraction 1980: %.3f (IQR = %.3f - %.3f)\n', Q3_ManureFert_1980)
-fprintf(fileID,'Q3 Median Manure Fraction 2017: %.3f (IQR = %.3f - %.3f)\n', Q3_ManureFert_2017)
-fprintf(fileID,'Q4 Median Manure Fraction 1980: %.3f (IQR = %.3f - %.3f)\n', Q4_ManureFert_1980)
-fprintf(fileID,'Q4 Median Manure Fraction 2017: %.3f (IQR = %.3f - %.3f)\n\n', Q4_ManureFert_2017)
+fprintf(fileID,'Fraction of Q2 going to Q1 in 2017 %.1f%% \n', Perc_D2_D1*100)
+
+fprintf(fileID,'Q1 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_1980*100)
+fprintf(fileID,'Q1 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_2017*100)
+fprintf(fileID,'Q2 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q2_ManureFert_1980*100)
+fprintf(fileID,'Q2 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q2_ManureFert_2017*100)
+fprintf(fileID,'Q3 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_1980*100)
+fprintf(fileID,'Q3 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_2017*100)
+fprintf(fileID,'Q4 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_1980*100)
+fprintf(fileID,'Q4 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n\n', Q4_ManureFert_2017*100)
 
 fclose(fileID);

@@ -1,6 +1,6 @@
 clc, clear, close all
 
-%% Aesthetic 
+% Aesthetic 
 fontSize_p = 10;
 fontSize_p2 = 12; 
 plot_dim_1 = [400,400,375,280];
@@ -17,11 +17,12 @@ colourPalette = [1,102,94;
 %                         216,179,101; 216,179,101; 
 %                         90,180,172; 90,180,172;
 %                         140,81,10; 140,81,10]./255;
-%% Read in gif files
+
+% Read in gif files
 INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
-%OUTPUTfilepath = '..\OUTPUTS\Quadrant\'; [OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230623.mat']
+OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 HUC2filepath = '..\OUTPUTS\HUC2\';
 % binscatter(x,y)
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
@@ -43,13 +44,11 @@ CS1980(find(CS1980 > 2^20)) = 0;
 % Vectorizin the data
 PUE2017_v = PUE2017(:);
 CS2017_v = CS2017(:);
-PUE2017 = []; 
-CS2017 = []; 
+PUE2017 = []; CS2017 = []; 
 
 PUE1980_v = PUE1980(:);
 CS1980_v = CS1980(:);
-PUE1980 = []; 
-CS1980 = []; 
+PUE1980 = []; CS1980 = []; 
 
 D = [CS1980_v, CS2017_v,PUE1980_v, PUE2017_v]; 
 
@@ -93,11 +92,17 @@ for i = 1:length(D)
         end
     end
 end
-D_copy = D; 
+
+save([OUTPUTfilepath,'QuadrantMapping_20230822.mat'], 'D', '-v7.3')
+
+D_copy = D;
 %% Creating barchart of the fraction of the total dataset that belongs to what quadrant.
 D = D_copy;
 close all
 % Stats for each quadrant
+% This is the fraction of ALL land. 
+%D(find(D(:,5) == 0 & D(:,6) == 0),:) = [];
+
 % 1980
 Q_1980 = [length(find(D(:,5) == 1)); 
           length(find(D(:,5) == 2)); 
@@ -107,7 +112,7 @@ Q_1980 = [length(find(D(:,5) == 1));
 Q_2017 = [length(find(D(:,6) == 1)); 
           length(find(D(:,6) == 2)); 
           length(find(D(:,6) == 3)); 
-  length(find(D(:,6) == 4))]./size(D,1); 
+          length(find(D(:,6) == 4))]./size(D,1); 
 
 figure(1)
 b = bar([Q_1980,Q_2017]','stacked');
@@ -125,7 +130,7 @@ set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
-ylim([0,0.2])
+ylim([0,1])
 
 set(gca,'xticklabel',{'1980', '2017'})
 
@@ -134,7 +139,6 @@ D = D_copy;
 % Read in the 2017 livestock and fertilzier rasters
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
     'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
-OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 YEARS = 1930:2017;
 
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
@@ -156,6 +160,9 @@ FERT1980_v = double(FERT1980(:));
 % Removing the boxes that have no quadrant in 2018
 Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D,1),1)*2017; 
                       LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5), ones(size(D,1),1)*1980];         
+
+% Removing all zeros from 1980 and 2017. This make sense because we are
+% left with JUST the points on the quadrant plot. 
 Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
 
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
@@ -311,15 +318,17 @@ Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_', datestr(datetime,'mmddyy'),'.p
 print('-dpng','-r600',Figfolderpath)
 
 %% Creating a Sankey Flow Chart
-D(D(:,5) == 0,:) = [];
-D(D(:,6) == 0,:) = [];
+%D(D(:,5) == 0,:) = [];
+D = D_copy;
+%D(D(:,6) == 0,:) = [];
+D(find(D(:,5) == 0 & D(:,6) == 0),:) = [];
 data = D(:,[5,6]);
 % Customizable options
 % Colormap: can be the name of matlab colormaps or a matrix of (N x 3).
 %   Important: N must be the max number of categories in a layer 
 %   multiplied by the number of layers. 
 
-options.color_map = [colourPalette; colourPalette];
+%options.color_map = [colourPalette; colourPalette];
 options.flow_transparency = 0.1;    % opacity of the flow paths
 options.bar_width = 40;             % width of the category blocks
 options.show_perc = false;          % show percentage over the blocks
@@ -333,5 +342,13 @@ options.show_legend = false;        % show legend with the category names.
 
 plotSankeyFlowChart(data,options);
 
+D = D_copy;
+D(D(:,5) == 0,:) = [];
+D(D(:,6) == 0,:) = [];
+data = D(:,[5,6]);
+
+options.color_map = [colourPalette; colourPalette];
+
+plotSankeyFlowChart(data,options);
 %% Adding HUC2 to the quadrant plot
 %HUC2_PUE = readtable([HUC2filepath,'PUE_meanHUC2_fromgrid.txt']);   
