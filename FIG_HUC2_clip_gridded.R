@@ -10,37 +10,36 @@ setwd("B:/LabFiles/users/DanykaByrnes/")
 
 # ******************************************************************************
 # This script takes the N Surplus data and clips the watersheds with the data. 
-# The result is a shapefile with the countries clipped and an extra column that
-# calculates the fraction of the county that is within the watershed boundary. 
-# This later gets aggregated in the FigureGeneration.mat
+# The result is a text file with the mean and median of the components for each 
+# HUC2 watershed.
 
 # ******************************************************************************
 # Setting up filepaths
 YEARS = 1930:2017
 INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_051523/'
 OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
-NSURPLUS_OUTPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/OUTPUTS/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded (2023-07-25)/'
+NSURPLUS_OUTPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded (2023-11-18)/'
 HUC2_loc = '0 General Data/HUC2/'
-ComponentsName = c('Lvsk', 'Fert', 'Crop', 'AgInputs')
+ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
                'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
                'CropUptake_Agriculture_Agriculture_LU/CropUptake_Ag_')
 
-# read in HUC8 files
+# read in HUC8 filesQ
 HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
 
 # Set up clusters - this will make things faster
-UseCores <- 4#detectCores() - 12 #leaving 2
-cl = makeCluster(UseCores)
-registerDoParallel(cl)
+#UseCores <- 4#detectCores() - 12 #leaving 2
+#cl = makeCluster(UseCores)
+#registerDoParallel(cl)
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
 # Iterate through rasters and clip each watershed to all rasters
-beginCluster(cl)
-par = foreach(a = 1:length(Components)) %dopar% {
+#beginCluster(cl)
+#par = foreach(a = 1:length(Components)) %dopar% {
 
-  library(raster)
-  library(sf)
+for (a in 1:length(Components)) {
+
   for (i in 1:length(YEARS)) {
     tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[i],'.tif')
     #R = raster(tif_folder)
@@ -77,4 +76,4 @@ par = foreach(a = 1:length(Components)) %dopar% {
                                        '_medianHUC2Components.txt'), row.names = FALSE)
 }
 
-stopCluster(cl)
+#stopCluster(cl)

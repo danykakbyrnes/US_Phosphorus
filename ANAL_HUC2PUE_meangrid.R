@@ -23,11 +23,6 @@ HUC2INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_051523/'
 INPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/PUE/'
 OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
 
-#ComponentsName = c('Lvsk', 'Fert', 'Crop')
-#Components = c('Lvst_Agriculture_LU/Lvst_', 
-#               'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
-#               'CropUptake_Agriculture_Agriculture_LU/CropUptake_Ag_')
-#
 # read in HUC8 files
 HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0 General Data/HUC2/merged_HUC2_5070_v3.shp'))
 Comp_extc = data.frame()
