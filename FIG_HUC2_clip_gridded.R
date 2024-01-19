@@ -5,6 +5,7 @@ library(snow)
 library(raster)
 library(tidyverse)
 library(sf)
+library(terra)
 
 setwd("B:/LabFiles/users/DanykaByrnes/")
 
@@ -23,23 +24,26 @@ HUC2_loc = '0 General Data/HUC2/'
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
                'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
-               'CropUptake_Agriculture_Agriculture_LU/CropUptake_Ag_')
+               'CropUptake_Agriculture_Agriculture_LU/CropUptake_')
 
 # read in HUC8 filesQ
 HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
 
 # Set up clusters - this will make things faster
-#UseCores <- 4#detectCores() - 12 #leaving 2
-#cl = makeCluster(UseCores)
-#registerDoParallel(cl)
+UseCores <- detectCores() - 12 #leaving 2
+cl = makeCluster(UseCores)
+registerDoParallel(cl)
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
+
 # Iterate through rasters and clip each watershed to all rasters
-#beginCluster(cl)
+beginCluster(cl)
 #par = foreach(a = 1:length(Components)) %dopar% {
+#for (a in 1:length(Components)) {
+#  library(sf)
+#  library(terra)
 
-for (a in 1:length(Components)) {
-
+a = 3
   for (i in 1:length(YEARS)) {
     tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[i],'.tif')
     #R = raster(tif_folder)
@@ -74,6 +78,6 @@ for (a in 1:length(Components)) {
   colnames(Comp_extc2)[1] ="REG"
   write.table(Comp_extc2, file = paste0(OUTPUT_folders, ComponentsName[a],
                                        '_medianHUC2Components.txt'), row.names = FALSE)
-}
+#}
 
 #stopCluster(cl)

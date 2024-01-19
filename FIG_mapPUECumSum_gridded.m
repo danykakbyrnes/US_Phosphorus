@@ -1,15 +1,14 @@
 clc, clear
 
 % Read in gif files
-INPUTfilepath = '..\INPUTS_103122\';
 PUEfilepath = '..\OUTPUTS\PUE\';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
-RasterINPUTfilepath = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\';
+RasterINPUTfilepath = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
 
-[D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
+[D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 % Getting raster information
-Rinfo = geotiffinfo([RasterINPUTfilepath,'Lvst_BeefCattle_Agriculture_LU\BeefCattle_1930.tif']);
+Rinfo = geotiffinfo([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 
 loadstar_CumSum = 0; %median(D(:,1),'omitnan');
 loadstar_PUE = 1;% median(D(:,3),'omitnan');

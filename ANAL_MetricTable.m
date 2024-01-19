@@ -3,9 +3,9 @@ clc, clear
 %% This script is used add watershed metrics
 
 %INPUT_folder = '../INPUTS_103122/';
-metricINPUT_folder = 'B:/LabFiles/users/DanykaByrnes/4 Memoryscapes/INPUTS_050522/';
+metricINPUT_folder = 'B:/LabFiles/users/DanykaByrnes/4 Memoryscapes/INPUTS_111523/';
 OUTPUT_folderName = '../OUTPUTS/ExportRatios/';
-ER_filename = 'ErRatio_20230609.txt'; 
+ER_filename = 'ErRatio_20240110.txt'; 
 
 % Toggling MT rewrite
 rewriteMetricTable = 1;
@@ -17,6 +17,7 @@ runPopulationDensity = 1;
 runTileDrainage = 1; 
 runStaticParameters = 1;
 runWWTPFeatures = 1;
+runRemoveER_NaN = 1;
 
 if rewriteMetricTable == 1
     opts = detectImportOptions([OUTPUT_folderName, ER_filename]);
@@ -35,7 +36,7 @@ else
 end
 
 %% Removing ER NaN
-if runRemoveER == 1
+if runRemoveER_NaN == 1
     MetricTable(isnan(MetricTable.ExportRatio_2010),:) = [];
     save([OUTPUT_folderName, 'MetricTable.mat'],'MetricTable')
 end
@@ -132,3 +133,14 @@ if runWWTPFeatures == 1
 end
 
 writetable(MetricTable,[OUTPUT_folderName,'MetricTable',datestr(datetime("now","Format","_dd_MM_uu"),"_dd_mm_yy"),'.txt'])
+
+% Opening the text file
+Er_mean = mean(MetricTable.ExportRatio_2010);
+Er_minmax = [min(MetricTable.ExportRatio_2010), max(MetricTable.ExportRatio_2010)];
+Er_median = median(MetricTable.ExportRatio_2010);
+Er_quantile = quantile(MetricTable.ExportRatio_2010, [0.25,0.75]);
+
+fileID = fopen([OUTPUT_folderName,'ExportRatioSummary.txt'],'w');
+fprintf(fileID,'2010 Mean Er: %0.2f (%0.2f - %0.2f)\n',Er_mean, Er_minmax);
+fprintf(fileID,'2010 Median Er: %0.2f (%0.2f -  %0.2f) \n',Er_median, Er_quantile);
+fclose(fileID);

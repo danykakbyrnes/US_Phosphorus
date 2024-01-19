@@ -27,7 +27,7 @@ OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
 HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0 General Data/HUC2/merged_HUC2_5070_v3.shp'))
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
-## MEAN ########################################################################
+
   for (i in 1:length(YEARS)) {
     tif_folders = paste0(INPUT_folders, 'PUE_', YEARS[i],'.tif')
     #R = raster(tif_folder)

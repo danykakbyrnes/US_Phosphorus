@@ -1,5 +1,24 @@
 clc, clear all, close all
 
+%% Folders and files
+filepathPSurplus = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\',...
+    'Surplus_P\Surplus_P_2017.tif'];
+filepathPUE = '..\OUTPUTS\PUE\PUE_2017.tif';
+
+%% Conceptual figure, panel b
+ [PS,~] = readgeoraster(filepathPSurplus);
+ [PUE,~]= readgeoraster(filepathPUE);
+
+PS =  PS(:);
+PUE =  PUE(:);
+
+% subset 10%
+
+
+scatter(PS, PUE,'o','filled','k')
+
+%% Supplemental Plots
 % plot y = b*(1-x) where b = 10, 100
 
 b = [2,10,50,100];

@@ -93,7 +93,7 @@ for i = 1:length(D)
     end
 end
 
-save([OUTPUTfilepath,'QuadrantMapping_20230822.mat'], 'D', '-v7.3')
+save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
 
 D_copy = D;
 %% Creating barchart of the fraction of the total dataset that belongs to what quadrant.
@@ -137,8 +137,8 @@ set(gca,'xticklabel',{'1980', '2017'})
 %% Finding the distribution of dominant manure inputs (vs. tot fertilizer) for each quadrant.
 D = D_copy;
 % Read in the 2017 livestock and fertilzier rasters
-INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
+INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
 YEARS = 1930:2017;
 
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
@@ -166,7 +166,7 @@ Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D
 Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
 
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid_20230818.mat'], 'Lvsk_Fert_Quadrant')
+save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
 %%
 figure(1)
 
@@ -287,6 +287,7 @@ set(gca,'ZColor',[0,0,0])
 
 Figfolderpath = [OUTPUTfilepath,'Quadrant_2017_',datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',[Figfolderpath])
+
 % 1980
 figure(2)
 for i = 1:length(unQ)

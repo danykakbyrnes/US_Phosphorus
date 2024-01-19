@@ -2,9 +2,16 @@ clc, clear
 
 % Folder names and filespaths
 OUTPUT_folderName = '..\OUTPUTS\';
-INPUT_folderName = '..\INPUTS_051523\';
+
+% Filepath of files to load
 TRENDOUTPUT_folderName = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\TREND_P_Version_1.2\';
-INPUTfolderName_2 = '..\OUTPUTS\Quadrants\';
+QuadrantINPUTfolderName = '..\OUTPUTS\Quadrants\';
+HUCINPUTfilepath = '..\OUTPUTS\HUC2\';
+INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
+    fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
+    livestockFolder = 'Lvst_Agriculture_LU';
+    agSFolder = 'Ag_Surplus';
 
 %% Calculating metrics for the paper
 fileID = fopen([OUTPUT_folderName,'ManuscriptMetrics.txt'],'w');
@@ -16,37 +23,6 @@ fprintf(fileID,'----------------------------------------------------------------
 % Section 3.1.1 Fertilizer
 % -------------------------------------------------------------------------
 load([OUTPUT_folderName, 'Component Timeseries\ComponentQuantiles.mat']) %Fertilizer_quantiles','Crop_quantiles','','AgSurplus_quantiles')
-% Getting total fraction of crop uptake that is in the midwest. This can be
-% done with county mass since it's a fraction of mass and the boundaries
-% are clean. 
-CR = shaperead([INPUT_folderName, '0 General Data\CensusRegions\CensusRegions_5070_20230122.shp']);
-CR = struct2cell(CR);
-CR = CR(9:11,:)';
-
-load([TRENDOUTPUT_folderName, 'Crop_mass.mat'])
-
-StateID_Northeast = [9,23,25,33,34,36, 42,44,50]; 
-StateID_Midwest = [17,18,19,20,26,27,29,31,38,39,46,55]; 
-StateID_South = [1,5,10,11,12,13,21,22,24,28,37,40,45,47,48,51,54]; 
-StateID_West = [4,6,8,16,30,32,35,41,49,53,56];
-StateID_Eastern = [StateID_Northeast, StateID_South];
-
-for i = 1:length(County1)
-    County_temp = County1{i};
-    if length(County_temp) == 6
-        State_temp = County_temp(2:3);
-    elseif length(County_temp) == 5
-        State_temp = County_temp(2);
-    end
-    StateID(i) = str2num(State_temp);
-end
-
-idx_Northeast = find(ismember(StateID, StateID_Northeast));
-idx_Midwest = find(ismember(StateID, StateID_Midwest));
-idx_South = find(ismember(StateID, StateID_South));
-idx_West = find(ismember(StateID, StateID_West));
-idx_East = find(ismember(StateID, StateID_Eastern));
-
 YEAR = 1930:2017; 
 idx_maxfert = find(Fertilizer_quantiles(3,:) > max(Fertilizer_quantiles(3,:)));
 idx_1977 = find(YEAR == 1977);
@@ -57,42 +33,7 @@ TS50_lm = fitlm([1930:2017],Fertilizer_quantiles(3,:));
 TS75_lm = fitlm([1930:2017],Fertilizer_quantiles(4,:));
 TS90_lm = fitlm([1930:2017],Fertilizer_quantiles(5,:));
 TS50_lm_1980 = fitlm([1980:2017], Fertilizer_quantiles(3,idx_1980:end));
-
-% Getting total fraction of fertilizer in the census regions. This can be
-% done with county mass since it's a fraction of mass and the boundaries
-% are clean. 
-
-load([TRENDOUTPUT_folderName, 'Fertilizer_ag_mass.mat'])
-
-Fertilizer_Regions_1930 = [sum(Fert_ag(1, idx_Northeast)); 
-                     sum(Fert_ag(1, idx_Midwest));
-                     sum(Fert_ag(1, idx_South));
-                     sum(Fert_ag(1, idx_West))]./sum(Fert_ag(1,:));
-
-Fertilizer_Regions_2017 = [sum(Fert_ag(end, idx_Northeast)); 
-                     sum(Fert_ag(end, idx_Midwest));
-                     sum(Fert_ag(end, idx_South));
-                     sum(Fert_ag(end, idx_West))]./sum(Fert_ag(end,:));
-
-Fertilizer_Regions_1930_norm = [sum(Fert_ag(1, idx_Northeast))./[CR{1,3}]; 
-                     sum(Fert_ag(1, idx_Midwest))./[CR{2,3}]; 
-                     sum(Fert_ag(1, idx_South))./[CR{3,3}]; 
-                     sum(Fert_ag(1, idx_West))./[CR{4,3}]];
-
-Fertilizer_Regions_1980_norm = [sum(Fert_ag(idx_1980, idx_Northeast))./[CR{1,3}]; 
-                     sum(Fert_ag(idx_1980, idx_Midwest))./[CR{2,3}]; 
-                     sum(Fert_ag(idx_1980, idx_South))./[CR{3,3}]; 
-                     sum(Fert_ag(idx_1980, idx_West))./[CR{4,3}]];
-
-Fertilizer_Regions_2017_norm = [sum(Fert_ag(end, idx_Northeast))./[CR{1,3}]; 
-                     sum(Fert_ag(end, idx_Midwest))./[CR{2,3}]; 
-                     sum(Fert_ag(end, idx_South))./[CR{3,3}]; 
-                     sum(Fert_ag(end, idx_West))./[CR{4,3}]];
-
-% Special case
-Eastern_Fert_Regions_norm = [sum(Fert_ag(1, idx_Northeast))./[CR{3,3}+CR{1,3}];
-                             sum(Fert_ag(end, idx_Northeast))./[CR{3,3}+CR{1,3}]];
-
+ 
 fprintf(fileID,'3.1.1 Fertilizer \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');
 fprintf(fileID,'Median fertilizer 1930: %.3f (IQR: %.3f-%.3f) \n',Fertilizer_quantiles(3,1),Fertilizer_quantiles(2,1),Fertilizer_quantiles(4,1));
@@ -134,33 +75,6 @@ TS50_lm = fitlm([1930:2017], Crop_quantiles(3,:));
 TS75_lm = fitlm([1930:2017], Crop_quantiles(4,:));
 TS90_lm = fitlm([1930:2017], Crop_quantiles(5,:));
 
-
-
-Crop_Regions_1930 = [sum(Crop_sum(1, idx_Northeast)); 
-                     sum(Crop_sum(1, idx_Midwest));
-                     sum(Crop_sum(1, idx_South));
-                     sum(Crop_sum(1, idx_West))]./sum(Crop_sum(1,:));
-
-Crop_Regions_2017 = [sum(Crop_sum(end, idx_Northeast)); 
-                     sum(Crop_sum(end, idx_Midwest));
-                     sum(Crop_sum(end, idx_South));
-                     sum(Crop_sum(end, idx_West))]./sum(Crop_sum(end,:));
-
-Crop_Regions_1930_norm = [sum(Crop_sum(1, idx_Northeast))./[CR{1,3}]; 
-                     sum(Crop_sum(1, idx_Midwest))./[CR{2,3}];
-                     sum(Crop_sum(1, idx_South))./[CR{3,3}];
-                     sum(Crop_sum(1, idx_West))./[CR{4,3}]];
-
-Crop_Regions_2017_norm = [sum(Crop_sum(end, idx_Northeast))./[CR{1,3}]; 
-                     sum(Crop_sum(end, idx_Midwest))./[CR{2,3}];
-                     sum(Crop_sum(end, idx_South))./[CR{3,3}];
-                     sum(Crop_sum(end, idx_West))./[CR{4,3}]];
-
-% Special case
-Eastern_Crop_Regions_norm = [sum(Crop_sum(1, idx_Northeast))./[CR{3,3}+CR{1,3}];
-                             sum(Crop_sum(end, idx_Northeast))./[CR{3,3}+CR{1,3}]];
-
-
 fprintf(fileID,'3.1.3 Crop Uptake \n');
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');
 fprintf(fileID,'Median crop uptake 1930: %.3f (IQR: %.3f-%.3f) \n',Crop_quantiles(3,1),Crop_quantiles(2,1),Crop_quantiles(4,1));
@@ -182,19 +96,11 @@ fprintf(fileID,'Median Ag Surplus 1980: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quan
 fprintf(fileID,'Median Ag Surplus 2017: %.3f (IQR: %.3f-%.3f) \n\n',AgSurplus_quantiles(3,end), AgSurplus_quantiles(2,end), AgSurplus_quantiles(4,end));
 
 %% Calculating PUE at the gridscale.
-% Read in gif files
-INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
-
-PSfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Agriculture Surplus'];
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
-livestockFolder = 'Lvst_Agriculture_LU';
 
 % Reading in the three components
 [Livestock_tif,~] = readgeoraster([INPUTfilepath, livestockFolder,'\Lvst_2017.tif']);
 [Fertilizer_tif,~] = readgeoraster([INPUTfilepath, fertilizerFolder,'\Fertilizer_Ag_2017.tif']);
-[AgSurp_tif,~] = readgeoraster([PSfilepath,'\AgSurplus_2017.tif']);
+[AgSurp_tif,~] = readgeoraster([INPUTfilepath,agSFolder,'\AgSurplus_2017.tif']);
 
 idx_pos = find(AgSurp_tif > 0);
 idx_neg = find(AgSurp_tif < 0);
@@ -220,12 +126,11 @@ fprintf(fileID,'Median PUE 2017: %.3f (IQR: %.3f-%.3f) \n\n',PUE_quantiles(3,end
 % -------------------------------------------------------------------------
 % Section 3.2 Phosphorus Use Efficiency and Relevant to Regional Nutrient Management
 % -------------------------------------------------------------------------
-INPUTfilepath = ['..\OUTPUTS\HUC2\'];
-PUE_HUC2 = readtable([INPUTfilepath, 'PUE_medianHUC2_fromgrid.txt']);
-Crop_Median_HUC2 = readtable([INPUTfilepath, 'Crop_medianHUC2Components.txt']);
-Fert_Median_HUC2 = readtable([INPUTfilepath, 'Fert_medianHUC2Components.txt']);
-Lvstk_Median_HUC2 = readtable([INPUTfilepath, 'Lvsk_medianHUC2Components.txt']);
-load([INPUTfilepath, 'HUC2_AgLandUse.mat']) %HUCLU
+PUE_HUC2 = readtable([HUCINPUTfilepath, 'PUE_medianHUC2_fromgrid.txt']);
+Crop_Median_HUC2 = readtable([HUCINPUTfilepath, 'Crop_medianHUC2Components.txt']);
+Fert_Median_HUC2 = readtable([HUCINPUTfilepath, 'Fert_medianHUC2Components.txt']);
+Lvstk_Median_HUC2 = readtable([HUCINPUTfilepath, 'Lvsk_medianHUC2Components.txt']);
+load([HUCINPUTfilepath, 'HUC2_AgLandUse.mat']) %HUCLU
 
 % Region 17 = Region A
 % Region 14 = Region B
@@ -277,8 +182,7 @@ fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n\n', RegionI_LU_1930_2017*100)
 % Section 3.2.3 Cumulative Phosphorus Surplus
 % -------------------------------------------------------------------------
 CSfilepath =  ['..\OUTPUTS\Cumulative Phosphorus\'];
-INPUTfilepath = ['..\OUTPUTS\HUC2\'];
-CS_HUC2 = readtable([INPUTfilepath, 'CumSum_meanHUC2_fromgrid.txt']);
+CS_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_meanHUC2_fromgrid.txt']);
 
 % Nationally Cumuliative P Surplus in 1980 and 2017
 [CS_1980,~] = readgeoraster([CSfilepath,'CumSum_1980.tif']);
@@ -363,8 +267,8 @@ fprintf(fileID,'Region I GH (1940, 1980, 2017): %.3f, %.3f and %.3f \n\n', Regio
 % Section 3.3 Phosphorus Management Quadrants
 % -------------------------------------------------------------------------
 
-load([INPUTfolderName_2,'QuadrantMapping_20230822.mat']) % D
-load([INPUTfolderName_2,'Lvstk_Fert_Ratio_Grid_20230818.mat']) %Lvsk_Fert_Quadrant
+load([QuadrantINPUTfolderName,'QuadrantMapping.mat']) % D
+load([QuadrantINPUTfolderName,'Lvstk_Fert_Ratio_Grid.mat']) %Lvsk_Fert_Quadrant
 
 D(D(:,5) == 0,:) = [];
 D(D(:,6) == 0,:) = [];

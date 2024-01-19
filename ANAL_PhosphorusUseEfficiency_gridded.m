@@ -13,7 +13,7 @@ fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
 
 delete(gcp('nocreate')); % Close any pools that might already be running
-parpool('local', 6);
+parpool('local', 12);
 [~,georef] = readgeoraster([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
 Rinfo = geotiffinfo([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
 

@@ -4,12 +4,10 @@ clc, clear, close all
 %   Read in each tif file, vetorize and take the median, and quanties per
 %   year. 
 % ------------------------------------------------------------------------
-runTiffs = 1;
+runTiffs = 0;
 % Read in tif files
-INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-07-25)\'];
-INPUTfilepath2 = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\',...
-    'Grid_TREND_P_Version_1\TREND-P Agriculture Surplus\'];
+INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
 INPUTfilepathPUE = '..\OUTPUTS\PUE\';
 
 OUTPUT_folderName = '..\OUTPUTS\Component Timeseries\';
@@ -18,6 +16,7 @@ YEARS = 1930:2017;
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
+agsurplusFolder = 'Ag_Surplus';
 
 % Aesthetic attributes
 % Plot Specs
@@ -86,12 +85,13 @@ end
 AgSurplus_quantiles = zeros(5,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
-    file_agsur_i = dir([INPUTfilepath2,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([INPUTfilepath2,'\',file_agsur_i.name]);
+    file_agsur_i = dir([INPUTfilepath,agsurplusFolder,'\*_',num2str(YEAR_i),'.tif']);
+    [Tif_i,~] = readgeoraster([INPUTfilepath,agsurplusFolder,'\',file_agsur_i.name]);
     
     % Converting the file
     Tif_i = single(Tif_i); 
     
+    Tif_i(Tif_i == 0) = NaN; 
     Tif_linear = Tif_i(:); 
         
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
@@ -150,7 +150,7 @@ yticks([0,20,40])
 
 set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim)
-
+box('on')
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
@@ -184,7 +184,7 @@ xlim([1930,2017])
 xticks(xticks_p)
 ylim([0,30])
 yticks([0,15,30])
-
+box('on')
 set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim)
 
@@ -224,7 +224,7 @@ yticks([0,15,30])
 
 set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim)
-
+box('on')
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
@@ -261,7 +261,7 @@ yticks([-15, 0, 15, 30])
 
 set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim)
-
+box('on')
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
@@ -297,7 +297,7 @@ yticks([0, 1, 2])
 
 set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim)
-
+box('on')
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
