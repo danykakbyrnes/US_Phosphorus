@@ -93,7 +93,7 @@ for i = 1:length(D)
     end
 end
 
-save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
+%save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
 
 D_copy = D;
 %% Creating barchart of the fraction of the total dataset that belongs to what quadrant.
@@ -166,7 +166,7 @@ Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D
 Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
 
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
+%save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
 %%
 figure(1)
 
