@@ -127,7 +127,7 @@ for i = 1:height(HUC_PUE)
     %hr=gca;
     %r_yaxis = hr.YTickLabel;
     %hr.YTickLabel = l_yaxis;
-    ylim([0.1,1.5])
+    ylim([0,1.5])
     yticks([])
 
     yyaxis left

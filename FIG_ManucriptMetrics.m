@@ -20,7 +20,10 @@ fprintf(fileID,'     Results (Section 3) \n');
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');
 %% Section 3.1
 % -------------------------------------------------------------------------
-% Section 3.1.1 Fertilizer
+% Section 3.1 Inputs 
+% -------------------------------------------------------------------------
+% -------------------------------------------------------------------------
+% Fertilizer 
 % -------------------------------------------------------------------------
 load([OUTPUT_folderName, 'Component Timeseries\ComponentQuantiles.mat']) %Fertilizer_quantiles','Crop_quantiles','','AgSurplus_quantiles')
 YEAR = 1930:2017; 
@@ -33,21 +36,47 @@ TS50_lm = fitlm([1930:2017],Fertilizer_quantiles(3,:));
 TS75_lm = fitlm([1930:2017],Fertilizer_quantiles(4,:));
 TS90_lm = fitlm([1930:2017],Fertilizer_quantiles(5,:));
 TS50_lm_1980 = fitlm([1980:2017], Fertilizer_quantiles(3,idx_1980:end));
+
+Fert_Mean_HUC2 = readtable([HUCINPUTfilepath, 'Fert_meanHUC2Components.txt']);
+Lvstk_Mean_HUC2 = readtable([HUCINPUTfilepath, 'Lvsk_meanHUC2Components.txt']);
  
-fprintf(fileID,'3.1.1 Fertilizer \n'); 
+fprintf(fileID,'3.1 3.1 Agricultural Phosphorus Usages across the Contiguous United States \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');
-fprintf(fileID,'Median fertilizer 1930: %.3f (IQR: %.3f-%.3f) \n',Fertilizer_quantiles(3,1),Fertilizer_quantiles(2,1),Fertilizer_quantiles(4,1));
-fprintf(fileID,'Median fertilizer 1980: %.3f (IQR: %.3f-%.3f) \n',Fertilizer_quantiles(3,idx_1980),Fertilizer_quantiles(2,idx_1977),Fertilizer_quantiles(4,idx_1980));
-fprintf(fileID,'Median fertilizer 2017: %.3f (IQR: %.3f-%.3f) \n',Fertilizer_quantiles(3,end),Fertilizer_quantiles(2,end),Fertilizer_quantiles(4,end));
-fprintf(fileID,'5th perc. slope: %.3f (p val = %.3f) \n',TS5_lm.Coefficients.Estimate(2), TS5_lm.Coefficients.pValue(1));
-fprintf(fileID,'25th perc. slope: %.3f (p val = %.3f) \n',TS25_lm.Coefficients.Estimate(2), TS25_lm.Coefficients.pValue(1));
-fprintf(fileID,'Median slope: %.3f (p val   = %.3f) \n',TS50_lm.Coefficients.Estimate(2), TS50_lm.Coefficients.pValue(1));
-fprintf(fileID,'75th perc. slope: %.3f (p val = %.3f) \n',TS75_lm.Coefficients.Estimate(2), TS75_lm.Coefficients.pValue(1));
-fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n',TS90_lm.Coefficients.Estimate(2), TS90_lm.Coefficients.pValue(1));
-fprintf(fileID,'Median slope (1980-2017): %.3f (p val   = %.3f) \n\n',TS50_lm_1980.Coefficients.Estimate(2), TS50_lm_1980.Coefficients.pValue(1));
+fprintf(fileID,'Fertilizer \n'); 
+fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');
+fprintf(fileID,'Median fertilizer 1930: %.2f (IQR: %.2f-%.1f) \n',Fertilizer_quantiles(3,1),Fertilizer_quantiles(2,1),Fertilizer_quantiles(4,1));
+fprintf(fileID,'Median fertilizer 1980: %.1f (IQR: %.1f-%.1f) \n',Fertilizer_quantiles(3,idx_1980),Fertilizer_quantiles(2,idx_1977),Fertilizer_quantiles(4,idx_1980));
+fprintf(fileID,'Median fertilizer 2017: %.1f (IQR: %.1f-%.1f) \n\n',Fertilizer_quantiles(3,end),Fertilizer_quantiles(2,end),Fertilizer_quantiles(4,end));
+%fprintf(fileID,'5th perc. slope: %.3f (p val = %.3f) \n',TS5_lm.Coefficients.Estimate(2), TS5_lm.Coefficients.pValue(1));
+%fprintf(fileID,'25th perc. slope: %.3f (p val = %.3f) \n',TS25_lm.Coefficients.Estimate(2), TS25_lm.Coefficients.pValue(1));
+%fprintf(fileID,'Median slope: %.3f (p val   = %.3f) \n',TS50_lm.Coefficients.Estimate(2), TS50_lm.Coefficients.pValue(1));
+%fprintf(fileID,'75th perc. slope: %.3f (p val = %.3f) \n',TS75_lm.Coefficients.Estimate(2), TS75_lm.Coefficients.pValue(1));
+%fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n',TS90_lm.Coefficients.Estimate(2), TS90_lm.Coefficients.pValue(1));
+%fprintf(fileID,'Median slope (1980-2017): %.3f (p val   = %.3f) \n\n',TS50_lm_1980.Coefficients.Estimate(2), TS50_lm_1980.Coefficients.pValue(1));
+
+fprintf(fileID,'Regional Mean Fertilizer \n');
+fprintf(fileID,'---------------------------------------------------------------------------------------------\n');
+fREGA_idx = find(Fert_Mean_HUC2.REG == 17);
+fREGB_idx = find(Fert_Mean_HUC2.REG == 14);
+fREGC_idx = find(Fert_Mean_HUC2.REG == 12);
+fREGD_idx = find(Fert_Mean_HUC2.REG == 10);
+fREGE_idx = find(Fert_Mean_HUC2.REG == 8);
+fREGF_idx = find(Fert_Mean_HUC2.REG == 7);
+fREGG_idx = find(Fert_Mean_HUC2.REG == 3);
+fREGH_idx = find(Fert_Mean_HUC2.REG == 2);
+fREGI_idx = find(Fert_Mean_HUC2.REG == 1);
+fprintf(fileID,'Region (A) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGA_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (B) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGB_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (C) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGC_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (D) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGD_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (E) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGE_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (F) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGF_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (G) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGG_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (H) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Fert_Mean_HUC2{fREGH_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (I) 1930: %.3f, 1980: %.3f, 2017: %.3f \n\n',Fert_Mean_HUC2{fREGI_idx, [2,idx_1980+1,end]});
 
 % -------------------------------------------------------------------------
-% Section 3.1.2 Livestock
+% Livestock
 % -------------------------------------------------------------------------
 TS5_lm = fitlm([1930:2017],Livestock_quantiles(1,:));
 TS25_lm = fitlm([1930:2017],Livestock_quantiles(2,:));
@@ -55,19 +84,38 @@ TS50_lm = fitlm([1930:2017],Livestock_quantiles(3,:));
 TS75_lm = fitlm([1930:2017],Livestock_quantiles(4,:));
 TS90_lm = fitlm([1930:2017],Livestock_quantiles(5,:));
 
-fprintf(fileID,'3.1.2 Livestock \n'); 
+fprintf(fileID,'Manure \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
-fprintf(fileID,'Median manure 1930: %.3f (IQR: %.3f-%.3f) \n',Livestock_quantiles(3,1),Livestock_quantiles(2,1),Livestock_quantiles(4,1));
-fprintf(fileID,'Median manure 2017: %.3f (IQR: %.3f-%.3f) \n',Livestock_quantiles(3,end),Livestock_quantiles(2,end),Livestock_quantiles(4,end));
-fprintf(fileID,'5th perc. slope: %.3f (p val = %.3f) \n',TS5_lm.Coefficients.Estimate(2), TS5_lm.Coefficients.pValue(1));
-fprintf(fileID,'25th perc. slope: %.3f (p val = %.3f) \n',TS25_lm.Coefficients.Estimate(2), TS25_lm.Coefficients.pValue(1));
-fprintf(fileID,'Median slope: %.3f (p val = %.3f) \n',TS50_lm.Coefficients.Estimate(2), TS50_lm.Coefficients.pValue(1));
-fprintf(fileID,'75th perc. slope: %.3f (p val = %.3f) \n',TS75_lm.Coefficients.Estimate(2), TS75_lm.Coefficients.pValue(1));
-fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n\n',TS90_lm.Coefficients.Estimate(2), TS90_lm.Coefficients.pValue(1));
+fprintf(fileID,'Median manure 1930: %.1f (5th-95th: %.1f-%.1f) \n',Livestock_quantiles(3,1),Livestock_quantiles(1,1),Livestock_quantiles(5,1));
+fprintf(fileID,'Median manure 1980: %.1f (5th-95th: %.1f-%.1f) \n',Livestock_quantiles(3,idx_1980),Livestock_quantiles(1,idx_1980),Livestock_quantiles(5,idx_1980));
+fprintf(fileID,'Median manure 2017: %.1f (5th-95th: %.1f-%.1f) \n\n',Livestock_quantiles(3,end),Livestock_quantiles(1,end),Livestock_quantiles(5,end));
+%fprintf(fileID,'5th perc. slope: %.3f (p val = %.3f) \n',TS5_lm.Coefficients.Estimate(2), TS5_lm.Coefficients.pValue(1));
+%fprintf(fileID,'25th perc. slope: %.3f (p val = %.3f) \n',TS25_lm.Coefficients.Estimate(2), TS25_lm.Coefficients.pValue(1));
+%fprintf(fileID,'Median slope: %.3f (p val = %.3f) \n',TS50_lm.Coefficients.Estimate(2), TS50_lm.Coefficients.pValue(1));
+%fprintf(fileID,'75th perc. slope: %.3f (p val = %.3f) \n',TS75_lm.Coefficients.Estimate(2), TS75_lm.Coefficients.pValue(1));
+%fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n\n',TS90_lm.Coefficients.Estimate(2), TS90_lm.Coefficients.pValue(1));
 
-% -------------------------------------------------------------------------
-% Section 3.1.3 Crop Uptake
-% -------------------------------------------------------------------------
+fprintf(fileID,'Regional Mean Manure \n');
+fprintf(fileID,'---------------------------------------------------------------------------------------------\n');
+mREGA_idx = find(Lvstk_Mean_HUC2.REG == 17);
+mREGB_idx = find(Lvstk_Mean_HUC2.REG == 14);
+mREGC_idx = find(Lvstk_Mean_HUC2.REG == 12);
+mREGD_idx = find(Lvstk_Mean_HUC2.REG == 10);
+mREGE_idx = find(Lvstk_Mean_HUC2.REG == 8);
+mREGF_idx = find(Lvstk_Mean_HUC2.REG == 7);
+mREGG_idx = find(Lvstk_Mean_HUC2.REG == 3);
+mREGH_idx = find(Lvstk_Mean_HUC2.REG == 2);
+mREGI_idx = find(Lvstk_Mean_HUC2.REG == 1);
+fprintf(fileID,'Region (A) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGA_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (B) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGB_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (C) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGC_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (D) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGD_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (E) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGE_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (F) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGF_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (G) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGG_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (H) 1930: %.3f, 1980: %.3f, 2017: %.3f \n',Lvstk_Mean_HUC2{mREGH_idx, [2,idx_1980+1,end]});
+fprintf(fileID,'Region (I) 1930: %.3f, 1980: %.3f, 2017: %.3f \n\n',Lvstk_Mean_HUC2{mREGI_idx, [2,idx_1980+1,end]});
+
 
 TS5_lm = fitlm([1930:2017], Crop_quantiles(1,:));
 TS25_lm = fitlm([1930:2017], Crop_quantiles(2,:));
@@ -75,21 +123,17 @@ TS50_lm = fitlm([1930:2017], Crop_quantiles(3,:));
 TS75_lm = fitlm([1930:2017], Crop_quantiles(4,:));
 TS90_lm = fitlm([1930:2017], Crop_quantiles(5,:));
 
-fprintf(fileID,'3.1.3 Crop Uptake \n');
+fprintf(fileID,'Crop \n');
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');
 fprintf(fileID,'Median crop uptake 1930: %.3f (IQR: %.3f-%.3f) \n',Crop_quantiles(3,1),Crop_quantiles(2,1),Crop_quantiles(4,1));
 fprintf(fileID,'Median crop uptake 2017: %.3f (IQR: %.3f-%.3f) \n',Crop_quantiles(3,end),Crop_quantiles(2,end),Crop_quantiles(4,end));
-fprintf(fileID,'5th perc. slope: %.3f (p val = %.3f) \n',TS5_lm.Coefficients.Estimate(2), TS5_lm.Coefficients.pValue(1));
-fprintf(fileID,'25th perc. slope: %.3f (p val = %.3f) \n',TS25_lm.Coefficients.Estimate(2), TS25_lm.Coefficients.pValue(1));
-fprintf(fileID,'Median slope: %.3f (p val = %.3f) \n',TS50_lm.Coefficients.Estimate(2), TS50_lm.Coefficients.pValue(1));
-fprintf(fileID,'75th perc. slope: %.3f (p val = %.3f) \n',TS75_lm.Coefficients.Estimate(2), TS75_lm.Coefficients.pValue(1));
-fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n\n',TS90_lm.Coefficients.Estimate(2), TS90_lm.Coefficients.pValue(1));
+%fprintf(fileID,'5th perc. slope: %.3f (p val = %.3f) \n',TS5_lm.Coefficients.Estimate(2), TS5_lm.Coefficients.pValue(1));
+%fprintf(fileID,'25th perc. slope: %.3f (p val = %.3f) \n',TS25_lm.Coefficients.Estimate(2), TS25_lm.Coefficients.pValue(1));
+fprintf(fileID,'Median slope: %.3f (p val = %.3f) \n\n',TS50_lm.Coefficients.Estimate(2), TS50_lm.Coefficients.pValue(1));
+%fprintf(fileID,'75th perc. slope: %.3f (p val = %.3f) \n',TS75_lm.Coefficients.Estimate(2), TS75_lm.Coefficients.pValue(1));
+%fprintf(fileID,'95th perc. slope: %.3f (p val = %.3f) \n\n',TS90_lm.Coefficients.Estimate(2), TS90_lm.Coefficients.pValue(1));
 
-% -------------------------------------------------------------------------
-% Section 3.1.4 Agriculture P Surplus
-% -------------------------------------------------------------------------
-
-fprintf(fileID,'3.1.4 Agriculture Surplus \n'); 
+fprintf(fileID,'Agriculture Surplus \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Median Ag Surplus 1930: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quantiles(3,1), AgSurplus_quantiles(2,1), AgSurplus_quantiles(4,1));
 fprintf(fileID,'Median Ag Surplus 1980: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quantiles(3,idx_1980), AgSurplus_quantiles(2,idx_1980), AgSurplus_quantiles(4,idx_1980));
@@ -116,7 +160,7 @@ INPUTfilepath = ['..\OUTPUTS\PUE\'];
 [PUE_1980,~] = readgeoraster([INPUTfilepath,'PUE_1980.tif']);
 [PUE_2017,~] = readgeoraster([INPUTfilepath,'PUE_2017.tif']);
 
-fprintf(fileID,'3.1.5 US PUE \n'); 
+fprintf(fileID,'US PUE \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Median PUE 1930: %.3f (IQR: %.3f-%.3f) \n',PUE_quantiles(3,1),PUE_quantiles(2,1),PUE_quantiles(4,1));
 fprintf(fileID,'Median PUE 1980: %.3f (IQR: %.3f-%.3f) \n',PUE_quantiles(3,idx_1980),PUE_quantiles(2,idx_1980),PUE_quantiles(4,idx_1980));
@@ -127,11 +171,11 @@ fprintf(fileID,'Median PUE 2017: %.3f (IQR: %.3f-%.3f) \n\n',PUE_quantiles(3,end
 % Section 3.2 Phosphorus Use Efficiency and Relevant to Regional Nutrient Management
 % -------------------------------------------------------------------------
 PUE_HUC2 = readtable([HUCINPUTfilepath, 'PUE_medianHUC2_fromgrid.txt']);
-Crop_Median_HUC2 = readtable([HUCINPUTfilepath, 'Crop_medianHUC2Components.txt']);
-Fert_Median_HUC2 = readtable([HUCINPUTfilepath, 'Fert_medianHUC2Components.txt']);
-Lvstk_Median_HUC2 = readtable([HUCINPUTfilepath, 'Lvsk_medianHUC2Components.txt']);
-load([HUCINPUTfilepath, 'HUC2_AgLandUse.mat']) %HUCLU
 
+load([HUCINPUTfilepath, 'HUC2_AgLandUse.mat']) %HUCLU
+Fert_Median_HUC2 = readtable([HUCINPUTfilepath, 'Fert_medianHUC2Components.txt']);
+Lvstk_Median_HUC2 = readtable([HUCINPUTfilepath, 'Lvsk_meanHUC2Components.txt']);
+Crop_Median_HUC2 = readtable([HUCINPUTfilepath, 'Crop_meanHUC2Components.txt']);
 % Region 17 = Region A
 % Region 14 = Region B
 % Region 12 = Region C
@@ -155,7 +199,8 @@ RegionDF_LU = HUCLU(ismember(HUCLU(:,1), Reg_DF),[2:end]);
 RegionDF_Crop = Crop_Median_HUC2{ismember(Crop_Median_HUC2{:,1}, Reg_DF),[2:end]};
 RegionDF_Fert = Fert_Median_HUC2{ismember(Fert_Median_HUC2{:,1}, Reg_DF),[2:end]};
 RegionDF_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_DF),[2:end]};
-RegionI_Mean_LU_1930_2017 =  [RegionDF_LU(1),RegionDF_LU(end)];
+RegionDF_Mean_LU_1930_2017 =  mean([RegionDF_LU(:,1),RegionDF_LU(:,end)]);
+RegionDF_Min_LU_1930_2017 =  min(min(RegionDF_LU));
 
 % Region G-H
 Reg_GH = [3, 2];
@@ -173,9 +218,9 @@ RegionI_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_I),[2:end
 
 RegionI_LU_1930_2017 = [RegionI_LU(1),RegionI_LU(end)];
 
-fprintf(fileID,'3.2 Regional PUE and Components \n'); 
+fprintf(fileID,'Regional PUE and Components \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
-fprintf(fileID,'Region D-F Mean Ag Land: %.3f and %.3f \n', RegionI_Mean_LU_1930_2017*100);
+fprintf(fileID,'Region D-F Minumum Ag Land: %.1f\n', RegionDF_Min_LU_1930_2017*100);
 fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n\n', RegionI_LU_1930_2017*100);
 
 % -------------------------------------------------------------------------
@@ -208,63 +253,40 @@ Neg_CS_2017 = sum(CS_2017_v < 0)/length(CS_2017_v)*100;
 % Region 2 = Region H
 % Region 1 = Region I
 
-% Region A-D
-YEARS_CS = [1940, 1980, 2017];
-idx_YEARS = ismember(YEAR, YEARS_CS);
+fREGA_idx = find(CS_HUC2.REG == 17);
+fREGB_idx = find(CS_HUC2.REG == 14);
+fREGC_idx = find(CS_HUC2.REG == 12);
+fREGD_idx = find(CS_HUC2.REG == 10);
+fREGE_idx = find(CS_HUC2.REG == 8);
+fREGF_idx = find(CS_HUC2.REG == 7);
+fREGG_idx = find(CS_HUC2.REG == 3);
+fREGH_idx = find(CS_HUC2.REG == 2);
+fREGI_idx = find(CS_HUC2.REG == 1);
 
-Reg_AC = [17, 14, 12];
-RegionAC_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_AC),[2:end]};
-
-% Region D-F
-% [CS_RD_1980,~] = readgeoraster([INPUTfilepath,'RegionD_Cumulative_1980.tif']);
-% CS_RD_1980(CS_RD_1980 == 0) = NaN;
-% CS_RD_1980 = CS_RD_1980(:);
-% 
-% [CS_RD_2017,~] = readgeoraster([INPUTfilepath,'RegionD_Cumulative_2017.tif']);
-% CS_RD_2017(CS_RD_2017 == 0) = NaN; 
-% CS_RD_2017 = CS_RD_2017(:);
-% 
-% Neg_CS_RD_1980 = sum(CS_RD_1980 < 0)/length(CS_RD_1980)*100;
-% Neg_CS_RD_2017 = sum(CS_RD_2017 < 0)/length(CS_RD_2017)*100;
-
-% [CS_RF_1980,~] = readgeoraster([INPUTfilepath,'RegionF_Cumulative_1980.tif']);
-% CS_RF_1980(CS_RF_1980 == 0) = NaN; 
-% CS_RF_1980 = CS_RF_1980(:);
-% 
-% [CS_RF_2017,~] = readgeoraster([INPUTfilepath,'RegionF_Cumulative_2017.tif']);
-% CS_RF_2017(CS_RF_2017 == 0) = NaN;
-% CS_RF_2017 = CS_RF_2017(:);
-% 
-% Neg_CS_RF_1980 = sum(CS_RF_1980 < 0)/length(CS_RF_1980)*100;
-% Neg_CS_RF_2017 = sum(CS_RF_2017 < 0)/length(CS_RF_2017)*100;
-
-Reg_DF = [10, 8, 7];
-RegionDF_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_DF),[2:end]};
-
-% Region G-H
-Reg_GH = [3, 2];
-RegionGH_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_GH),[2:end]};
-
-% Region I
-Reg_I = 1;
-RegionI_CS = CS_HUC2{ismember(CS_HUC2{:,1}, Reg_I),[2:end]};
-
-fprintf(fileID,'3.2 Regional Cumultive P Surplus \n'); 
+fprintf(fileID,'Regional Cumultive P Surplus \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Percent of area with Positive CS in 1980 and 2017: %.1f and %.1f \n', Pos_CS_1980, Pos_CS_2017);
 fprintf(fileID,'Percent of area with Negative CS in 1980 and 2017: %.1f and %.1f \n', Neg_CS_1980, Neg_CS_2017);
-%fprintf(fileID,'Percent of area with Negative CS in Region F 1980 and 2017: %.1f and %.1f \n', Neg_CS_RF_1980, Neg_CS_RF_2017);
-fprintf(fileID,'Region G CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionGH_CS(1, idx_YEARS));
-fprintf(fileID,'Region H CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionGH_CS(2, idx_YEARS));
-fprintf(fileID,'Region D CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionDF_CS(1, idx_YEARS));
-fprintf(fileID,'Region F CS (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionDF_CS(2, idx_YEARS));
-fprintf(fileID,'Region DF GH (1940, 1980, 2017): %.3f, %.3f and %.3f \n', RegionGH_CS(idx_YEARS));
-fprintf(fileID,'Region I GH (1940, 1980, 2017): %.3f, %.3f and %.3f \n\n', RegionI_CS(idx_YEARS));
 
+fprintf(fileID,'Region A (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGA_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region B (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGB_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region C (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGC_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region D (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGD_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region E (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGE_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region F (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGF_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region G (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGG_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region H (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGH_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region I (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGI_idx, [idx_1980+1, end]});
+
+
+%% Section 3.2
+% -------------------------------------------------------------------------
+% Section 3.2 Limitations of Single Metrics in Landscape Socioeconomic and Environmental Analysis
+% -------------------------------------------------------------------------
 
 %% Section 3.3
 % -------------------------------------------------------------------------
-% Section 3.3 Phosphorus Management Quadrants
+% Section 3.3 3.3 Toward a Holistic Approach for Landscape Socio-Environmental Evaluation
 % -------------------------------------------------------------------------
 
 load([QuadrantINPUTfolderName,'QuadrantMapping.mat']) % D
@@ -273,7 +295,6 @@ load([QuadrantINPUTfolderName,'Lvstk_Fert_Ratio_Grid.mat']) %Lvsk_Fert_Quadrant
 D(D(:,5) == 0,:) = [];
 D(D(:,6) == 0,:) = [];
 
-% 
 Q2_1980 = D(find(D(:,5) == 2),:);
 Q2_Q1 = D(find(D(:,5) == 2 & D(:,6) == 1),:);
 Perc_D2_D1 = size(Q2_Q1,1)/size(Q2_1980,1);

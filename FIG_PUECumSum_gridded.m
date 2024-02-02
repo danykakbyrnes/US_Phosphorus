@@ -202,6 +202,9 @@ for i = 1:4
         sLvsk_Fert_Quadrant_1980.LvstkFertFract,'MarkerStyle',...
         'none','BoxFaceColor',colourPalette(i,:));
     hold on
+
+    oLvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant_1980(Lvsk_Fert_Quadrant_1980.Q ~= i,:);
+    pv(i) = ranksum(sLvsk_Fert_Quadrant_1980.LvstkFertFract, oLvsk_Fert_Quadrant_1980.LvstkFertFract);
 end
 
 box on
@@ -216,7 +219,7 @@ xticks([1,2,3,4])
 xticklabels({'Q1','Q2','Q3','Q4'})
 
 Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_1980_',datestr(datetime,'mmddyy'),'.png'];
-print('-dpng','-r600',[Figfolderpath])
+%print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 Lvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:);
@@ -227,6 +230,9 @@ for i = 1:4
         sLvsk_Fert_Quadrant_2017.LvstkFertFract,'MarkerStyle',...
         'none','BoxFaceColor',colourPalette(i,:));
     hold on
+
+    oLvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant_2017(Lvsk_Fert_Quadrant_2017.Q ~= i,:);
+    pv_2017(i,1) = ranksum(sLvsk_Fert_Quadrant_2017.LvstkFertFract, oLvsk_Fert_Quadrant_2017.LvstkFertFract);
 end
 box on
 set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
@@ -242,7 +248,7 @@ xticklabels({'Q1','Q2','Q3','Q4'})
 %ylabel('% Manure of Total Inputs')
 
 Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_2017_',datestr(datetime,'mmddyy'),'.png'];
-print('-dpng','-r600',[Figfolderpath])
+%print('-dpng','-r600',[Figfolderpath])
 
 %% Subsampling the data
 D = D_copy;
