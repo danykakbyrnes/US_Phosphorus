@@ -268,15 +268,15 @@ fprintf(fileID,'----------------------------------------------------------------
 fprintf(fileID,'Percent of area with Positive CS in 1980 and 2017: %.1f and %.1f \n', Pos_CS_1980, Pos_CS_2017);
 fprintf(fileID,'Percent of area with Negative CS in 1980 and 2017: %.1f and %.1f \n', Neg_CS_1980, Neg_CS_2017);
 
-fprintf(fileID,'Region A (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGA_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region B (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGB_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region C (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGC_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region D (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGD_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region E (1980, 2017): %.3f, %.3f and %.3f \n', CS_HUC2{fREGE_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region F (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGF_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region G (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGG_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region H (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGH_idx, [idx_1980+1, end]});
-fprintf(fileID,'Region I (1980, 2017): %.3f, %.3f and %.3f \n\n', CS_HUC2{fREGI_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region A (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGA_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region B (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGB_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region C (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGC_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region D (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGD_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region E (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGE_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region F (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGF_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region G (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGG_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region H (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGH_idx, [idx_1980+1, end]});
+fprintf(fileID,'Region I (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGI_idx, [idx_1980+1, end]});
 
 
 %% Section 3.2
