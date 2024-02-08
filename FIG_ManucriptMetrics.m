@@ -7,6 +7,7 @@ OUTPUT_folderName = '..\OUTPUTS\';
 TRENDOUTPUT_folderName = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\TREND_P_Version_1.2\';
 QuadrantINPUTfolderName = '..\OUTPUTS\Quadrants\';
 HUCINPUTfilepath = '..\OUTPUTS\HUC2\';
+PUEINPUTfilepath = ['..\OUTPUTS\PUE\'];
 INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
     'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
     fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
@@ -140,25 +141,26 @@ fprintf(fileID,'Median Ag Surplus 1980: %.3f (IQR: %.3f-%.3f) \n',AgSurplus_quan
 fprintf(fileID,'Median Ag Surplus 2017: %.3f (IQR: %.3f-%.3f) \n\n',AgSurplus_quantiles(3,end), AgSurplus_quantiles(2,end), AgSurplus_quantiles(4,end));
 
 %% Calculating PUE at the gridscale.
-
 % Reading in the three components
 [Livestock_tif,~] = readgeoraster([INPUTfilepath, livestockFolder,'\Lvst_2017.tif']);
 [Fertilizer_tif,~] = readgeoraster([INPUTfilepath, fertilizerFolder,'\Fertilizer_Ag_2017.tif']);
 [AgSurp_tif,~] = readgeoraster([INPUTfilepath,agSFolder,'\AgSurplus_2017.tif']);
 
-idx_pos = find(AgSurp_tif > 0);
+idx_pos = find(AgSurp_tif > 0); % Ag Surp has 0 values for non-ag land
 idx_neg = find(AgSurp_tif < 0);
 
 Pos_agSurp_FracLivestock = sum(Livestock_tif(idx_pos) > Fertilizer_tif(idx_pos))/size(idx_pos,1)*100;
 Neg_agSurp_FracFertilizer = sum(Livestock_tif(idx_neg) < Fertilizer_tif(idx_neg))/size(idx_pos,1)*100;
 
+Neg_AgLand = length(idx_neg)/(length(idx_pos)+length(idx_neg));
+Pos_AgLand = length(idx_pos)/(length(idx_pos)+length(idx_neg));
+
 fprintf(fileID,'Fraction of Positive Ag Surplus grids with mostly manure inputs: %.1f (mostly Fert: %.1f) \n',Pos_agSurp_FracLivestock, 100-Pos_agSurp_FracLivestock);
 fprintf(fileID,'Fraction of Negative Ag Surplus grids with mostly fertilizer inputs: %.1f (mostly Manure: %.1f) \n\n',Neg_agSurp_FracFertilizer, 100-Neg_agSurp_FracFertilizer);
 
-INPUTfilepath = ['..\OUTPUTS\PUE\'];
-[PUE_1930,~] = readgeoraster([INPUTfilepath,'PUE_1930.tif']);
-[PUE_1980,~] = readgeoraster([INPUTfilepath,'PUE_1980.tif']);
-[PUE_2017,~] = readgeoraster([INPUTfilepath,'PUE_2017.tif']);
+[PUE_1930,~] = readgeoraster([PUEINPUTfilepath,'PUE_1930.tif']);
+[PUE_1980,~] = readgeoraster([PUEINPUTfilepath,'PUE_1980.tif']);
+[PUE_2017,~] = readgeoraster([PUEINPUTfilepath,'PUE_2017.tif']);
 
 fprintf(fileID,'US PUE \n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
@@ -229,19 +231,43 @@ fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n\n', RegionI_LU_1930_2017*100)
 CSfilepath =  ['..\OUTPUTS\Cumulative Phosphorus\'];
 CS_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_meanHUC2_fromgrid.txt']);
 
+Neg_AgLand = length(idx_neg)/(length(idx_pos)+length(idx_neg));
+Pos_AgLand = length(idx_pos)/(length(idx_pos)+length(idx_neg));
+
 % Nationally Cumuliative P Surplus in 1980 and 2017
+
 [CS_1980,~] = readgeoraster([CSfilepath,'CumSum_1980.tif']);
 [CS_2017,~] = readgeoraster([CSfilepath,'CumSum_2017.tif']);
 
 CS_1980_v = CS_1980(:);
-CS_1980_v(isnan(CS_1980_v)) = [];
+CS_1980_v(isnan(CS_1980_v)) = []; % Removing all non-ag land. 
 CS_2017_v = CS_2017(:);
-CS_2017_v(isnan(CS_2017_v)) = [];
+CS_2017_v(isnan(CS_2017_v)) = []; % Removing all non-ag land. 
 
 Pos_CS_1980 = sum(CS_1980_v > 0)/length(CS_1980_v)*100;
 Pos_CS_2017 = sum(CS_2017_v > 0)/length(CS_2017_v)*100;
 Neg_CS_1980 = sum(CS_1980_v < 0)/length(CS_1980_v)*100;
 Neg_CS_2017 = sum(CS_2017_v < 0)/length(CS_2017_v)*100;
+
+% For the fraction of land with negative CS, we want to just look at the
+% year's productive land. Therefore, we want to remove all CS values that
+% aren't in current year's production.
+AgSurp_tif_v = AgSurp_tif(:);
+CS_2017_v = CS_2017(:); 
+idx = isnan(AgSurp_tif_v) + AgSurp_tif_v == 0; % Index for non-ag land and external US boundary land.
+% Removing all grid cells that are not 2017 agricultural land. 
+AgSurp_tif_v(idx) = [];
+CS_2017_v(idx) = [];
+
+% Finding the grids with negative PS and positive CS. 
+binary_CS_2017 = CS_2017_v > 0;
+binary_AgS_2017 = AgSurp_tif_v < 0;
+
+% Adding them together, cell = 2, conditions are met.
+binary_AgS_CS_2017 = binary_CS_2017 + binary_AgS_2017;
+
+% Fraction of agricultural land that has negative CS and PS
+Neg_AG_Pos_CS = sum(binary_AgS_CS_2017 == 2)./sum(binary_AgS_2017);
 
 % Region 17 = Region A
 % Region 14 = Region B
@@ -267,6 +293,8 @@ fprintf(fileID,'Regional Cumultive P Surplus \n');
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Percent of area with Positive CS in 1980 and 2017: %.1f and %.1f \n', Pos_CS_1980, Pos_CS_2017);
 fprintf(fileID,'Percent of area with Negative CS in 1980 and 2017: %.1f and %.1f \n', Neg_CS_1980, Neg_CS_2017);
+fprintf(fileID,'Percent of aPS grids with Negative aPS: %.1f %% \n', Neg_AgLand*100);
+fprintf(fileID,'Percent of Neg Ag land with positive CS in 2017: %.1f %%\n\n', Neg_AG_Pos_CS*100);
 
 fprintf(fileID,'Region A (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGA_idx, [idx_1980+1, end]});
 fprintf(fileID,'Region B (1980, 2017): %.3f and %.3f \n', CS_HUC2{fREGB_idx, [idx_1980+1, end]});
