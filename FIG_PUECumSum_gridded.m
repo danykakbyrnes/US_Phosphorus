@@ -199,7 +199,7 @@ Lvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:)
 for i = 1:4
     sLvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant_1980(Lvsk_Fert_Quadrant_1980.Q == i,:);
     b_1980 = boxchart(sLvsk_Fert_Quadrant_1980.Q,...
-        sLvsk_Fert_Quadrant_1980.LvstkFertFract,'MarkerStyle',...
+        sLvsk_Fert_Quadrant_1980.LvstkFertFract*100,'MarkerStyle',...
         'none','BoxFaceColor',colourPalette(i,:));
     hold on
 
@@ -214,12 +214,12 @@ set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
-ylim([0,1.05])
+ylim([0,105])
 xticks([1,2,3,4])
 xticklabels({'Q1','Q2','Q3','Q4'})
 
 Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_1980_',datestr(datetime,'mmddyy'),'.png'];
-%print('-dpng','-r600',[Figfolderpath])
+print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 Lvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:);
@@ -227,7 +227,7 @@ Lvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:)
 for i = 1:4
     sLvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant_2017(Lvsk_Fert_Quadrant_2017.Q == i,:);
     b_2017 = boxchart(sLvsk_Fert_Quadrant_2017.Q,...
-        sLvsk_Fert_Quadrant_2017.LvstkFertFract,'MarkerStyle',...
+        sLvsk_Fert_Quadrant_2017.LvstkFertFract*100,'MarkerStyle',...
         'none','BoxFaceColor',colourPalette(i,:));
     hold on
 
@@ -242,13 +242,13 @@ set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
-ylim([0,1.05])
+ylim([0,105])
 xticks([1,2,3,4])
 xticklabels({'Q1','Q2','Q3','Q4'})
 %ylabel('% Manure of Total Inputs')
 
 Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_2017_',datestr(datetime,'mmddyy'),'.png'];
-%print('-dpng','-r600',[Figfolderpath])
+print('-dpng','-r600',[Figfolderpath])
 
 %% Subsampling the data
 D = D_copy;
@@ -260,8 +260,52 @@ D = D(I,:);
 unQ = unique(D(:,6));
 unQ = unQ(find(unQ ~= 0));
 
-%% Scatter 
+%% Quadrant Plot
 close all
+
+% % HUC2 for the quadrant plot
+% HUC2_PUE = readtable([HUC2filepath,'PUE_meanHUC2_fromgrid.txt']);
+% HUC2_CS = readtable([HUC2filepath,'CumSum_meanHUC2_fromgrid.txt']);
+% HUC2_PUE = HUC2_PUE(:,[1, find(YEARS == 1980)+1,end]);
+% HUC2_CS  = HUC2_CS (:,[1, find(YEARS == 1980)+1,end]);
+% 
+% HUC2_CS = sortrows(HUC2_CS,"REG","descend"); % ordered A-I
+% HUC2_PUE = sortrows(HUC2_PUE,"REG","descend"); % ordered A-I
+% HUC_Q = [];
+% 
+% for i = 1:height(HUC2_PUE)
+%     HUC_Q(i,1) = HUC2_PUE{i,1};
+%     if HUC2_CS{i,2} > loadstar_CumSum
+%         if HUC2_PUE{i,2} > loadstar_PUE
+%             HUC_Q(i,2)  = 1; 
+%         elseif HUC2_PUE{i,2} <= loadstar_PUE
+%             HUC_Q(i,2)  = 2; 
+%         end
+%     elseif HUC2_CS{i,2} <= loadstar_CumSum
+%         if HUC2_PUE{i,2} > loadstar_PUE
+%             HUC_Q(i,2)  = 4;
+%         elseif HUC2_PUE{i,2} <= loadstar_PUE
+%             HUC_Q(i,2)  = 3; 
+%         end
+%     end
+% end
+% 
+% for i = 1:height(HUC2_PUE)
+%     HUC_Q(i,1) = HUC2_PUE{i,1};
+%     if HUC2_CS{i,3} > loadstar_CumSum
+%         if HUC2_PUE{i,3} > loadstar_PUE
+%             HUC_Q(i,3)  = 1; 
+%         elseif HUC2_PUE{i,2} <= loadstar_PUE
+%             HUC_Q(i,3)  = 2; 
+%         end
+%     elseif HUC2_CS{i,3} <= loadstar_CumSum
+%         if HUC2_PUE{i,3} > loadstar_PUE
+%             HUC_Q(i,3)  = 4;
+%         elseif HUC2_PUE{i,3} <= loadstar_PUE
+%             HUC_Q(i,3)  = 3; 
+%         end
+%     end
+% end
 
 %2017
 figure(1)
@@ -270,8 +314,6 @@ for i = 1:length(unQ)
     scatter(temp_D(:,4), temp_D(:,2), mSize, 'filled',...
               'MarkerFaceColor',colourPalette(i,:),...
               'MarkerFaceAlpha',0.05)
-%             'MarkerEdgeColor',none[0 0 0],...
-%              'LineWidth',0.5
     hold on
 end
 plot([0,20], [0,0],'--k','LineWidth',1)
@@ -287,9 +329,6 @@ box on
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
-
-%xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-%ylabel('Phosphorus Use Efficiency')
 
 Figfolderpath = [OUTPUTfilepath,'Quadrant_2017_',datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',[Figfolderpath])
@@ -308,7 +347,6 @@ plot([1,1], [-2000,4000],'--k','LineWidth',1)
 
 xlim([0,3])
 ylim([-300, 4000])
-%% Saving Files
 
 set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
 set(gcf,'position',plot_dim_1)
@@ -318,9 +356,7 @@ set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
-%xlabel('Cumulative Phosphorus Surplus (kg-P ha-ag^-^1)')
-%ylabel('Phosphorus Use Efficiency')
-
+%% Saving Files
 Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_', datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',Figfolderpath)
 
@@ -357,5 +393,3 @@ data = D(:,[5,6]);
 options.color_map = [colourPalette; colourPalette];
 
 plotSankeyFlowChart(data,options);
-%% Adding HUC2 to the quadrant plot
-%HUC2_PUE = readtable([HUC2filepath,'PUE_meanHUC2_fromgrid.txt']);   

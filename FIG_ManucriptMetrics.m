@@ -325,7 +325,10 @@ D(D(:,6) == 0,:) = [];
 
 Q2_1980 = D(find(D(:,5) == 2),:);
 Q2_Q1 = D(find(D(:,5) == 2 & D(:,6) == 1),:);
+Q2_Q2 = D(find(D(:,5) == 2 & D(:,6) == 2),:);
+
 Perc_D2_D1 = size(Q2_Q1,1)/size(Q2_1980,1);
+Perc_D2_D2 = size(Q2_Q2,1)/size(Q2_1980,1);
 
 TotalNumelLand_1980 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:);
 TotalNumelLand_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:);
@@ -375,6 +378,7 @@ fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_f
 fprintf(fileID,'Q4 Fraction 1980 and 2017: %.3f and %.3f \n\n', Q4_frac_1980, Q4_frac_2017)
 
 fprintf(fileID,'Fraction of Q2 going to Q1 in 2017 %.1f%% \n', Perc_D2_D1*100)
+fprintf(fileID,'Fraction of Q2 going to Q2 in 2017 %.1f%% \n', Perc_D2_D2*100)
 
 fprintf(fileID,'Q1 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_1980*100)
 fprintf(fileID,'Q1 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_2017*100)
