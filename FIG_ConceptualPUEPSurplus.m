@@ -14,8 +14,6 @@ PS =  PS(:);
 PUE =  PUE(:);
 
 % subset 10%
-
-
 scatter(PS, PUE,'o','filled','k')
 
 %% Supplemental Plots
