@@ -21,7 +21,8 @@ agsurplusFolder = 'Ag_Surplus';
 % Aesthetic attributes
 % Plot Specs
 fontSize_p = 13;
-xticks_p = [1930, 1980, 2017];
+xticks_p = [1930, 1970, 2010];
+xtick_len = [0.5];
 plot_dim = [50,50,200,190];
 plot_dim2 = [50,50,250,225];
 
@@ -135,7 +136,7 @@ Color = [];
 Y = [Livestock_quantiles(5,:), fliplr(Livestock_quantiles(1,:))];
 pgon = polyshape(X,Y);
 plot(pgon, 'EdgeColor', '#9e9ac8', 'FaceColor', '#bcbddc')
-%plot(pgon, 'LineStyle','none', 'FaceColor', '#4a1486')
+
 
 hold on
 
@@ -143,23 +144,28 @@ hold on
 Y = [Livestock_quantiles(4,:), fliplr(Livestock_quantiles(2,:))];
 pgon = polyshape(X,Y);
 plot(pgon, 'EdgeColor','#acacd2', 'FaceColor', '#807dba')
-%plot(pgon, 'LineStyle','none', 'FaceColor', '#807dba')
 
 % Plotting Median   
 plot([1930:2017],Livestock_quantiles(3,:),'Color','#54278f','LineWidth',2)
-%plot([1930:2017],Livestock_quantiles(3,:),'Color','#efedf5','LineWidth',2)
 
+% Editing the Axes
 xlim([1929,2018])
 xticks(xticks_p)
 ylim([0,40])
 yticks([0,20,40])
 
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim)
+h = gca; % Get axis to modify
+set(h,'TickLength',[0.022, 0.001])
+set(h,'XMinorTick','on','YMinorTick','off')
+h.XAxis.MinorTickValues = 1930:10:2017; % Minor ticks which don't line up with majors
+set(h,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(h,'XColor',[0,0,0])
+set(h,'YColor',[0,0,0])
+set(h,'ZColor',[0,0,0])
 box('on')
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
+
+% Saving the figure
+set(gcf,'position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'Livestock_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
 Figfolderpath = [OUTPUT_folderName,'Livestock_grid_TS.png'];
@@ -186,21 +192,29 @@ plot(pgon, 'EdgeColor','#fb6a4a', 'FaceColor', '#fb6a4a')
 % Plotting Median
 plot([1930:2017],Fertilizer_quantiles(3,:),'Color','#d32020','LineWidth',2)
 
+% Editing the Axes
 xlim([1929,2018])
 xticks(xticks_p)
 ylim([0,30])
 yticks([0,15,30])
-box('on')
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim)
 
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
+h = gca; % Get axis to modify
+set(h,'TickLength',[0.022, 0.001])
+set(h,'XMinorTick','on','YMinorTick','off')
+h.XAxis.MinorTickValues = 1930:10:2017; % Minor ticks which don't line up with majors
+set(h,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(h,'XColor',[0,0,0])
+set(h,'YColor',[0,0,0])
+set(h,'ZColor',[0,0,0])
+box('on')
+
+% Saving the figure
+set(gcf,'position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'Fertilizer_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
 Figfolderpath = [OUTPUT_folderName,'Fertilizer_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
+
 close all
 
 %% Crop Uptake
@@ -223,17 +237,24 @@ plot(pgon, 'EdgeColor','#74c476', 'FaceColor', '#41ab5d')
 % Plotting Median
 plot([1930:2017],Crop_quantiles(3,:),'Color','#006d2c','LineWidth',2)
 
+% Editing the Axes
 xlim([1929,2018])
 xticks(xticks_p)
 ylim([0,30])
 yticks([0,15,30])
 
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim)
+h = gca; % Get axis to modify
+set(h,'TickLength',[0.022, 0.001])
+set(h,'XMinorTick','on','YMinorTick','off')
+h.XAxis.MinorTickValues = 1930:10:2017; % Minor ticks which don't line up with majors
+set(h,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(h,'XColor',[0,0,0])
+set(h,'YColor',[0,0,0])
+set(h,'ZColor',[0,0,0])
 box('on')
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
+
+% Saving the figure
+set(gcf,'position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'Crop_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
 Figfolderpath = [OUTPUT_folderName,'Crop_grid_TS.png'];
@@ -260,17 +281,24 @@ plot(pgon, 'EdgeColor','#539fa8', 'FaceColor', '#539fa8')
 % Plotting Median
 plot([1930:2017],AgSurplus_quantiles(3,:),'Color','#1a5e66','LineWidth',2)
 
+% Editing the Axes
 xlim([1929,2018])
 xticks(xticks_p)
 ylim([-10,30])
 yticks([-10, 0, 10, 20 30])
 
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim2)
+h = gca; % Get axis to modify
+set(h,'TickLength',[0.022, 0.001])
+set(h,'XMinorTick','on','YMinorTick','off')
+h.XAxis.MinorTickValues = 1930:10:2017; % Minor ticks which don't line up with majors
+set(h,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(h,'XColor',[0,0,0])
+set(h,'YColor',[0,0,0])
+set(h,'ZColor',[0,0,0])
 box('on')
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
+
+% Saving the figure
+set(gcf,'position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'AgSurp_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
 Figfolderpath = [OUTPUT_folderName,'AgSurp_grid_TS.png'];
@@ -296,17 +324,24 @@ plot(pgon, 'EdgeColor','#fd9243', 'FaceColor', '#fd9243')
 % Plotting Median
 plot([1930:2017], PUE_quantiles(3,:),'Color','#7f2704','LineWidth',2)
 
+% Editing the Axes
 xlim([1929,2018])
 xticks(xticks_p)
 ylim([0,2])
 yticks([0, 1, 2])
 
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim2)
+h = gca; % Get axis to modify
+set(h,'TickLength',[0.022, 0.001])
+set(h,'XMinorTick','on','YMinorTick','off')
+h.XAxis.MinorTickValues = 1930:10:2017; % Minor ticks which don't line up with majors
+set(h,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(h,'XColor',[0,0,0])
+set(h,'YColor',[0,0,0])
+set(h,'ZColor',[0,0,0])
 box('on')
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
+
+% Saving the figure
+set(gcf,'position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'PUE_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
 Figfolderpath = [OUTPUT_folderName,'PUE_grid_TS.png'];
