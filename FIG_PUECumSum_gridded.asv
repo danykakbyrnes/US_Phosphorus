@@ -335,7 +335,7 @@ close all
 colorPicker = [1,102, 94, 171, 251, 244;
                47, 26, 0, 234, 192, 140; 
                90, 188, 180, 205, 244, 241;
-               113,86,29, 255, 238, 200]./255;
+               216,179,101, 255, 238, 200]./255;
 
 % Ordering the Input data so that it matches with the D vector. 
 IN2017 = FERT2017_v + LVSTK2017_v;
@@ -414,53 +414,6 @@ end
 
 plottingMatrix = sortrows(plottingMatrix, 9,'ascend');
 
-
-for i = 1:4
-    figure(i)
-    % Isolating relevant data
-    pM_Q = plottingMatrix(plottingMatrix(:,7) == i, :);
-
-    mSize = pM_Q(:,8);
-    mSize(find(mSize > 50)) = 50;
-    
-    % Setting up colorramp
-    color = pM_Q(:,9);
-    color(find(color > 50)) = 50;
-    first = colorPicker(i,4:6);
-    last = colorPicker(i,1:3);
-    graduatedColorRamp = [first; NaN(255,3); last];
-    graduatedColorRamp = fillmissing(graduatedColorRamp,'linear'); 
-    
-    scatter(pM_Q(:,5),pM_Q(:,6), ...
-        mSize, color, 'filled','s')
-    
-    set(gca,'Colormap',...
-        graduatedColorRamp)
-    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-    set(gcf,'position',plot_dim_1)
-    box on
-    set(gca,'XColor',[0,0,0])
-    set(gca,'YColor',[0,0,0])
-    set(gca,'ZColor',[0,0,0])
-end
-
-figure(1)
-xlim([1,2])
-ylim([0, 4000])
-
-figure(2)
-xlim([0,1])
-ylim([0, 4000])
-
-figure(3) 
-xlim([0,1])
-ylim([-1000,0])
-
-figure(4)
-xlim([1,2])
-ylim([-1000,0])
-
-figure(5)
 plotIDX = [2,1,3,4];
 for i = 1:4
     subplot(2,2,plotIDX(i))
@@ -510,6 +463,20 @@ ylim([-1000,0])
 subplot(2,2,4)
 xlim([1,2])
 ylim([-1000,0])
+
+% Setting up colorramp
+color = plottingMatrix(:,8);
+color(find(color > 50)) = 50;
+first = colorPicker(1,4:6);
+last = colorPicker(1,1:3);
+graduatedColorRamp = [first; NaN(255,3); last];
+graduatedColorRamp = fillmissing(graduatedColorRamp,'linear'); 
+set(gca,'Colormap',...
+    graduatedColorRamp)
+
+hold on
+plot([0,20], [0,0],'--k','LineWidth',1)
+plot([1,1], [-2000,4000],'--k','LineWidth',1)
 
 % Saving Figure
 %Figfolderpath = [OUTPUTfilepath,'Quadrant_2017_',datestr(datetime,'mmddyy'),'.png'];

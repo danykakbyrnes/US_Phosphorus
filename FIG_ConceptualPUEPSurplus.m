@@ -1,4 +1,4 @@
-clc, clear all, close all
+clc, clear all%, close all
 
 %% Folders and files
 filepathPSurplus = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
@@ -15,9 +15,10 @@ PUE =  PUE(:);
 
 % subset 10%
 scatter(PS, PUE,'o','filled','k')
-
+close all
 %% Supplemental Plots
 % plot y = b*(1-x) where b = 10, 100
+figure(1)
 
 b = [2,10,50,100];
 
@@ -37,11 +38,13 @@ figure(2)
 
 b = [2,10,50,100];
 
-fp = fplot(@(x) (1-x./b),'LineWidth',2);
+fp = fplot(@(x) b.*(1/x - 1),'LineWidth',2);
+xlim([0,1])
+ylim([0,100])
 
-legend({'input (kg-P/ha) = 2', 'input (kg-P/ha) = 10', 'input (kg-P/ha) = 50', 'input (kg-P/ha) = 100'})
+legend({'CU (kg-P/ha) = 2', 'CU (kg-P/ha) = 10', 'CU (kg-P/ha) = 50', 'CU (kg-P/ha) = 100'})
 
-ylabel('Phosphorus Use Efficiency')
-xlabel('P Surplus (kg-P ha^-^1)')
+xlabel('Phosphorus Use Efficiency')
+ylabel('P Surplus (kg-P ha^-^1)')
 
 set(gca,'FontSize',14)

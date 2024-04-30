@@ -17,9 +17,9 @@ setwd("B:/LabFiles/users/DanykaByrnes/")
 # ******************************************************************************
 # Setting up filepaths
 YEARS = 1930:2017
-INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_051523/'
-OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
-NSURPLUS_OUTPUT_folders = '3 TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded (2023-11-18)/'
+INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
+OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
+NSURPLUS_OUTPUT_folders = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded (2023-11-18)/'
 HUC2_loc = '0 General Data/HUC2/'
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
@@ -30,7 +30,7 @@ Components = c('Lvst_Agriculture_LU/Lvst_',
 HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
 
 # Set up clusters - this will make things faster
-UseCores <- detectCores() - 12 #leaving 2
+UseCores <- detectCores() - 12 #leaving half
 cl = makeCluster(UseCores)
 registerDoParallel(cl)
 Comp_extc = data.frame()
@@ -38,12 +38,12 @@ Comp_extc2 = data.frame()
 
 # Iterate through rasters and clip each watershed to all rasters
 beginCluster(cl)
-#par = foreach(a = 1:length(Components)) %dopar% {
-#for (a in 1:length(Components)) {
-#  library(sf)
-#  library(terra)
+par = foreach(a = 1:length(Components)) %dopar% {
+for (a in 1:length(Components)) {
+  library(sf)
+  library(terra)
 
-a = 3
+a = 1
   for (i in 1:length(YEARS)) {
     tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[i],'.tif')
     #R = raster(tif_folder)
@@ -75,9 +75,10 @@ a = 3
   colnames(Comp_extc)[1] ="REG"
   write.table(Comp_extc, file = paste0(OUTPUT_folders, ComponentsName[a],
                                       '_meanHUC2Components.txt'), row.names = FALSE)
-  colnames(Comp_extc2)[1] ="REG"
+  colnames(Comp_extc2) <- colnames(Comp_extc)
   write.table(Comp_extc2, file = paste0(OUTPUT_folders, ComponentsName[a],
                                        '_medianHUC2Components.txt'), row.names = FALSE)
-#}
+}
+}
 
-#stopCluster(cl)
+stopCluster(cl)
