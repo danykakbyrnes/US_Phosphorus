@@ -6,7 +6,7 @@ clc, clear, close all
 smoothing_int = [5 5];
 
 fontSize_p = 9;
-plot_dim_1 = [100,100,250,350];
+plot_dim_1 = [100,100,250,175];
 plot_dim_3 = [100,100,400,125];
 mSize = 36; 
 
@@ -93,7 +93,7 @@ HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 HUC_PUE = sortrows(HUC_PUE,1,'descend');
 
 % Isolate three regions. 
-Regions_idx = [1,6,7];
+Regions_idx = [4,6,7];
 HUCLU = HUCLU(Regions_idx,:);
 HUC_PUE = HUC_PUE(Regions_idx,:);
 MANURE_AGHA = MANURE_AGHA(Regions_idx,:);
@@ -303,17 +303,20 @@ print('-dpng','-r600',[Figfolderpath])
 %% How to make the Cumulative Surplus timeseries summary figures
 close all
 SURPcumu_AGHA = readmatrix([OUTPUT_folderName, 'CumSum_meanHUC2_fromgrid.txt']);
-SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend');
+SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'descend');
 
 % Isolate 1980 and 2017
 idx_1980 = find(YEARS == 1980);
 idx_2017 = find(YEARS == 2017);
 
 SURPcumu_AGHA = SURPcumu_AGHA(:,[1, idx_1980, idx_2017]);
+SURPcumu_AGHA = SURPcumu_AGHA(Regions_idx,:);
+SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend');
 
 % Insert a column in indexes that are sequential, for plotting purposes. 
 SURPcumu_AGHA = [SURPcumu_AGHA, [1:size(SURPcumu_AGHA,1)]'];
-regionID = {'i';'h';'g';'f';'e'; 'd';'c';'b';'a'};
+%regionID = {'9';'8';'7';'6';'5'; '4';'3';'2';'1'};
+regionID = {'Region 7';'Region 6';'Region 4'};
 
 h = barh(SURPcumu_AGHA(:,end), SURPcumu_AGHA(:,2:3)', 1);
 h(1).FaceColor = [178,223,138]./255;
@@ -333,5 +336,5 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 
 set(gcf, 'Position',plot_dim_1)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_SURPcumu_BarChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_SURPcumu_BarChart_subset.png'];
 print('-dpng','-r600',[Figfolderpath])

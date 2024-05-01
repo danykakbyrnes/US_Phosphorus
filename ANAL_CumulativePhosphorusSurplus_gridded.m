@@ -18,10 +18,6 @@ CumulativeP = zeros(georef.RasterSize);
 CumulativeP = single(CumulativeP);
 
 for i = 1:length(YEARS)
-
-    if i == 33
-        'hi'
-    end
     YEAR_i = YEARS(i);
     file_lvsk_i = dir([INPUTfilepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Livestock_i,~] = readgeoraster([INPUTfilepath, livestockFolder,'\',file_lvsk_i.name]);
