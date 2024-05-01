@@ -349,10 +349,10 @@ IN1980 = IN1980(I,:);
 
 %% Binned data, coor median input
 % Ranges and bin dimensions
-xBinDim = 0.05;
+xBinDim = 0.03;
 yBinDim = 150;
-xRange = 0:xBinDim:max([D(:,3);D(:,4)]); % PUE
-yRange = min([D(:,1);D(:,2)]):yBinDim:max([D(:,1);D(:,2)]); % Cumu Surp
+xRange = 0:xBinDim:max(D(:,4)); % PUE
+yRange = min(D(:,2)):yBinDim:max(D(:,2)); % Cumu Surp
 % Adding a 0 to the y ranges
 yRange = sort([yRange,0], 'ascend');
 
