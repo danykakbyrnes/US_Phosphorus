@@ -4,7 +4,7 @@ clc, clear
 PUEfilepath = '..\OUTPUTS\PUE\';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
-RasterINPUTfilepath = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
+RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
 
 [D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 % Getting raster information
@@ -16,8 +16,6 @@ loadstar_PUE = 1;% median(D(:,3),'omitnan');
 % binscatter(x,y)   
 [PUE2017,~] = readgeoraster([PUEfilepath, 'PUE_2017.tif']);
 [CS2017,~] = readgeoraster([CUMSUMfilepath,'CumSum_2017.tif']);
-PUE2017(find(PUE2017 > 2^20)) = 0; 
-CS2017(find(CS2017 > 2^20)) = 0; 
 
 Q = zeros(size(CS2017));
 for i = 1:numel(Q)

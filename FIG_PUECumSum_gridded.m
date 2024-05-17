@@ -2,12 +2,13 @@ clc, clear, close all
 
 % Aesthetic 
 fontSize_p = 10;
-fontSize_p2 = 12; 
-plot_dim_1 = [400,400,375,280];
-plot_dim_2 = [200,200,170,125];
-plot_dim_3 = [200,200,200,150];
-plot_dim_4 = [200,200,500,400];
-mSize = 10; 
+fontSize_p2 = 8; 
+plot_dim_1 = [400,400,200,150];
+plot_dim_2 = [200,200,215,350];
+plot_dim_alt = [200,200,215,215];
+plot_dim_3 = [200,200,400,200];
+
+mSize = 4; 
 
 colourPalette = [1,102,94;
                 140,81,10; 
@@ -21,42 +22,41 @@ colourPalette = [1,102,94;
 
 % Read in gif files
 INPUTfilepath = '..\INPUTS_103122\';
-PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 HUC2filepath = '..\OUTPUTS\HUC2\';
+trendINPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
 
+% These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.
+PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
+CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
 [CS2017,~] = readgeoraster(CUMSUMfilepath); % single
-% Removing "no data"
-PUE2017(find(PUE2017 > 2^20)) = 0; 
-CS2017(find(CS2017 > 2^20)) = 0; 
 
+% Reading in 1980 data.
 PUEfilepath = '..\OUTPUTS\PUE\PUE_1980.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_1980.tif';
 
-% Reading in 1980 data.
 [PUE1980,~] = readgeoraster(PUEfilepath); % single
 [CS1980,~] = readgeoraster(CUMSUMfilepath); % single
-% Removing "no data"
-PUE1980(find(PUE1980 > 2^20)) = 0; 
-CS1980(find(CS1980 > 2^20)) = 0; 
 
 % Vectorizing the data
 PUE2017_v = PUE2017(:);
 CS2017_v = CS2017(:);
-PUE2017 = []; CS2017 = []; 
-
 PUE1980_v = PUE1980(:);
 CS1980_v = CS1980(:);
-PUE1980 = []; CS1980 = []; 
 
+clear PUE2017 CS2017 PUE1980 CS1980
+
+% Creating a matrix with available data.
 D = [CS1980_v, CS2017_v,PUE1980_v, PUE2017_v]; 
 
-loadstar_CumSum = 0; %median(D(:,1),'omitnan');
-loadstar_PUE = 1;% median(D(:,3),'omitnan');
+% Setting the quadrant divisions.
+loadstar_CumSum = 0;
+loadstar_PUE = 1;
 
+% Assigning the data into quadrants.
 % 1980
 for i = 1:length(D)
    
@@ -95,184 +95,37 @@ end
 
 save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
 
-D_copy = D;
-%% Creating barchart of the fraction of the total dataset that belongs to what quadrant.
-D = D_copy;
+% D_copy is the unfiltered form of the data.
+D_allData = D;
 
-% Stats for each quadrant
-% This is the fraction of ALL land. 
-%D(find(D(:,5) == 0 & D(:,6) == 0),:) = [];
+% Cleaning the data 
+% First we will clean up the D matrix to only consider data
+% that has both 1980 and 2017 data. Which means looking ONLY at the 
+% gridcells that are still agricultural. If PUE is NaN
+% then there is no ag land in that year for the gridcell.
 
-% 1980
-Q_1980 = [length(find(D(:,5) == 1)); 
-          length(find(D(:,5) == 2)); 
-          length(find(D(:,5) == 3)); 
-          length(find(D(:,5) == 4))]./size(D,1); 
-
-Q_2017 = [length(find(D(:,6) == 1)); 
-          length(find(D(:,6) == 2)); 
-          length(find(D(:,6) == 3)); 
-          length(find(D(:,6) == 4))]./size(D,1); 
-
-figure(1)
-b = bar([Q_1980,Q_2017]','stacked');
-b(1).FaceColor = colourPalette(1,:);
-b(2).FaceColor = colourPalette(2,:);
-b(3).FaceColor = colourPalette(3,:);
-b(4).FaceColor = colourPalette(4,:);
-
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,...
-    {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},...
-    {'k','k','k'});
-set(gcf,'position',plot_dim_3)
-
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
-
-ylim([0,1])
-
-set(gca,'xticklabel',{'1980', '2017'})
-
-%% Finding the distribution of dominant manure inputs (vs. tot fertilizer) for each quadrant.
-D = D_copy;
-% Read in the 2017 livestock and fertilzier rasters
-INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
-YEARS = 1930:2017;
-
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
-livestockFolder = 'Lvst_Agriculture_LU\';
-
-[LVSTK2017,~] = readgeoraster([INPUTfilepath,livestockFolder,'Lvst_2017.tif']);
-[FERT2017,~] = readgeoraster([INPUTfilepath,fertilizerFolder,'Fertilizer_Ag_2017.tif']);
-
-[LVSTK1980,~] = readgeoraster([INPUTfilepath,livestockFolder,'Lvst_1980.tif']);
-[FERT1980,~] = readgeoraster([INPUTfilepath,fertilizerFolder,'Fertilizer_Ag_1980.tif']);
-
-LVSTK2017_v = double(LVSTK2017(:));
-FERT2017_v = double(FERT2017(:));
-
-LVSTK1980_v = double(LVSTK1980(:));
-FERT1980_v = double(FERT1980(:));
-
-
-% Removing the boxes that have no quadrant in 2018
-Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6), ones(size(D,1),1)*2017; 
-                      LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5), ones(size(D,1),1)*1980];         
-
-% Removing all zeros from 1980 and 2017. This make sense because we are
-% left with JUST the points on the quadrant plot. 
-Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0,:) ;
-
-Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
-
-%% Creating the boxplot panel for the framework figure
-figure(1)
-
-for i = 1:4
-    sLvsk_Fert_Quadrant= Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == i,:);
-    b = boxchart(sLvsk_Fert_Quadrant.Q,...
-        sLvsk_Fert_Quadrant.LvstkFertFract,'MarkerStyle',...
-        'none','BoxFaceColor',colourPalette(i,:),'GroupByColor',...
-        sLvsk_Fert_Quadrant.QYear);
-    hold on
-end
-
-box on
-set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim_1)
-
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
-
-ylim([0,1.05])
-xticks([0, 0.5, 1, 1.5, 2, 2.5,3, 3.5,4])    
-xticklabels({'.','1980','2017','1980','2017','1980','2017','1980','2017'})
-%ylabel('% Manure of Total Fertilizer')
-
-%%
-figure(2)
-Lvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 1980,:);
-
-for i = 1:4
-    sLvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant_1980(Lvsk_Fert_Quadrant_1980.Q == i,:);
-    b_1980 = boxchart(sLvsk_Fert_Quadrant_1980.Q,...
-        sLvsk_Fert_Quadrant_1980.LvstkFertFract*100,'MarkerStyle',...
-        'none','BoxFaceColor',colourPalette(i,:));
-    hold on
-
-    oLvsk_Fert_Quadrant_1980 = Lvsk_Fert_Quadrant_1980(Lvsk_Fert_Quadrant_1980.Q ~= i,:);
-    pv(i) = ranksum(sLvsk_Fert_Quadrant_1980.LvstkFertFract, oLvsk_Fert_Quadrant_1980.LvstkFertFract);
-end
-
-box on
-set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim_1)
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
-
-ylim([0,105])
-xticks([1,2,3,4])
-xticklabels({'Q1','Q2','Q3','Q4'})
-
-Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_1980_',datestr(datetime,'mmddyy'),'.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(3)
-Lvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == 2017,:);
-
-for i = 1:4
-    sLvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant_2017(Lvsk_Fert_Quadrant_2017.Q == i,:);
-    b_2017 = boxchart(sLvsk_Fert_Quadrant_2017.Q,...
-        sLvsk_Fert_Quadrant_2017.LvstkFertFract*100,'MarkerStyle',...
-        'none','BoxFaceColor',colourPalette(i,:));
-    hold on
-
-    oLvsk_Fert_Quadrant_2017 = Lvsk_Fert_Quadrant_2017(Lvsk_Fert_Quadrant_2017.Q ~= i,:);
-    pv_2017(i,1) = ranksum(sLvsk_Fert_Quadrant_2017.LvstkFertFract, oLvsk_Fert_Quadrant_2017.LvstkFertFract);
-end
-box on
-set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-set(gcf,'position',plot_dim_1)
-
-set(gca,'XColor',[0,0,0])
-set(gca,'YColor',[0,0,0])
-set(gca,'ZColor',[0,0,0])
-
-ylim([0,105])
-xticks([1,2,3,4])
-xticklabels({'Q1','Q2','Q3','Q4'})
-%ylabel('% Manure of Total Inputs')
-
-Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_2017_',datestr(datetime,'mmddyy'),'.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-%% Subsampling the data
-D = D_copy;
-% Looking ONLY at the gridcells that are still agricultural.
 DisnanIDX = isnan(D(:,3)) + isnan(D(:,4)); 
 D = D(DisnanIDX == 0,:);
+D = D(D(:,5) ~= 0, :); % removing 0 quadrant data. 
+'data needs to be updated. once updated, check if there are 0s.'
 
-% Subsetting the data so it's easier to plot. 1% of the data.
+% D_copy is the cleaned form of the data.
+D_cleanedData = D;
+%% Quadrant Plot
+D = D_cleanedData;
+% To improve computation speed for plotting, we will only use 1% of the 
+% gridcells available.
 I = sort(randperm(length(D),ceil(length(D)/100))'); 
 D = D(I,:);
-
-% Getting quadrant numbers
-unQ = unique(D(:,6));
-unQ = unQ(find(unQ ~= 0));
-
-%% Quadrant Plot
-close all
 
 % Create colormaps
 colourPalette = [1,102,94;
                 140,81,10; 
                 90,180,172;
                 216,179,101]./255;
+
+% Getting quadrant numbers
+unQ = unique(D(:,6));
 
 % 2017
 figure(1)
@@ -284,13 +137,15 @@ for i = 1:length(unQ)
     hold on
 end
 
-plot([0,20], [0,0],'--k','LineWidth',1)
-plot([1,1], [-2000,4000],'--k','LineWidth',1)
+plot([0,20], [0,0],'--k','LineWidth',0.5)
+plot([1,1], [-2000,4000],'--k','LineWidth',0.5)
 
 xlim([0,3])
 ylim([-300, 4000])
 
-set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3, ...
+    {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+    {'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
 box on
@@ -311,13 +166,15 @@ for i = 1:length(unQ)
               'MarkerFaceAlpha',0.05)
     hold on
 end
-plot([0,20], [0,0],'--k','LineWidth',1)
-plot([1,1], [-2000,4000],'--k','LineWidth',1)
+plot([0,20], [0,0],'--k','LineWidth',0.5)
+plot([1,1], [-2000,4000],'--k','LineWidth',0.5)
 
 xlim([0,3])
 ylim([-300, 4000])
 
-set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3, ...
+    {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+    {'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
 box on
@@ -329,352 +186,138 @@ set(gca,'ZColor',[0,0,0])
 Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_', datestr(datetime,'mmddyy'),'.png'];
 print('-dpng','-r600',Figfolderpath)
 
-%% Limitation of SURP and PUE Plot
-close all
-
-% Create colormaps
-colorPicker = [1,102, 94, 171, 251, 244;
-               47, 26, 0, 234, 192, 140; 
-               90, 188, 180, 205, 244, 241;
-               113,86,29, 255, 238, 200]./255;
-
-% Ordering the Input data so that it matches with the D vector. 
-IN2017 = FERT2017_v + LVSTK2017_v;
-IN2017 = IN2017(DisnanIDX == 0,:);
-IN2017 = IN2017(I,:); 
-
-IN1980 = FERT1980_v + LVSTK1980_v;
-IN1980 = IN1980(DisnanIDX == 0,:);
-IN1980 = IN1980(I,:); 
-
-%% Binned data, coor median input
-% Ranges and bin dimensions
-xBinDim = 0.05;
-yBinDim = 150;
-xRange = 0:xBinDim:max([D(:,3);D(:,4)]); % PUE
-yRange = min([D(:,1);D(:,2)]):yBinDim:max([D(:,1);D(:,2)]); % Cumu Surp
-% Adding a 0 to the y ranges
-yRange = sort([yRange,0], 'ascend');
-
-%% 2017
-plottingMatrix = [];
-
-for i = 2:length(xRange)
-    % X = N surplus slope
-    ith_x = [xRange(i-1),xRange(i)];
-
-    for j = 2:length(yRange)
-        % Y = C slope
-        jth_y = [yRange(j-1),yRange(j)];
-
-        idx_i = find(D(:,4) >= ith_x(1) & D(:,4) < ith_x(2));
-        idx_j = find(D(:,2) >= jth_y(1) & D(:,2) < jth_y(2));
-        
-        [pair_idx,~] = intersect(idx_i,idx_j);
-
-        if xRange(i) > 1 && yRange(j) >= 0
-            Q_j = 1; 
-        elseif xRange(i) <= 1 && yRange(j) >= 0
-            Q_j = 2;
-        elseif xRange(i) <= 1 && yRange(j) < 0
-            Q_j = 3;
-        elseif xRange(i) > 1 && yRange(j) < 0
-            Q_j = 4; 
-        end
-
-        if ~isempty(pair_idx)
-            plottingMatrix = [plottingMatrix; 
-                            ith_x, jth_y,...
-                            ith_x(2)-xBinDim/2, jth_y(2)-yBinDim/2,...
-                            Q_j,...
-                            size(pair_idx,1),...
-                            median(IN2017(pair_idx))];
-        end
-    end
-end
-
-plottingMatrix = sortrows(plottingMatrix, 9,'ascend');
-
-%
-close all
-for i = 1:4
-    figure(i)
-    % Isolating relevant data
-    pM_Q = plottingMatrix(plottingMatrix(:,7) == i, :);
-
-    mSize = pM_Q(:,8);
-    mSize(find(mSize > 100)) = 100;
-    
-    % Setting up colorramp
-    color = pM_Q(:,9);
-    color(find(color > 50)) = 50;
-    first = colorPicker(i,4:6);
-    last = colorPicker(i,1:3);
-    graduatedColorRamp = [first; NaN(255,3); last];
-    graduatedColorRamp = fillmissing(graduatedColorRamp,'linear'); 
-    
-    scatter(pM_Q(:,5),pM_Q(:,6), ...
-        mSize, color, 'filled','s')
-    
-    set(gca,'Colormap',...
-        graduatedColorRamp)
-    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-    set(gcf,'position',plot_dim_1)
-    box on
-    set(gca,'XColor',[0,0,0])
-    set(gca,'YColor',[0,0,0])
-    set(gca,'ZColor',[0,0,0])
-end
-
-figure(1)
-xlim([1,2])
-ylim([0, 4000])
-
-figure(2)
-xlim([0,1])
-ylim([0, 4000])
-
-figure(3) 
-xlim([0,1])
-ylim([-2000,0])
-
-figure(4)
-xlim([1,2])
-ylim([-2000,0])
-%
-figure(5)
-plotIDX = [2,1,3,4];
-for i = 1:4
-    subplot(2,2,plotIDX(i))
-    % Isolating relevant data
-    pM_Q = plottingMatrix(plottingMatrix(:,7) == i, :);
-
-    mSize = pM_Q(:,8);
-    mSize(find(mSize > 30)) = 30;
-    
-    % Setting up colorramp
-    color = pM_Q(:,9);
-    color(find(color > 50)) = 50;
-    first = colorPicker(i,4:6);
-    last = colorPicker(i,1:3);
-    graduatedColorRamp = [first; NaN(255,3); last];
-    graduatedColorRamp = fillmissing(graduatedColorRamp,'linear'); 
-    
-    scatter(pM_Q(:,5),pM_Q(:,6), ...
-        mSize, color, 'filled','s')
-    
-    set(gca,'Colormap',...
-        graduatedColorRamp)
-    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3, ...
-        {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
-        {'k','k','k'});
-
-    box on
-    set(gca,'XColor',[0,0,0])
-    set(gca,'YColor',[0,0,0])
-    set(gca,'ZColor',[0,0,0])
-end
-set(gcf,'position',plot_dim_4)
-subplot(2,2,2)
-xlim([1,2])
-ylim([0, 4000])
-xticks([])
-yticks([])
-
-%figure(2)
-subplot(2,2,1)
-xlim([0,1])
-ylim([0, 4000])
-xticks([])
-
-%figure(3)
-subplot(2,2,3)
-xlim([0,1])
-ylim([-1000,0])
-
-%figure(4)
-subplot(2,2,4)
-xlim([1,2])
-ylim([-2000,0])
-yticks([])
-
-
-%% 1980
-plottingMatrix = [];
-
-for i = 2:length(xRange)
-    % X = N surplus slope
-    ith_x = [xRange(i-1),xRange(i)];
-
-    for j = 2:length(yRange)
-        % Y = C slope
-        jth_y = [yRange(j-1),yRange(j)];
-
-        idx_i = find(D(:,4) >= ith_x(1) & D(:,4) < ith_x(2));
-        idx_j = find(D(:,2) >= jth_y(1) & D(:,2) < jth_y(2));
-        
-        [pair_idx,~] = intersect(idx_i,idx_j);
-
-        if xRange(i) > 1 && yRange(j) >= 0
-            Q_j = 1; 
-        elseif xRange(i) <= 1 && yRange(j) >= 0
-            Q_j = 2;
-        elseif xRange(i) <= 1 && yRange(j) < 0
-            Q_j = 3;
-        elseif xRange(i) > 1 && yRange(j) < 0
-            Q_j = 4; 
-        end
-
-        if ~isempty(pair_idx)
-            plottingMatrix = [plottingMatrix; 
-                            ith_x, jth_y,...
-                            ith_x(2)-xBinDim/2, jth_y(2)-yBinDim/2,...
-                            Q_j,...
-                            size(pair_idx,1),...
-                            median(IN1980(pair_idx))];
-        end
-    end
-end
-
-plottingMatrix = sortrows(plottingMatrix, 9,'ascend');
-
-%
-close all
-for i = 1:4
-    figure(i)
-    % Isolating relevant data
-    pM_Q = plottingMatrix(plottingMatrix(:,7) == i, :);
-
-    mSize = pM_Q(:,8);
-    mSize(find(mSize > 100)) = 100;
-    
-    % Setting up colorramp
-    color = pM_Q(:,9);
-    color(find(color > 50)) = 50;
-    first = colorPicker(i,4:6);
-    last = colorPicker(i,1:3);
-    graduatedColorRamp = [first; NaN(255,3); last];
-    graduatedColorRamp = fillmissing(graduatedColorRamp,'linear'); 
-    
-    scatter(pM_Q(:,5),pM_Q(:,6), ...
-        mSize, color, 'filled','s')
-    
-    set(gca,'Colormap',...
-        graduatedColorRamp)
-    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-    set(gcf,'position',plot_dim_1)
-    box on
-    set(gca,'XColor',[0,0,0])
-    set(gca,'YColor',[0,0,0])
-    set(gca,'ZColor',[0,0,0])
-end
-
-figure(1)
-xlim([1,2])
-ylim([0, 4000])
-
-figure(2)
-xlim([0,1])
-ylim([0, 4000])
-
-figure(3) 
-xlim([0,1])
-ylim([-2000,0])
-
-figure(4)
-xlim([1,2])
-ylim([-2000,0])
-%
-figure(5)
-plotIDX = [2,1,3,4];
-for i = 1:4
-    subplot(2,2,plotIDX(i))
-    % Isolating relevant data
-    pM_Q = plottingMatrix(plottingMatrix(:,7) == i, :);
-
-    mSize = pM_Q(:,8);
-    mSize(find(mSize > 30)) = 30;
-    
-    % Setting up colorramp
-    color = pM_Q(:,9);
-    color(find(color > 50)) = 50;
-    first = colorPicker(i,4:6);
-    last = colorPicker(i,1:3);
-    graduatedColorRamp = [first; NaN(255,3); last];
-    graduatedColorRamp = fillmissing(graduatedColorRamp,'linear'); 
-    
-    scatter(pM_Q(:,5),pM_Q(:,6), ...
-        mSize, color, 'filled','s')
-    
-    set(gca,'Colormap',...
-        graduatedColorRamp)
-    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3, ...
-        {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
-        {'k','k','k'});
-
-    box on
-    set(gca,'XColor',[0,0,0])
-    set(gca,'YColor',[0,0,0])
-    set(gca,'ZColor',[0,0,0])
-end
-set(gcf,'position',plot_dim_4)
-subplot(2,2,2)
-xlim([1,2])
-ylim([0, 4000])
-xticks([])
-yticks([])
-
-%figure(2)
-subplot(2,2,1)
-xlim([0,1])
-ylim([0, 4000])
-xticks([])
-
-%figure(3)
-subplot(2,2,3)
-xlim([0,1])
-ylim([-1000,0])
-
-%figure(4)
-subplot(2,2,4)
-xlim([1,2])
-ylim([-2000,0])
-yticks([])
-
-% Saving Figure
-%Figfolderpath = [OUTPUTfilepath,'Quadrant_2017_',datestr(datetime,'mmddyy'),'.png'];
-%print('-dpng','-r600',[Figfolderpath])
-
 %% Creating a Sankey Flow Chart
-%D(D(:,5) == 0,:) = [];
-D = D_copy;
-%D(D(:,6) == 0,:) = [];
-D(find(D(:,5) == 0 & D(:,6) == 0),:) = [];
+D = D_cleanedData;
+
 data = D(:,[5,6]);
 % Customizable options
 % Colormap: can be the name of matlab colormaps or a matrix of (N x 3).
 %   Important: N must be the max number of categories in a layer 
 %   multiplied by the number of layers. 
 
-%options.color_map = [colourPalette; colourPalette];
-options.flow_transparency = 0.1;    % opacity of the flow paths
-options.bar_width = 40;             % width of the category blocks
+
+options.flow_transparency = 0.3;    % opacity of the flow paths
+options.bar_width = 30;             % width of the category blocks
 options.show_perc = false;          % show percentage over the blocks
 options.text_color = [1 1 1];       % text color for the percentages
-options.show_layer_labels = true;   % show layer names under the chart
-options.show_cat_labels = true;     % show categories over the blocks.
-options.categoryNames = ['Year 1980','Year 2017'];
+options.show_layer_labels = false;   % show layer names under the chart
+options.show_cat_labels = false;     % show categories over the blocks.
+options.categoryNames = [{'1980'},{'2017'}];
 options.show_legend = false;        % show legend with the category names. 
                                     % if the data is not a table, then the
                                     % categories are labeled as catX-layerY
-
-plotSankeyFlowChart(data,options);
-
-D = D_copy;
-D(D(:,5) == 0,:) = [];
-D(D(:,6) == 0,:) = [];
-data = D(:,[5,6]);
-
 options.color_map = [colourPalette; colourPalette];
-
 plotSankeyFlowChart(data,options);
+%set(gcf,'position',plot_dim_2)
+set(gcf,'position',plot_dim_alt)
+
+Figfolderpath = [OUTPUTfilepath,'SankeyPlot_',datestr(datetime,'mmddyy'),'.svg'];
+print('-dsvg',[Figfolderpath])
+
+% Percentages for Manuscript Metrics
+Q_pct = [sum(D(:,5) == 1)/length(D), sum(D(:,6) == 1)/length(D); 
+     sum(D(:,5) == 2)/length(D), sum(D(:,6) == 2)/length(D); 
+     sum(D(:,5) == 3)/length(D), sum(D(:,6) == 3)/length(D);
+     sum(D(:,5) == 4)/length(D), sum(D(:,6) == 4)/length(D)]*100;
+save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')
+
+%% Finding the distribution of dominant manure inputs (vs. tot fertilizer) 
+% for each quadrant.
+D = D_allData; % D = CS1980, CS2017, PUE1980, PUE2017, Q1980, Q2017
+
+% Read in the 2017 livestock and fertilzier rasters
+YEARS = 1930:2017;
+
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
+livestockFolder = 'Lvst_Agriculture_LU\';
+
+[LVSTK2017,~] = readgeoraster([trendINPUTfilepath,livestockFolder,...
+                               'Lvst_2017.tif']);
+[FERT2017,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
+                              'Fertilizer_Ag_2017.tif']);
+
+[LVSTK1980,~] = readgeoraster([trendINPUTfilepath,livestockFolder,...
+                                'Lvst_1980.tif']);
+[FERT1980,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
+                                'Fertilizer_Ag_1980.tif']);
+
+LVSTK2017_v = double(LVSTK2017(:));
+FERT2017_v = double(FERT2017(:));
+
+LVSTK1980_v = double(LVSTK1980(:));
+FERT1980_v = double(FERT1980(:));
+
+% Removing the boxes that have no quadrant in 2018
+Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6),... 
+                      repmat(2017,size(D,1),1); 
+                      LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5),...
+                      repmat(1980,size(D,1),1)];
+
+% Cleaning the data.
+Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(~isnan(Lvsk_Fert_Quadrant(:,1)),:); 
+Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0, :); % removing 0 quadrant data. 
+
+'data needs to be updated. once updated, check if there are 0s.'
+
+Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
+save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
+
+%% Creating the boxplot panel for quadrant input distribution (figure 6).
+% 2017
+figure(1)
+for i = 1:4
+    sLvsk_Fert_Quadrant= Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.Q == i,:);
+    b = boxchart(sLvsk_Fert_Quadrant.Q,...
+        sLvsk_Fert_Quadrant.LvstkFertFract,'MarkerStyle',...
+        'none','BoxFaceColor',colourPalette(i,:),'GroupByColor',...
+        sLvsk_Fert_Quadrant.QYear);
+    hold on
+end
+
+box on
+set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(gcf,'position',plot_dim_1)
+
+set(gca,'XColor',[0,0,0])
+set(gca,'YColor',[0,0,0])
+set(gca,'ZColor',[0,0,0])
+
+ylim([0,1.05])
+xlim([1,4])
+xticks([1, 1.5, 2, 2.5,3, 3.5, 4])    
+xticklabels({'1980','2017','1980','2017','1980','2017','1980','2017'})
+ylabel('% Manure of Inputs')
+close all
+
+unyears = unique(Lvsk_Fert_Quadrant.QYear);
+for j = 1:2
+    subplot(1,2,j)
+    Lvsk_Fert_Quadrant_j = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == unyears(j),:);
+    for i = 1:4
+        
+        sLvsk_Fert_Quadrant = Lvsk_Fert_Quadrant_j(Lvsk_Fert_Quadrant_j.Q == i,:);
+        b_1980 = boxchart(sLvsk_Fert_Quadrant.Q,...
+            sLvsk_Fert_Quadrant.LvstkFertFract*100,'MarkerStyle',...
+            'none','BoxFaceColor',colourPalette(i,:));
+        hold on
+    
+        oLvsk_Fert_Quadrant = Lvsk_Fert_Quadrant_j(Lvsk_Fert_Quadrant_j.Q ~= i,:);
+        pv(i) = ranksum(sLvsk_Fert_Quadrant.LvstkFertFract, oLvsk_Fert_Quadrant.LvstkFertFract);
+    end
+    box on
+    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+    set(gca,'XColor',[0,0,0])
+    set(gca,'YColor',[0,0,0])
+    set(gca,'ZColor',[0,0,0])
+    
+    ylim([0,105])
+    xticks([1,2,3,4])
+    xticklabels({'Q1','Q2','Q3','Q4'})
+end
+subplot(1,2,1)
+ylabel('% Manure of Inputs')
+subplot(1,2,2)
+yticks([])
+set(gcf,'position',plot_dim_3)
+Figfolderpath = [OUTPUTfilepath,'Q_Boxplot_',datestr(datetime,'mmddyy'),'.png'];
+print('-dpng','-r600',[Figfolderpath])
