@@ -15,35 +15,35 @@ setwd("B:/LabFiles/users/DanykaByrnes/")
 # HUC2 watershed.
 
 # ******************************************************************************
+
 # Setting up filepaths
 YEARS = 1930:2017
 INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
 OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
 NSURPLUS_OUTPUT_folders = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P Postpocessed Gridded (2023-11-18)/'
-HUC2_loc = '0 General Data/HUC2/'
+HUC2_loc = '0_General_Data/HUC2/'
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
                'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
                'CropUptake_Agriculture_Agriculture_LU/CropUptake_')
 
-# read in HUC8 filesQ
+# read in HUC8 files
 HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
 
 # Set up clusters - this will make things faster
-UseCores <- detectCores() - 12 #leaving half
-cl = makeCluster(UseCores)
-registerDoParallel(cl)
+#UseCores <- detectCores() - 18 #leaving half
+#cl = makeCluster(UseCores)
+#registerDoParallel(cl)
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
 
 # Iterate through rasters and clip each watershed to all rasters
-beginCluster(cl)
-par = foreach(a = 1:length(Components)) %dopar% {
+#beginCluster(cl)
+#par = foreach(a = 1:length(Components)) %dopar% {
 for (a in 1:length(Components)) {
   library(sf)
   library(terra)
 
-a = 1
   for (i in 1:length(YEARS)) {
     tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[a], YEARS[i],'.tif')
     #R = raster(tif_folder)
@@ -59,13 +59,13 @@ a = 1
 
     for (j in 1:dim(HUC2)[1]) {
 
-        clipped_raster = terra::crop(R,extent(HUC2[j,]))
-        temp2 = terra::extract(clipped_raster, HUC2[j,], fun=mean, na.rm=TRUE)
+        #clipped_raster = terra::crop(R, extent(HUC2[j,]))
+        temp2 = terra::extract(R, HUC2[j,], fun=mean, na.rm=TRUE)
 
         Comp_extc[j,1] = HUC2[j,]$REG
         Comp_extc[j,i+1] = temp2[2]
         
-        medianMask = terra::mask(clipped_raster, HUC2[j,], inverse=FALSE)
+        medianMask = terra::mask(R, HUC2[j,], inverse=FALSE)
         maskDf1 = as.data.frame(medianMask) # this removes all NaNs
         temp3 = apply(maskDf1,2,median)
         Comp_extc2[j,1] = HUC2[j,]$REG
@@ -79,6 +79,6 @@ a = 1
   write.table(Comp_extc2, file = paste0(OUTPUT_folders, ComponentsName[a],
                                        '_medianHUC2Components.txt'), row.names = FALSE)
 }
-}
+#}
 
 stopCluster(cl)

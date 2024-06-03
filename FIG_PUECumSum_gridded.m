@@ -1,7 +1,7 @@
 clc, clear, close all
 
 % Aesthetic 
-fontSize_p = 10;
+fontSize_p = 11;
 fontSize_p2 = 8; 
 plot_dim_1 = [400,400,200,150];
 plot_dim_2 = [200,200,215,350];
@@ -30,13 +30,13 @@ trendINPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
 % These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_2017.tif';
+CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_2017.tif';
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
 [CS2017,~] = readgeoraster(CUMSUMfilepath); % single
 
 % Reading in 1980 data.
 PUEfilepath = '..\OUTPUTS\PUE\PUE_1980.tif';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\CumSum_1980.tif';
+CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_1980.tif';
 
 [PUE1980,~] = readgeoraster(PUEfilepath); % single
 [CS1980,~] = readgeoraster(CUMSUMfilepath); % single
@@ -99,19 +99,21 @@ save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
 D_allData = D;
 
 % Cleaning the data 
-% First we will clean up the D matrix to only consider data
+% First we will clean up the D matrix to only consider PUE data
 % that has both 1980 and 2017 data. Which means looking ONLY at the 
-% gridcells that are still agricultural. If PUE is NaN
-% then there is no ag land in that year for the gridcell.
+% grid-cells that are still agricultural. If PUE is NaN
+% then there is no ag land in that year for the grid-cell.
 
-DisnanIDX = isnan(D(:,3)) + isnan(D(:,4)); 
-D = D(DisnanIDX == 0,:);
-D = D(D(:,5) ~= 0, :); % removing 0 quadrant data. 
-'data needs to be updated. once updated, check if there are 0s.'
+%DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
+%D = D(DisnanIDX == 0, :);
+DisnanIDX = [(D(:,5) == 0) + (D(:,6) == 0)];
+D = D(DisnanIDX < 1, :);
 
 % D_copy is the cleaned form of the data.
 D_cleanedData = D;
+
 %% Quadrant Plot
+
 D = D_cleanedData;
 % To improve computation speed for plotting, we will only use 1% of the 
 % gridcells available.
@@ -235,6 +237,7 @@ livestockFolder = 'Lvst_Agriculture_LU\';
                                'Lvst_2017.tif']);
 [FERT2017,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
                               'Fertilizer_Ag_2017.tif']);
+%[CROP2017,~] = readgeoraster([trendINPUTfilepath,'CropUptake_Agriculture_Agriculture_LU/CropUptake_2017.tif']);
 
 [LVSTK1980,~] = readgeoraster([trendINPUTfilepath,livestockFolder,...
                                 'Lvst_1980.tif']);
@@ -243,26 +246,29 @@ livestockFolder = 'Lvst_Agriculture_LU\';
 
 LVSTK2017_v = double(LVSTK2017(:));
 FERT2017_v = double(FERT2017(:));
+%CROP2017_v = double(CROP2017(:));
 
 LVSTK1980_v = double(LVSTK1980(:));
 FERT1980_v = double(FERT1980(:));
 
+% Cleaning the data.  D = CS1980, CS2017, PUE1980, PUE2017, Q1980, Q2017
+DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
+D = D(DisnanIDX == 0, :);
+LVSTK2017_v = LVSTK2017_v(DisnanIDX == 0, :);
+FERT2017_v = FERT2017_v(DisnanIDX == 0, :);
+LVSTK1980_v = LVSTK1980_v(DisnanIDX == 0, :);
+FERT1980_v = FERT1980_v(DisnanIDX == 0, :);
+
 % Removing the boxes that have no quadrant in 2018
 Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6),... 
-                      repmat(2017,size(D,1),1); 
+                      repmat(2017,size(D,1),1);
                       LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5),...
                       repmat(1980,size(D,1),1)];
-
-% Cleaning the data.
-Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(~isnan(Lvsk_Fert_Quadrant(:,1)),:); 
-Lvsk_Fert_Quadrant = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant(:,2) ~= 0, :); % removing 0 quadrant data. 
-
-'data needs to be updated. once updated, check if there are 0s.'
 
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', {'LvstkFertFract','Q','QYear'});
 save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
 
-%% Creating the boxplot panel for quadrant input distribution (figure 6).
+% Creating the boxplot panel for quadrant input distribution (figure 6).
 % 2017
 figure(1)
 for i = 1:4
@@ -287,6 +293,7 @@ xlim([1,4])
 xticks([1, 1.5, 2, 2.5,3, 3.5, 4])    
 xticklabels({'1980','2017','1980','2017','1980','2017','1980','2017'})
 ylabel('% Manure of Inputs')
+
 close all
 
 unyears = unique(Lvsk_Fert_Quadrant.QYear);
@@ -305,7 +312,7 @@ for j = 1:2
         pv(i) = ranksum(sLvsk_Fert_Quadrant.LvstkFertFract, oLvsk_Fert_Quadrant.LvstkFertFract);
     end
     box on
-    set(gca,'FontSize',fontSize_p2,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
     set(gca,'XColor',[0,0,0])
     set(gca,'YColor',[0,0,0])
     set(gca,'ZColor',[0,0,0])
@@ -316,6 +323,7 @@ for j = 1:2
 end
 subplot(1,2,1)
 ylabel('% Manure of Inputs')
+yticks([0, 25, 50, 75, 100])
 subplot(1,2,2)
 yticks([])
 set(gcf,'position',plot_dim_3)

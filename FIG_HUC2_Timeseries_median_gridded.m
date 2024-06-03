@@ -157,28 +157,34 @@ for i = 1:height(HUC_PUE)
 
 %% FIGURE 2: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(2) 
+   lineColor = [50, 87, 64; 
+                101, 55, 27;
+                27, 73, 101]./255;
    faceColor = [134, 168, 147;
                 180, 126, 93;
                 111, 155,183]./255;
-   faceColor = [50, 87, 64; 
-                101, 55, 27;
-                27, 73, 101]./255;
+  
    subplot(1,3,i)
-   movmeanManure = movmean(MANURE_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanManure,'-k', 'LineWidth',2, 'Color',faceColor(1,:)) 
-   hold on
-   
    movmeanCrop = movmean(CROP_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanCrop,'-k', 'LineWidth',2, 'Color',faceColor(2,:)) 
+   plot(YEARS,movmeanCrop,'-k', 'LineWidth',3, 'Color',[0,0,0]) 
+   hold on
+   plot(YEARS,movmeanCrop,'-k', 'LineWidth',2, 'Color',lineColor(1,:)) 
+   
+   movmeanManure = movmean(MANURE_AGHA(i,2:end),smoothing_int);
+   plot(YEARS,movmeanManure,'-k', 'LineWidth',3, 'Color',[0,0,0]) 
+   hold on
+   plot(YEARS,movmeanManure,'-k', 'LineWidth',2, 'Color',lineColor(2,:)) 
    
    movmeanFertilizer = movmean(FERT_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth',2,'Color',faceColor(3,:)) 
+   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth',3, 'Color',[0,0,0]) 
+   hold on
+   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth',2,'Color',lineColor(3,:)) 
     
   if i == 1
-       ylim([0, 25])
-       yticks([0, 12, 25])
+       ylim([0, 22])
+       yticks([0, 10, 20])
   else
-       ylim([0, 25])
+       ylim([0, 22])
        yticks([])
    end
 
@@ -192,26 +198,19 @@ for i = 1:height(HUC_PUE)
    %% FIGURE 3: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(3)
    
-   faceColor = [134, 168, 147;
-                180, 126, 93;
-                111, 155,183]./255;
-   edgeColor = [50, 87, 64; 
-                101, 55, 27;
-                27, 73, 101]./255;
-
     subplot(1,3,i)
     movmeanComponents = [movmeanManure; movmeanFertilizer];
     a = area(YEARS, movmeanCrop*-1);
     a(1).FaceColor = faceColor(1, :);
-    a(1).EdgeColor = edgeColor(1, :);
+    a(1).EdgeColor = lineColor(1, :);
     a(1).LineWidth = 0.75;
     hold on
     a = area(YEARS, movmeanComponents');
     a(1).FaceColor = faceColor(2, :);
     a(2).FaceColor = faceColor(3, :);
 
-    a(1).EdgeColor = edgeColor(2, :);
-    a(2).EdgeColor = edgeColor(3, :);
+    a(1).EdgeColor = lineColor(2, :);
+    a(2).EdgeColor = lineColor(3, :);
 
     a(1).LineWidth = 1.5;
     a(2).LineWidth = 0.75;
@@ -235,30 +234,23 @@ for i = 1:height(HUC_PUE)
    %% FIGURE 4: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(4)
    
-   faceColor = [134, 168, 147;
-                180, 126, 93;
-                111, 155,183]./255;
-   edgeColor = [50, 87, 64; 
-                101, 55, 27;
-                27, 73, 101]./255;
-
     subplot(1,3,i)
     movmeanComponents = [movmeanManure; movmeanFertilizer];
     a = area(YEARS, movmeanCrop*-1);
     a.FaceColor = faceColor(1, :);
-    a.EdgeColor = edgeColor(1, :);
+    a.EdgeColor = lineColor(1, :);
     a.LineWidth = 1.25;
     a.FaceAlpha = 0.4;
     hold on
     a = area(YEARS, movmeanManure);
     a.FaceColor = faceColor(2, :);
-    a.EdgeColor = edgeColor(2, :);
+    a.EdgeColor = lineColor(2, :);
     a.LineWidth = 1.25;
     a.FaceAlpha = 0.4;
 
     a = area(YEARS, movmeanFertilizer);
     a.FaceColor = faceColor(3, :);
-    a.EdgeColor = edgeColor(3, :);
+    a.EdgeColor = lineColor(3, :);
     a.LineWidth = 1.25;
     a.FaceAlpha = 0.4;
 
@@ -304,7 +296,7 @@ print('-dpng','-r600',[Figfolderpath])
 close all
 % First start by calculating national cumsum
 PUEfilepath = '..\OUTPUTS\PUE\';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\';
+CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
 

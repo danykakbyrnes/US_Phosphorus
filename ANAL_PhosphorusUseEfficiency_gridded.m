@@ -3,7 +3,7 @@ clc, clear
 %% Calculating PUE at the gridscale.
 
 % Read in gif files
-INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
     'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
 OUTPUTfilepath = '..\OUTPUTS\PUE\';
 YEARS = 1930:2017;

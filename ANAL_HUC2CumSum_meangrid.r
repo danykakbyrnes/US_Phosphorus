@@ -19,12 +19,12 @@ setwd("B:/LabFiles/users/DanykaByrnes/")
 # Setting up filepaths
 YEARS = 1930:2017
 
-HUC2INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_051523/'
-INPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/Cumulative Phosphorus/'
-OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
+HUC2INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
+INPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/Cumulative_Phosphorus/'
+OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
 
 # read in HUC8 files
-HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0 General Data/HUC2/merged_HUC2_5070_v3.shp'))
+HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0_General_Data/HUC2/merged_HUC2_5070_v3.shp'))
 Comp_extc = data.frame()
 ## MEAN ########################################################################
   for (i in 1:length(YEARS)) {
@@ -43,5 +43,3 @@ Comp_extc = data.frame()
   colnames(Comp_extc)[1] ="REG"
   write.table(Comp_extc, file = paste0(OUTPUT_folders, 
                                       'CumSum_meanHUC2_fromgrid.txt'), row.names = FALSE)
-
-  

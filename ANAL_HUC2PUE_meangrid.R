@@ -19,12 +19,12 @@ setwd("B:/LabFiles/users/DanykaByrnes/")
 # Setting up filepaths
 YEARS = 1930:2017
 
-HUC2INPUT_folders = '9 Phosphorus Use Efficiency/INPUTS_051523/'
-INPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/PUE/'
-OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/HUC2/'
+HUC2INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
+INPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/PUE/'
+OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
 
 # read in HUC8 files
-HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0 General Data/HUC2/merged_HUC2_5070_v3.shp'))
+HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0_General_Data/HUC2/merged_HUC2_5070_v3.shp'))
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
 

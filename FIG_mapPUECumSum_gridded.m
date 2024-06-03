@@ -2,7 +2,7 @@ clc, clear
 
 % Read in gif files
 PUEfilepath = '..\OUTPUTS\PUE\';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative Phosphorus\';
+CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
 

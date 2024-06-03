@@ -4,7 +4,7 @@ clc, clear, close all
 %   Read in each tif file, vetorize and take the median, and quanties per
 %   year. 
 % ------------------------------------------------------------------------
-runTiffs = 0;
+runTiffs = 0 ;
 % Read in tif files
 INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
     'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
