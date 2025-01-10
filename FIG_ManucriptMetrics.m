@@ -4,12 +4,11 @@ clc, clear
 OUTPUT_folderName = '..\OUTPUTS\';
 
 % Filepath of files to load
-TRENDOUTPUT_folderName = '..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUTS\TREND_P_Version_1.2\';
 QuadrantINPUTfolderName = '..\OUTPUTS\Quadrants\';
 HUCINPUTfilepath = '..\OUTPUTS\HUC2\';
 PUEINPUTfilepath = ['..\OUTPUTS\PUE\'];
-INPUTfilepath = ['..\..\3 TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
+INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+    'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
     fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
     livestockFolder = 'Lvst_Agriculture_LU';
     agSFolder = 'Ag_Surplus';
@@ -26,7 +25,7 @@ fprintf(fileID,'----------------------------------------------------------------
 % -------------------------------------------------------------------------
 % Fertilizer 
 % -------------------------------------------------------------------------
-load([OUTPUT_folderName, 'Component Timeseries\ComponentQuantiles.mat']) %Fertilizer_quantiles','Crop_quantiles','','AgSurplus_quantiles')
+load([OUTPUT_folderName, 'Component_Timeseries\ComponentQuantiles.mat']) %Fertilizer_quantiles','Crop_quantiles','','AgSurplus_quantiles')
 YEAR = 1930:2017; 
 idx_maxfert = find(Fertilizer_quantiles(3,:) > max(Fertilizer_quantiles(3,:)));
 idx_1977 = find(YEAR == 1977);
@@ -228,7 +227,7 @@ fprintf(fileID,'Region I Ag Land: %.3f and %.3f \n\n', RegionI_LU_1930_2017*100)
 % -------------------------------------------------------------------------
 % Section 3.2.3 Cumulative Phosphorus Surplus
 % -------------------------------------------------------------------------
-CSfilepath =  ['..\OUTPUTS\Cumulative Phosphorus\'];
+CSfilepath =  ['..\OUTPUTS\Cumulative_Phosphorus\'];
 CS_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_meanHUC2_fromgrid.txt']);
 
 Neg_AgLand = length(idx_neg)/(length(idx_pos)+length(idx_neg));

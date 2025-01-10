@@ -6,8 +6,8 @@ clc, clear, close all
 smoothing_int = [5 5];
 
 fontSize_p = 9;
-plot_dim_1 = [100,100,250,175];
-plot_dim_3 = [100,100,400,125];
+plot_dim_1 = [100,100,450,400];
+plot_dim_3 = [100,100,450,400];
 mSize = 36; 
 
 colourPalette = [1,102,94;
@@ -92,18 +92,18 @@ HUCAgHA = sortrows(HUCAgHA,1,'descend');
 HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 HUC_PUE = sortrows(HUC_PUE,1,'descend');
 
-% Isolate three regions. 
-Regions_idx = [4,6,7];
-HUCLU = HUCLU(Regions_idx,:);
-HUC_PUE = HUC_PUE(Regions_idx,:);
-MANURE_AGHA = MANURE_AGHA(Regions_idx,:);
-CROP_AGHA = CROP_AGHA(Regions_idx,:);
-FERT_AGHA = FERT_AGHA(Regions_idx,:);
+% % Isolate three regions. 
+% Regions_idx = [4,6,7];
+% HUCLU = HUCLU(Regions_idx,:);
+% HUC_PUE = HUC_PUE(Regions_idx,:);
+% MANURE_AGHA = MANURE_AGHA(Regions_idx,:);
+% CROP_AGHA = CROP_AGHA(Regions_idx,:);
+% FERT_AGHA = FERT_AGHA(Regions_idx,:);
 
 for i = 1:height(HUC_PUE)
 % FIGURE 1: TIMESERIES OF PUE ACROSS HUC REGIONS
     figure(1) 
-    subplot(1,3,i)
+    subplot(3,3,i)
     yyaxis right
     movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int)*100;
     X = [YEARS, fliplr(YEARS)];
@@ -115,7 +115,9 @@ for i = 1:height(HUC_PUE)
     ylim([0,70])
     
     box on
-    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
+        {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+        {'k','k','k'});
     set(gca,'XColor',[0,0,0])
     set(gca,'YColor',[0,0,0])
     set(gca,'ZColor',[0,0,0])    
@@ -125,66 +127,72 @@ for i = 1:height(HUC_PUE)
     hold on
     movmeanPUE = movmean(HUC_PUE(i,2:end),smoothing_int);
     plot(YEARS, movmeanPUE, '-', 'LineWidth',4,'Color', '#42233A')
-    plot(YEARS, movmeanPUE, ':', 'LineWidth',1.5, 'Color', '#8C4A7A')
+    plot(YEARS, movmeanPUE, '-', 'LineWidth',2, 'Color', '#8C4A7A')
     xlim([1930,2017])
     ylim([0,1.5])
     
     box on
     set(gca, 'SortMethod', 'depth')
-    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
+        {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+        {'k','k','k'});
     set(gca,'XColor',[0,0,0])
     set(gca,'YColor',[0,0,0])
     set(gca,'ZColor',[0,0,0])
-   set(gca,'XMinorTick','on','YMinorTick','on')
-   set(gca,'TickLength',[0.03, 0])
+    set(gca,'XMinorTick','on','YMinorTick','on')
+    set(gca,'TickLength',[0.03, 0])
 
-    if i == 1
+    if i == 1 | i == 4 | i == 7
         yyaxis left
         yticks([0, 0.5, 1, 1.5])
         yyaxis right
         yticks([])
-    elseif i == 2
-        yyaxis left
-        yticks([])
-        yyaxis right
-        yticks([])
-    elseif i == 3
+    elseif i == 3 | i == 6 | i == 9
         yyaxis left
         yticks([])
         yyaxis right
         yticks([0, 35, 70])
+    else
+        yyaxis left
+        yticks([])
+        yyaxis right
+        yticks([])
     end
 
 %% FIGURE 2: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(2) 
-   lineColor = [50, 87, 64; 
+   lineColor = [134, 168, 147; 
+                210 133 87;
+                88 164 210]./255;
+    lineColor = [50, 87, 64; 
                 101, 55, 27;
                 27, 73, 101]./255;
+
    faceColor = [134, 168, 147;
                 180, 126, 93;
                 111, 155,183]./255;
   
-   subplot(1,3,i)
+   subplot(3,3,i)
    movmeanCrop = movmean(CROP_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanCrop,'-k', 'LineWidth',3, 'Color',[0,0,0]) 
+   plot(YEARS,movmeanCrop,'-k', 'LineWidth',4, 'Color', lineColor(1,:)) 
    hold on
-   plot(YEARS,movmeanCrop,'-k', 'LineWidth',2, 'Color',lineColor(1,:)) 
+   plot(YEARS,movmeanCrop,'-k', 'LineWidth',2, 'Color', faceColor(1,:)) 
    
    movmeanManure = movmean(MANURE_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanManure,'-k', 'LineWidth',3, 'Color',[0,0,0]) 
+   plot(YEARS,movmeanManure,'-k', 'LineWidth', 4, 'Color', lineColor(2,:)) 
    hold on
-   plot(YEARS,movmeanManure,'-k', 'LineWidth',2, 'Color',lineColor(2,:)) 
+   plot(YEARS,movmeanManure,'-k', 'LineWidth',2, 'Color', faceColor(2,:)) 
    
    movmeanFertilizer = movmean(FERT_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth',3, 'Color',[0,0,0]) 
+   plot(YEARS, movmeanFertilizer,'-k', 'LineWidth', 4, 'Color', lineColor(3,:)) 
    hold on
-   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth',2,'Color',lineColor(3,:)) 
+   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth', 2, 'Color', faceColor(3,:)) 
     
-  if i == 1
-       ylim([0, 22])
+  if i == 1 || i == 4 || i == 7
+       ylim([0, 23])
        yticks([0, 10, 20])
   else
-       ylim([0, 22])
+       ylim([0, 23])
        yticks([])
    end
 
@@ -198,7 +206,7 @@ for i = 1:height(HUC_PUE)
    %% FIGURE 3: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(3)
    
-    subplot(1,3,i)
+    subplot(3,3,i)
     movmeanComponents = [movmeanManure; movmeanFertilizer];
     a = area(YEARS, movmeanCrop*-1);
     a(1).FaceColor = faceColor(1, :);
@@ -215,14 +223,16 @@ for i = 1:height(HUC_PUE)
     a(1).LineWidth = 1.5;
     a(2).LineWidth = 0.75;
 
-  if i == 1
+  if i == 1 || i == 4 || i == 7
        ylim([-25, 27])
        yticks([-25, 0, 25])
   else
        ylim([-25, 27])
        yticks([])
   end
-   set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+   set(gca,'FontSize',fontSize_p, ...
+       {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+       {'k','k','k'});
    set(gca,'XColor',[0,0,0])
    set(gca,'YColor',[0,0,0])
    set(gca,'ZColor',[0,0,0])
@@ -234,7 +244,7 @@ for i = 1:height(HUC_PUE)
    %% FIGURE 4: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(4)
    
-    subplot(1,3,i)
+    subplot(3,3,i)
     movmeanComponents = [movmeanManure; movmeanFertilizer];
     a = area(YEARS, movmeanCrop*-1);
     a.FaceColor = faceColor(1, :);
@@ -263,7 +273,7 @@ for i = 1:height(HUC_PUE)
 
    plot([1930,2017], [0,0], 'LineWidth',0.3, 'Color', '#454545')
 
-  if i == 1
+  if i == 1 | i == 4 | i == 9
        ylim([-25, 25])
        yticks([-25, 0, 25])
   else
@@ -274,22 +284,22 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_median_subset.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(2)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median_subset.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_median_subset.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(4)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_median_subset.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Cumulative Surplus timeseries summary figures
@@ -298,7 +308,7 @@ close all
 PUEfilepath = '..\OUTPUTS\PUE\';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
-RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
+RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\';
 
 [D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 
@@ -319,7 +329,7 @@ idx_1980 = find(YEARS == 1980);
 idx_2017 = find(YEARS == 2017);
 
 SURPcumu_AGHA = SURPcumu_AGHA(:,[1, idx_1980, idx_2017]);
-SURPcumu_AGHA = SURPcumu_AGHA(Regions_idx,:);
+%SURPcumu_AGHA = SURPcumu_AGHA(Regions_idx,:);
 SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend');
 
 % Insert national data
@@ -327,8 +337,8 @@ SURPcumu_AGHA = [SURPcumu_AGHA; 99, csNatMean_1980, csNatMean_2017];
 
 % Insert a column in indexes that are sequential, for plotting purposes. 
 SURPcumu_AGHA = [SURPcumu_AGHA, [1:size(SURPcumu_AGHA,1)]'];
-%regionID = {'9';'8';'7';'6';'5'; '4';'3';'2';'1'};
-regionID = {'Region 7';'Region 6';'Region 4'; 'National'};
+regionID = {'9';'8';'7';'6';'5'; '4';'3';'2';'1';'National'};
+%regionID = {'Region 7';'Region 6';'Region 4'; 'National'};
 
 h = barh(SURPcumu_AGHA(:,end), SURPcumu_AGHA(:,2:3)', 0.95);
 h(1).FaceColor = [178,223,138]./255;
@@ -342,7 +352,9 @@ a = gca;
 set(a,'yticklabel',regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
 set(a,'TickLength',[0.015, 0])
-set(a,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
+set(a,'FontSize',fontSize_p, ...
+    {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+    {'k','k','k'});
 set(a,'XColor',[0,0,0])
 set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
@@ -354,5 +366,5 @@ set(gcf, 'Position',plot_dim_1)
 % set(h, 'Position', legloc)
 % legend boxoff
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_SURPcumu_BarChart_subset.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_SURPcumu_BarChart.png'];
 print('-dpng','-r600',[Figfolderpath])

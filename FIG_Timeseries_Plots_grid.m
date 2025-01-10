@@ -20,10 +20,11 @@ agsurplusFolder = 'Ag_Surplus';
 
 % Aesthetic attributes
 % Plot Specs
-fontSize_p = 13;
+fontSize_p = 7;
+median_LW = 1;
 xticks_p = [1930, 1970, 2010];
 xtick_len = [0.5];
-plot_dim = [50,50,200,190];
+plot_dim = [50,50,130,120];
 plot_dim2 = [50,50,250,225];
 
 %% Running Code
@@ -135,7 +136,7 @@ Color = [];
 % Setting up the 5-95th percentile band
 Y = [Livestock_quantiles(5,:), fliplr(Livestock_quantiles(1,:))];
 pgon = polyshape(X,Y);
-plot(pgon, 'EdgeColor', '#9e9ac8', 'FaceColor', '#bcbddc')
+plot(pgon, 'EdgeColor', '#807BB7', 'FaceColor', '#bcbddc')
 
 
 hold on
@@ -146,7 +147,7 @@ pgon = polyshape(X,Y);
 plot(pgon, 'EdgeColor','#acacd2', 'FaceColor', '#807dba')
 
 % Plotting Median   
-plot([1930:2017],Livestock_quantiles(3,:),'Color','#54278f','LineWidth',2)
+plot([1930:2017],Livestock_quantiles(3,:),'Color','#54278f','LineWidth',median_LW)
 
 % Editing the Axes
 xlim([1929,2018])
@@ -180,7 +181,7 @@ X = [[1930:2017], fliplr([1930:2017])];
 % Setting up the 5-95th percentile band
 Y = [Fertilizer_quantiles(5,:), fliplr(Fertilizer_quantiles(1,:))];
 pgon = polyshape(X,Y);
-plot(pgon, 'EdgeColor','#fcbba1', 'FaceColor', '#fcbba1')
+plot(pgon, 'EdgeColor','#FBA683', 'FaceColor', '#fcbba1')
 
 hold on
 
@@ -190,7 +191,7 @@ pgon = polyshape(X,Y);
 plot(pgon, 'EdgeColor','#fb6a4a', 'FaceColor', '#fb6a4a')
 
 % Plotting Median
-plot([1930:2017],Fertilizer_quantiles(3,:),'Color','#d32020','LineWidth',2)
+plot([1930:2017],Fertilizer_quantiles(3,:),'Color','#d32020','LineWidth',median_LW)
 
 % Editing the Axes
 xlim([1929,2018])
@@ -225,17 +226,17 @@ X = [[1930:2017], fliplr([1930:2017])];
 % Setting up the 5-95th percentile band
 Y = [Crop_quantiles(5,:), fliplr(Crop_quantiles(1,:))];
 pgon = polyshape(X,Y);
-plot(pgon, 'EdgeColor','#a1d99b', 'FaceColor', '#a1d99b')
+plot(pgon, 'EdgeColor','#60A659', 'FaceColor', '#60A659')
 
 hold on
 
 % Setting up the 25th-75th percentile
 Y = [Crop_quantiles(4,:), fliplr(Crop_quantiles(2,:))];
 pgon = polyshape(X,Y);
-plot(pgon, 'EdgeColor','#74c476', 'FaceColor', '#41ab5d')
+plot(pgon, 'EdgeColor','#59A662', 'FaceColor', '#59A662')
 
 % Plotting Median
-plot([1930:2017],Crop_quantiles(3,:),'Color','#006d2c','LineWidth',2)
+plot([1930:2017],Crop_quantiles(3,:),'Color','#26472A','LineWidth',median_LW)
 
 % Editing the Axes
 xlim([1929,2018])
@@ -279,7 +280,7 @@ pgon = polyshape(X,Y);
 plot(pgon, 'EdgeColor','#539fa8', 'FaceColor', '#539fa8')
 
 % Plotting Median
-plot([1930:2017],AgSurplus_quantiles(3,:),'Color','#1a5e66','LineWidth',2)
+plot([1930:2017],AgSurplus_quantiles(3,:),'Color','#1a5e66','LineWidth',median_LW)
 
 % Editing the Axes
 xlim([1929,2018])
@@ -312,17 +313,17 @@ X = [[1930:2017], fliplr([1930:2017])];
 % Setting up the 5-95th percentile band
 Y = [PUE_quantiles(5,:), fliplr(PUE_quantiles(1,:))];
 pgon = polyshape(X,Y);
-plot(pgon, 'EdgeColor','#ffc892', 'FaceColor', '#ffc892')
+plot(pgon, 'EdgeColor','#FFA54D', 'FaceColor', '#FFA54D')
 
 hold on
 
 % Setting up the 25th-75th percentile
 Y = [PUE_quantiles(4,:), fliplr(PUE_quantiles(2,:))];
 pgon = polyshape(X,Y);
-plot(pgon, 'EdgeColor','#fd9243', 'FaceColor', '#fd9243')
+plot(pgon, 'EdgeColor','#FD7B1C', 'FaceColor', '#FD7B1C')
 
 % Plotting Median
-plot([1930:2017], PUE_quantiles(3,:),'Color','#7f2704','LineWidth',2)
+plot([1930:2017], PUE_quantiles(3,:),'Color','#7f2704','LineWidth',median_LW)
 
 % Editing the Axes
 xlim([1929,2018])
