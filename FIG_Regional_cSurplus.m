@@ -3,13 +3,11 @@ clc, clear, close all
 
 % First start by calculating national cumsum
 OUTPUT_folderName = '../OUTPUTS/HUC2/';
-PUEfilepath = '..\OUTPUTS\PUE\';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
-OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 
 YEARS = 1930:2017;
-fontSize_p = 9;
-plot_dim_1 = [100,100,360,400];
+fontSize_p = 10;
+plot_dim_1 = [100,100,330, 400];
 
 % Getting raster information
 [CS2017,~] = readgeoraster([CUMSUMfilepath,'CumSum_2017.tif']);
@@ -41,10 +39,11 @@ regionID = {'Region 9';'Region 8';'Region 7';'Region 6';'Region 5';...
 %regionID = {'Region 7';'Region 6';'Region 4'; 'National'};
 
 h = barh(SURPcumu_AGHA(:,end), SURPcumu_AGHA(:,2:3)', 0.95);
-h(1).FaceColor = [178,223,138]./255;
-h(2).FaceColor = [146,195,221]./255;
-h(1).EdgeColor = [108,176,48]./255;
-h(2).EdgeColor = [84,160,201]./255;
+h(1).FaceColor = '#79A6BF';
+h(2).FaceColor = '#428186';
+
+h(1).EdgeColor = '#4E86A6';
+h(2).EdgeColor = '#386E72';
 
 % Adjusting axies
 xlim([-50, 600])
@@ -61,11 +60,6 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 
 set(gcf, 'Position',plot_dim_1)
-
-% h = legend({'1980','2017'});
-% legloc = [0.5820, 0.5809, 0.3037, 0.1809];
-% set(h, 'Position', legloc)
-% legend boxoff
 
 Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_SURPcumu_BarChart.png'];
 print('-dpng','-r600',[Figfolderpath])
