@@ -84,8 +84,8 @@ end
 HUCLU = sortrows(HUCLU,1,'descend');
 HUCAgHA = sortrows(HUCAgHA,1,'descend');
 
-%save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
-%save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
+save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
+save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
 
 
 %% Calculating PUE and combined inputs
@@ -126,8 +126,8 @@ for i = 1:height(HUC_PUE)
     plot([1930,2017], [1,1], ':k', 'LineWidth',0.5)
     hold on
     movmeanPUE = movmean(HUC_PUE(i,2:end),smoothing_int);
-    plot(YEARS, movmeanPUE, '-', 'LineWidth',4,'Color', '#42233A')
-    plot(YEARS, movmeanPUE, '-', 'LineWidth',2, 'Color', '#8C4A7A')
+    plot(YEARS, movmeanPUE, '-', 'LineWidth',2.5,'Color', '#42233A')
+    plot(YEARS, movmeanPUE, '-', 'LineWidth',1, 'Color', '#8C4A7A')
     xlim([1930,2017])
     ylim([0,1.5])
     
@@ -161,32 +161,37 @@ for i = 1:height(HUC_PUE)
 
 %% FIGURE 2: MANURE, FERTILIZER, AND CROP TIMESERIES
    figure(2) 
-   lineColor = [134, 168, 147; 
-                210 133 87;
-                88 164 210]./255;
-    lineColor = [50, 87, 64; 
-                101, 55, 27;
-                27, 73, 101]./255;
+   lineColor = [50, 87, 64;        % CROP
+                101, 55, 27;       % MANURE
+                27, 73, 101]./255; % FERT
 
    faceColor = [134, 168, 147;
                 180, 126, 93;
                 111, 155,183]./255;
+
+   lineColor = [66, 94, 36;        % CROP
+                101, 55, 27;       % MANURE
+                58, 95, 117]./255; % FERT
+
+   faceColor = [132, 187, 72;
+                154, 108, 29;
+                169, 205, 225]./255;
   
    subplot(3,3,i)
    movmeanCrop = movmean(CROP_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanCrop,'-k', 'LineWidth',4, 'Color', lineColor(1,:)) 
+   plot(YEARS,movmeanCrop,'-k', 'LineWidth',2.5, 'Color', lineColor(1,:)) 
    hold on
-   plot(YEARS,movmeanCrop,'-k', 'LineWidth',2, 'Color', faceColor(1,:)) 
+   plot(YEARS,movmeanCrop,'-k', 'LineWidth',1, 'Color', faceColor(1,:)) 
    
    movmeanManure = movmean(MANURE_AGHA(i,2:end),smoothing_int);
-   plot(YEARS,movmeanManure,'-k', 'LineWidth', 4, 'Color', lineColor(2,:)) 
+   plot(YEARS,movmeanManure,'-k', 'LineWidth', 2.5, 'Color', lineColor(2,:)) 
    hold on
-   plot(YEARS,movmeanManure,'-k', 'LineWidth',2, 'Color', faceColor(2,:)) 
+   plot(YEARS,movmeanManure,'-k', 'LineWidth',1, 'Color', faceColor(2,:)) 
    
    movmeanFertilizer = movmean(FERT_AGHA(i,2:end),smoothing_int);
-   plot(YEARS, movmeanFertilizer,'-k', 'LineWidth', 4, 'Color', lineColor(3,:)) 
+   plot(YEARS, movmeanFertilizer,'-k', 'LineWidth', 2.5, 'Color', lineColor(3,:)) 
    hold on
-   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth', 2, 'Color', faceColor(3,:)) 
+   plot(YEARS,movmeanFertilizer,'-k', 'LineWidth', 1, 'Color', faceColor(3,:)) 
     
   if i == 1 || i == 4 || i == 7
        ylim([0, 23])

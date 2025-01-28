@@ -25,18 +25,17 @@ SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'descend');
 idx_1980 = find(YEARS == 1980);
 idx_2017 = find(YEARS == 2017);
 
-SURPcumu_AGHA = SURPcumu_AGHA(:,[1, idx_1980, idx_2017]);
+SURPcumu_AGHA = SURPcumu_AGHA(:,[1, idx_1980+1, idx_2017+1]);
 %SURPcumu_AGHA = SURPcumu_AGHA(Regions_idx,:);
 SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend');
 
 % Insert national data
 SURPcumu_AGHA = [SURPcumu_AGHA; 99, csNatMean_1980, csNatMean_2017];
 
-% Insert a column in indexes that are sequential, for plotting purposes. 
+% Insert a column in sequential indexes for plotting order. 
 SURPcumu_AGHA = [SURPcumu_AGHA, [1:size(SURPcumu_AGHA,1)]'];
 regionID = {'Region 9';'Region 8';'Region 7';'Region 6';'Region 5';...
     'Region 4';'Region 3';'Region 2';'Region 1';'National'};
-%regionID = {'Region 7';'Region 6';'Region 4'; 'National'};
 
 h = barh(SURPcumu_AGHA(:,end), SURPcumu_AGHA(:,2:3)', 0.95);
 h(1).FaceColor = '#79A6BF';
