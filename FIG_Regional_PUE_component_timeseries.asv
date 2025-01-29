@@ -188,10 +188,10 @@ for i = 1:height(HUC_PUE)
    plot(YEARS,movmeanFertilizer,'-k', 'LineWidth', 1, 'Color', faceColor(3,:)) 
     
   if i == 1 || i == 4 || i == 7
-       ylim([0, 30])
-       yticks([0, 15, 30])
+       ylim([0, 23])
+       yticks([0, 10, 20])
   else
-       ylim([0, 30])
+       ylim([0, 23])
        yticks([])
    end
 
@@ -283,20 +283,20 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(2)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(4)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])

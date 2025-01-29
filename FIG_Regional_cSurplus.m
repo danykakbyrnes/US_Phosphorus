@@ -34,8 +34,8 @@ SURPcumu_AGHA = [SURPcumu_AGHA; 99, csNatMean_1980, csNatMean_2017];
 
 % Insert a column in sequential indexes for plotting order. 
 SURPcumu_AGHA = [SURPcumu_AGHA, [1:size(SURPcumu_AGHA,1)]'];
-regionID = {'Region 9';'Region 8';'Region 7';'Region 6';'Region 5';...
-    'Region 4';'Region 3';'Region 2';'Region 1';'National'};
+regionID = {'9';8';'7';'6';'5';...
+    '4';'3';'2';'1';'National'};
 
 h = barh(SURPcumu_AGHA(:,end), SURPcumu_AGHA(:,2:3)', 0.95);
 h(1).FaceColor = '#79A6BF';
