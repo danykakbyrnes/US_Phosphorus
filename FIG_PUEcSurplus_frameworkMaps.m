@@ -6,12 +6,13 @@ CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\';
 
-[D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 % Getting raster information
+[D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 Rinfo = geotiffinfo([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
 
-loadstar_CumSum = 0; %median(D(:,1),'omitnan');
-loadstar_PUE = 1;% median(D(:,3),'omitnan');
+% Setting bounds of quadrant
+loadstar_CumSum = 0; 
+loadstar_PUE = 1;
 
 % binscatter(x,y)   
 [PUE2017,~] = readgeoraster([PUEfilepath, 'PUE_2017.tif']);
