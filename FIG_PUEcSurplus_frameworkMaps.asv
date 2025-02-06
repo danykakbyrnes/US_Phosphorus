@@ -21,20 +21,8 @@ loadstar_PUE = 1;
 [PUE1980,~] = readgeoraster([PUEfilepath, 'PUE_1980.tif']);
 [CS1980,~] = readgeoraster([CUMSUMfilepath,'CumSum_1980.tif']);
 
-PUE2017(find(PUE2017 > 2^20)) = 0;
-CS2017(find(CS2017 > 2^20)) = 0;
-
 PUE1980(find(PUE1980 > 2^20)) = 0;
 CS1980(find(CS1980 > 2^20)) = 0;
-
-% Making the grid cells the same between 1980 and 2017
-nanMask = isnan(PUE2017) | isnan(CS2017) | isnan(PUE1980) | isnan(CS1980);
-
-% Apply the mask to all rasters at once
-PUE2017(nanMask) = NaN;
-CS2017(nanMask) = NaN;
-PUE1980(nanMask) = NaN;
-CS1980(nanMask) = NaN;
 
 % 2017
 Q = zeros(size(CS2017));
