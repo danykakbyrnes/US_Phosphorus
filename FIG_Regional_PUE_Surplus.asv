@@ -192,6 +192,7 @@ Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Fert_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Livestock regional figures
+
 % Now getting the regional values
 LVSK_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
 % Isolate 1930, 1980 and 2017
@@ -289,46 +290,4 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
 Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Crop_LolliChart.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-%% Percent Manure of total inputs regional figures
-% Now getting the regional values
-PCT_MANU = LVSK_AGHA
-
-% Plotting livestock lollichart
-figure(5)
-
-
-for i = 1:length(LVSK_AGHA(:,3))
-    plot(LVSK_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
-    hold on
-end
-% 1930
-scatter(LVSK_AGHA(:,2), LVSK_AGHA(:,end), 70, ...
-    [239,237,245]./255,'filled', 'MarkerEdgeColor', [158,154,200]./255)
-hold on
-% 1980
-scatter(LVSK_AGHA(:,3), LVSK_AGHA(:,end), 70, ...
-    [158,154,200]./255, 'filled', 'MarkerEdgeColor', [106,81,163]./255)
-% 2017
-scatter(LVSK_AGHA(:,4), LVSK_AGHA(:,end), 70, ...
-    [84,39,143]./255,'filled', 'MarkerEdgeColor', [63,0,125]./255)
-
-% Adjusting axes
-ylim([0.5, 9.5])
-xlim([0, 25])
-xlabel('kg-P ha^-^1 yr^-^1')
-a = gca;
-set(a,'yticklabel',regionID)
-set(a,'XMinorTick','on','YMinorTick','off')
-set(a,'TickLength',[0.015, 0])
-set(a,'FontSize',fontSize_p, ...
-    {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
-    {'k','k','k'});
-set(a,'XColor',[0,0,0])
-set(a,'YColor',[0,0,0])
-set(a,'ZColor',[0,0,0])
-box on
-set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Lvsk_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
