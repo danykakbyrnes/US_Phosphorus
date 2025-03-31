@@ -37,7 +37,6 @@ Rinfo = geotiffinfo([trendINPUTfilepath,livestockFolder,...
                                 'Lvst_1980.tif']);
 [FERT1980,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
                                 'Fertilizer_Ag_1980.tif']);
-
 %% FIGURE 7 BOXPLOTS: Two boxplot of each quadrant 
 % Cleaning the data.  
 % D = CS1980, CS2017, PUE1980, PUE2017, Q1980, Q2017. This means that we
@@ -69,6 +68,8 @@ Lvsk_Fert_Quadrant = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6),...
 Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', ...
     {'LvstkFertFract','Q','QYear'});
 save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant')
+
+PUE_LvstkRatio = [D(:,4), LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
 
 unyears = unique(Lvsk_Fert_Quadrant.QYear);
 for j = 1:2
@@ -146,3 +147,12 @@ outputFilename = 'PctManure_TotIn_Map_2017.tif';
 geotiffwrite([OUTPUTfilepath,outputFilename], pct_Manu_2017, georef, ...
     'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
     'TiffTags',struct('Compression',Tiff.Compression.LZW));
+
+%% FIGURE X: PUE vs. % manure
+I = sort(randperm(length(PUE_LvstkRatio),ceil(length(PUE_LvstkRatio)/100))'); 
+PUE_LvstkRatio_ss = PUE_LvstkRatio(I,:);
+scatter(PUE_LvstkRatio_ss(:,1), PUE_LvstkRatio_ss(:,2),'filled', ...
+    'MarkerFaceAlpha', 0.01)
+xlabel('PUE')
+xlim([0,2])
+ylabel('Manure Total Input Ratio')

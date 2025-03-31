@@ -12,7 +12,7 @@ plot_dim_2 = [100,100,275,325];
 % Now getting the regional values
 PUE_AGHA = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 
-AGS_AGHA = readmatrix([OUTPUT_folderName, 'Ag_Surplus_meanHUC2Components.txt']);
+AGS_AGHA = readmatrix([OUTPUT_folderName, 'Ag_Surplus_medianHUC2Components.txt']);
 
 % Isolate 1980 and 2017
 idx_1930 = find(YEARS == 1930);
@@ -42,18 +42,18 @@ for i = 1:length(PUE_AGHA(:,3))
 end
 
 scatter(PUE_AGHA(:,2), PUE_AGHA(:,end), 70, ...
-    [47, 133, 181]./255,'filled', 'MarkerEdgeColor', [13,79,116]./255)
+    [254,196,79]./255,'filled', 'MarkerEdgeColor', [236,112,20]./255)
 hold on 
 scatter(PUE_AGHA(:,3), PUE_AGHA(:,end), 70, ...
-    [27, 146, 155]./255, 'filled', 'MarkerEdgeColor',[13, 78, 83]./255)
+    [204,76,2]./255, 'filled', 'MarkerEdgeColor',[140,45,4]./255)
 
 % Adjusting axies
 ylim([0.5, 9.5])
 xlim([0.29, 1.25])
-xlabel('[-]')
+xlabel('PUE [-]')
 
 a = gca;
-set(a,'yticklabel',regionID)
+set(a,'yticklabel', regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
 set(a,'TickLength',[0.015, 0])
 set(a,'FontSize',fontSize_p, ...
@@ -65,7 +65,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_1)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_PUE_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Plotting surplus lollichart
@@ -107,7 +107,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_1)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_Surplus_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Plotting surplus bar chart
@@ -142,7 +142,7 @@ print('-dpng','-r600',[Figfolderpath])
 
 %% Fertilizer regional figures
 % Now getting the regional values
-FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_meanHUC2Components.txt']);
+FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianHUC2Components.txt']);
 % Isolate 1930, 1980 and 2017
 idx_1930 = find(YEARS == 1930);
 idx_1980 = find(YEARS == 1980);
@@ -156,10 +156,10 @@ FERT_AGHA = [FERT_AGHA, [1:size(FERT_AGHA,1)]'];
 
 % Plotting fertilizer lollichart
 figure(4)
-plot([0,0], [0,10], ':', 'Color','#ABABAB', 'LineWidth',1)
-hold on
+
 for i = 1:length(FERT_AGHA(:,3))
     plot(FERT_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
+    hold on
 end
 % 1930
 scatter(FERT_AGHA(:,2), FERT_AGHA(:,end), 70, ...
@@ -174,7 +174,7 @@ scatter(FERT_AGHA(:,4), FERT_AGHA(:,end), 70, ...
 
 % Adjusting axes
 ylim([0.5, 9.5])
-xlim([0, 30])
+xlim([0, 25])
 xlabel('kg-P ha^-^1 yr^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
@@ -188,13 +188,13 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_Fert_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Fert_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Livestock regional figures
 
 % Now getting the regional values
-LVSK_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_meanHUC2Components.txt']);
+LVSK_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
 % Isolate 1930, 1980 and 2017
 idx_1930 = find(YEARS == 1930);
 idx_1980 = find(YEARS == 1980);
@@ -207,10 +207,11 @@ LVSK_AGHA = [LVSK_AGHA, [1:size(LVSK_AGHA,1)]'];
 
 % Plotting livestock lollichart
 figure(5)
-plot([0,0], [0,10], ':', 'Color','#ABABAB', 'LineWidth',1)
-hold on
+
+
 for i = 1:length(LVSK_AGHA(:,3))
     plot(LVSK_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
+    hold on
 end
 % 1930
 scatter(LVSK_AGHA(:,2), LVSK_AGHA(:,end), 70, ...
@@ -225,7 +226,7 @@ scatter(LVSK_AGHA(:,4), LVSK_AGHA(:,end), 70, ...
 
 % Adjusting axes
 ylim([0.5, 9.5])
-xlim([0, 30])
+xlim([0, 25])
 xlabel('kg-P ha^-^1 yr^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
@@ -239,12 +240,12 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_Lvsk_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Lvsk_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Crop regional figures
 % Now getting the regional values
-CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
+CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
 % Isolate 1930, 1980 and 2017
 idx_1930 = find(YEARS == 1930);
 idx_1980 = find(YEARS == 1980);
@@ -257,7 +258,6 @@ CROP_AGHA = [CROP_AGHA, [1:size(CROP_AGHA,1)]'];
 
 % Plotting livestock lollichart
 figure(6)
-plot([0,0], [0,10], ':', 'Color','#ABABAB', 'LineWidth',1)
 hold on
 for i = 1:length(CROP_AGHA(:,3))
     plot(CROP_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
@@ -275,7 +275,7 @@ scatter(CROP_AGHA(:,4), CROP_AGHA(:,end), 70, ...
 
 % Adjusting axes
 ylim([0.5, 9.5])
-xlim([0, 30])
+xlim([0, 25])
 xlabel('kg-P ha^-^1 yr^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
@@ -289,7 +289,7 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_Crop_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Crop_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Combined regional figures with vertical alignment
@@ -335,7 +335,7 @@ for i = 1:n_regions
 end
 
 % Create figure
-figure(1)
+figure(7)
 set(gcf, 'Position', [100,100,350,600])  % Taller figure to accommodate vertical alignment
 
 % Background grid
@@ -400,5 +400,69 @@ set(a,'ZColor',[0,0,0])
 box on
 
 Figfolderpath = [OUTPUT_folderName,...
-    'HUCFigures/HUC_Components_Combined_LolliChart.png'];
+    'HUCFigures/HUC_mean_Components_Combined_LolliChart.png'];
+print('-dpng','-r600',[Figfolderpath])
+
+%% Scatter plot of P surplus vs. PUE
+close all
+% Regional Color schemes
+RegCol =  [228,26,28;
+55,126,184;
+77,175,74;
+152,78,163;
+255,127,0;
+255,255,51;
+166,86,40;
+247,129,191;
+153,153,153]./255;
+
+PUE_AGHA = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
+AGS_AGHA = readmatrix([OUTPUT_folderName, 'Ag_Surplus_medianHUC2Components.txt']);
+
+% Isolate 1980 and 2017
+
+idx_2017 = find(YEARS == 2017);
+
+PUE_AGHA = PUE_AGHA(:,[1, idx_2017+1]);
+PUE_AGHA = sortrows(PUE_AGHA,'descend');
+
+AGS_AGHA = AGS_AGHA(:,[1, idx_2017+1]);
+AGS_AGHA = sortrows(AGS_AGHA,'descend');
+
+% Insert a column in indexes that are sequential of region numbers.
+PUE_AGHA = [PUE_AGHA, [1:size(PUE_AGHA,1)]'];
+AGS_AGHA = [AGS_AGHA, [1:size(AGS_AGHA,1)]'];
+regionID = {'9';'8';'7';'6';'5';...
+    '4';'3';'2';'1'};
+
+groups = PUE_AGHA(:,3);
+hold on
+
+% Plot each group separately
+for i = 1:length(PUE_AGHA(:,3))
+    idx = PUE_AGHA(:,3) == groups(i);
+    
+    % Create scatter plot for this group
+    h = scatter(AGS_AGHA(i,2), PUE_AGHA(i,2), ...
+         70, ...
+         RegCol(i,:), ... % Use the color for this group
+         'filled', ...
+         'LineWidth', 1.5);
+    
+    % Set face alpha and edge color
+    h.MarkerFaceAlpha = 0.4;
+    h.MarkerEdgeColor = RegCol(i,:) * 0.7; % Darker version of same color
+end
+
+legend(regionID)
+legend boxoff
+
+hold off;
+
+ylabel('PUE (-)')
+xlabel('Surplus (kg-P ha^-^1 y^-^1)')
+box on
+set(gcf, 'Position',plot_dim_1)
+Figfolderpath = [OUTPUT_folderName,...
+    'HUCFigures/HUC_median_Surplus_v_PUE.png'];
 print('-dpng','-r600',[Figfolderpath])

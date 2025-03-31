@@ -4,10 +4,10 @@ clc, clear, close all
 %   Read in each tif file, vetorize and take the median, and quanties per
 %   year. 
 % ------------------------------------------------------------------------
-runTiffs = 0 ;
+runTiffs = 1 ;
 % Read in tif files
 INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
+    'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
 INPUTfilepathPUE = '..\OUTPUTS\PUE\';
 
 OUTPUT_folderName = '..\OUTPUTS\Component_Timeseries\';
@@ -32,6 +32,7 @@ plot_dim2 = [50,50,250,225];
 if runTiffs == 1
 % Reading in Manure Files 
 Livestock_quantiles = zeros(5,length(YEARS));
+Livestock_average = zeros(1,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
     file_lvsk_i = dir([INPUTfilepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
@@ -46,10 +47,13 @@ for i = 1:length(YEARS)
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
     
     Livestock_quantiles(:,i) = QLV;
+    Livestock_average(1,i) = mean(Tif_linear,'omitnan');
 end
 
 %% Reading in Fetilizer Files 
 Fertilizer_quantiles = zeros(5,length(YEARS));
+Fertilizer_average = zeros(1,length(YEARS));
+
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
     file_fert_i = dir([INPUTfilepath, fertilizerFolder,'\*_',num2str(YEAR_i),'.tif']);
@@ -64,10 +68,12 @@ for i = 1:length(YEARS)
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
     
     Fertilizer_quantiles(:,i) = QLV;
+    Fertilizer_average(1,i) = mean(Tif_linear, 'omitnan');
 end
 
 %% Reading in Crop Files 
 Crop_quantiles = zeros(5,length(YEARS));
+Crop_average = zeros(1,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
     file_fert_i = dir([INPUTfilepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
@@ -82,6 +88,7 @@ for i = 1:length(YEARS)
     QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
     
     Crop_quantiles(:,i) = QLV;
+    Crop_average(1,i) = mean(Tif_linear, 'omitnan');
 end
 
 %% Reading in Ag Surplus Files 
@@ -119,8 +126,12 @@ for i = 1:length(YEARS)
     
     PUE_quantiles(:,i) = QLV;
 end
+PUE_mean = Crop_average./(Fertilizer_average+Livestock_average);
+save([OUTPUT_folderName, 'PUE_mean.mat'],'PUE_mean')
 
-save([OUTPUT_folderName, 'ComponentQuantiles.mat'],'Fertilizer_quantiles','Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles','PUE_quantiles')
+save([OUTPUT_folderName, 'ComponentQuantiles.mat'],'Fertilizer_quantiles', ...
+    'Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles', ...
+    'PUE_quantiles')
 end
 
 %% Timeseries plots
@@ -348,3 +359,24 @@ print('-dsvg','-r600',[Figfolderpath])
 Figfolderpath = [OUTPUT_folderName,'PUE_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
 close all
+
+%% Supplemental Figure for mean and median PUE. 
+plot([1930:2017], PUE_quantiles(3,:), 'LineWidth', 1)
+hold on
+plot([1930:2017], PUE_mean, 'LineWidth', 1)
+
+% Create ylabel
+ylabel('PUE [-]');
+xlim([1930, 2017])
+
+box('on');
+
+% Create legend
+legend1 = legend('Median PUE', 'Mean PUE')
+set(legend1,'EdgeColor',[1 1 1]);
+
+% set window size
+set(gcf, 'Position',  [100, 100, 300, 250])
+
+Figfolderpath = [OUTPUT_folderName,'PUE_meanNational.png'];
+print('-dpng','-r600',[Figfolderpath])
