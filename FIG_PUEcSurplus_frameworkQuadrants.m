@@ -29,6 +29,8 @@ PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_2017.tif';
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
 [CS2017,~] = readgeoraster(CUMSUMfilepath); % single
+PUE2017_v = PUE2017(:);
+CS2017_v = CS2017(:);
 
 % Reading in 1980 data.
 PUEfilepath = '..\OUTPUTS\PUE\PUE_1980.tif';
@@ -36,6 +38,9 @@ CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_1980.tif';
 
 [PUE1980,~] = readgeoraster(PUEfilepath); % single
 [CS1980,~] = readgeoraster(CUMSUMfilepath); % single
+
+PUE1980_v = PUE2017(:);
+CS1980_v = CS2017(:);
 
 clear PUE2017 CS2017 PUE1980 CS1980
 

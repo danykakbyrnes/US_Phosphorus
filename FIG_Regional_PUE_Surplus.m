@@ -163,14 +163,14 @@ for i = 1:length(FERT_AGHA(:,3))
 end
 % 1930
 scatter(FERT_AGHA(:,2), FERT_AGHA(:,end), 70, ...
-    [254,224,210]./255,'filled', 'MarkerEdgeColor', [252,187,161]./255)
+    [254,224,210]./255,'filled', 'MarkerEdgeColor', 0.5*[254,224,210]./255)
 hold on
 % 1980
 scatter(FERT_AGHA(:,3), FERT_AGHA(:,end), 70, ...
-    [251,106,74]./255, 'filled', 'MarkerEdgeColor', [203,24,29]./255)
+    [251,106,74]./255, 'filled', 'MarkerEdgeColor', 0.5*[251,106,74]./255)
 % 2017
 scatter(FERT_AGHA(:,4), FERT_AGHA(:,end), 70, ...
-    [165,15,21]./255,'filled', 'MarkerEdgeColor', [103,0,13]./255)
+    [165,15,21]./255,'filled', 'MarkerEdgeColor', 0.5*[165,15,21]./255)
 
 % Adjusting axes
 ylim([0.5, 9.5])
@@ -195,10 +195,6 @@ print('-dpng','-r600',[Figfolderpath])
 % Now getting the regional values
 LVSK_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
 % Isolate 1930, 1980 and 2017
-idx_1930 = find(YEARS == 1930);
-idx_1980 = find(YEARS == 1980);
-idx_2017 = find(YEARS == 2017);
-
 LVSK_AGHA = LVSK_AGHA(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
 LVSK_AGHA = sortrows(LVSK_AGHA,'ascend');
 % Insert a column in indexes that are sequential of region numbers.
@@ -214,14 +210,14 @@ for i = 1:length(LVSK_AGHA(:,3))
 end
 % 1930
 scatter(LVSK_AGHA(:,2), LVSK_AGHA(:,end), 70, ...
-    [239,237,245]./255,'filled', 'MarkerEdgeColor', [158,154,200]./255)
+    [239,237,245]./255,'filled', 'MarkerEdgeColor', 0.5*[239,237,245]./255)
 hold on
 % 1980
 scatter(LVSK_AGHA(:,3), LVSK_AGHA(:,end), 70, ...
-    [158,154,200]./255, 'filled', 'MarkerEdgeColor', [106,81,163]./255)
+    [158,154,200]./255, 'filled', 'MarkerEdgeColor', 0.5*[158,154,200]./255)
 % 2017
 scatter(LVSK_AGHA(:,4), LVSK_AGHA(:,end), 70, ...
-    [84,39,143]./255,'filled', 'MarkerEdgeColor', [63,0,125]./255)
+    [84,39,143]./255,'filled', 'MarkerEdgeColor', 0.5*[84,39,143]./255)
 
 % Adjusting axes
 ylim([0.5, 9.5])
@@ -246,10 +242,6 @@ print('-dpng','-r600',[Figfolderpath])
 % Now getting the regional values
 CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
 % Isolate 1930, 1980 and 2017
-idx_1930 = find(YEARS == 1930);
-idx_1980 = find(YEARS == 1980);
-idx_2017 = find(YEARS == 2017);
-
 CROP_AGHA = CROP_AGHA(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
 CROP_AGHA = sortrows(CROP_AGHA,'ascend');
 % Insert a column in indexes that are sequential of region numbers.
@@ -263,14 +255,14 @@ for i = 1:length(CROP_AGHA(:,3))
 end
 % 1930
 scatter(CROP_AGHA(:,2), CROP_AGHA(:,end), 70, ...
-    [229,245,224]./255,'filled', 'MarkerEdgeColor', [161,217,155]./255)
+    [229,245,224]./255,'filled', 'MarkerEdgeColor', 0.5*[229,245,224]./255)
 hold on
 % 1980
 scatter(CROP_AGHA(:,3), CROP_AGHA(:,end), 70, ...
-    [65,171,93]./255, 'filled', 'MarkerEdgeColor', [35,139,69]./255)
+    [65,171,93]./255, 'filled', 'MarkerEdgeColor', 0.5*[65,171,93]./255)
 % 2017
 scatter(CROP_AGHA(:,4), CROP_AGHA(:,end), 70, ...
-    [0,109,44]./255,'filled', 'MarkerEdgeColor', [0,68,27]./255)
+    [0,109,44]./255,'filled', 'MarkerEdgeColor', 0.5*[0,109,44]./255)
 
 % Adjusting axes
 ylim([0.5, 9.5])
@@ -293,31 +285,36 @@ print('-dpng','-r600',[Figfolderpath])
 
 %% Percent Manure of total inputs regional figures
 % Now getting the regional values
-PCT_MANU = LVSK_AGHA
+PCT_MANU = readmatrix([OUTPUT_folderName, 'PCT_Manure_In_medianHUC2_fromgrid.txt']);
+PCT_MANU = PCT_MANU(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
+PCT_MANU(1,:) = [];
+PCT_MANU = sortrows(PCT_MANU,'ascend');
+
+% Insert a column in indexes that are sequential of region numbers.
+PCT_MANU = [PCT_MANU, [1:size(PCT_MANU,1)]'];
 
 % Plotting livestock lollichart
 figure(5)
 
-
-for i = 1:length(LVSK_AGHA(:,3))
-    plot(LVSK_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
+for i = 1:length(PCT_MANU(:,3))
+    plot(PCT_MANU(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
     hold on
 end
 % 1930
-scatter(LVSK_AGHA(:,2), LVSK_AGHA(:,end), 70, ...
-    [239,237,245]./255,'filled', 'MarkerEdgeColor', [158,154,200]./255)
+scatter(PCT_MANU(:,2), PCT_MANU(:,end), 70, ...
+    [255,247,188]./255,'filled', 'MarkerEdgeColor', 0.5*[255,247,188]./255)
 hold on
 % 1980
-scatter(LVSK_AGHA(:,3), LVSK_AGHA(:,end), 70, ...
-    [158,154,200]./255, 'filled', 'MarkerEdgeColor', [106,81,163]./255)
+scatter(PCT_MANU(:,3), PCT_MANU(:,end), 70, ...
+    [254,196,79]./255, 'filled', 'MarkerEdgeColor', 0.5*[254,196,79]./255)
 % 2017
-scatter(LVSK_AGHA(:,4), LVSK_AGHA(:,end), 70, ...
-    [84,39,143]./255,'filled', 'MarkerEdgeColor', [63,0,125]./255)
+scatter(PCT_MANU(:,4), PCT_MANU(:,end), 70, ...
+    [217,95,14]./255,'filled', 'MarkerEdgeColor', 0.5*[217,95,14]./255)
 
 % Adjusting axes
 ylim([0.5, 9.5])
-xlim([0, 25])
-xlabel('kg-P ha^-^1 yr^-^1')
+xlim([0, 1])
+xlabel('[-]')
 a = gca;
 set(a,'yticklabel',regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
@@ -330,5 +327,5 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Lvsk_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Pct_Manure_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])

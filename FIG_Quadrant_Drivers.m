@@ -1,7 +1,6 @@
 clc, clear
 
 %% Finding the distribution of dominant manure inputs (vs. tot fertilizer) 
-
 % Filepaths
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 trendINPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
@@ -9,11 +8,11 @@ trendINPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
 PUEfilepath = '..\OUTPUTS\PUE\';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
 
-
 % Figure aesthetics 
 fontSize_p = 11;
 fontSize_p2 = 8; 
 plot_dim = [200,200,400,200];
+plot_dim_2 = [200,200,325,400];
 mSize = 4; 
 
 colourPalette = [1,102,94;
@@ -135,7 +134,7 @@ FERT2017(~mask2017) = NaN;
 
 % Calculating the ratio of livestock to total inputs
 pct_Manu_1980 = LVSTK1980./(LVSTK1980+FERT1980);
-pct_Manu_2017 = LVSTK2017./(LVSTK62017+FERT2017);
+pct_Manu_2017 = LVSTK2017./(LVSTK2017+FERT2017);
 
 % Saving maps as tif files. 
 outputFilename = 'PctManure_TotIn_Map_1980.tif';
@@ -147,12 +146,3 @@ outputFilename = 'PctManure_TotIn_Map_2017.tif';
 geotiffwrite([OUTPUTfilepath,outputFilename], pct_Manu_2017, georef, ...
     'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
     'TiffTags',struct('Compression',Tiff.Compression.LZW));
-
-%% FIGURE X: PUE vs. % manure
-I = sort(randperm(length(PUE_LvstkRatio),ceil(length(PUE_LvstkRatio)/100))'); 
-PUE_LvstkRatio_ss = PUE_LvstkRatio(I,:);
-scatter(PUE_LvstkRatio_ss(:,1), PUE_LvstkRatio_ss(:,2),'filled', ...
-    'MarkerFaceAlpha', 0.01)
-xlabel('PUE')
-xlim([0,2])
-ylabel('Manure Total Input Ratio')
