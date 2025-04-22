@@ -80,9 +80,10 @@ smoothing_int = [5 5];
 
 for i = 1:size(AGS_AGHA_TS,1)
     subplot(3,3,i)
+    movmeanAGS = movmean(AGS_AGHA_TS(i,2:end),smoothing_int);
     plot(YEARS, movmeanAGS, '-', 'LineWidth',2.5, 'Color', '#0868AC') 
     hold on
-    plot(YEARS, movmeanAGS, '-', 'LineWidth', 1, 'Color', '#43A2CA') 
+   plot(YEARS, movmeanAGS, '-', 'LineWidth', 1, 'Color', '#43A2CA') 
     
     set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
         {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
