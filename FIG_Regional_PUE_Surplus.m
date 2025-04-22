@@ -15,6 +15,10 @@ PUE_AGHA = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 
 AGS_AGHA = readmatrix([OUTPUT_folderName, 'Ag_Surplus_medianHUC2Components.txt']);
 
+smoothing_int = [5 5];
+PUE_AGHA(i,2:end) = movmean(PUE_AGHA(i,2:end),smoothing_int);
+AGS_AGHA(i,2:end) = movmean(AGS_AGHA(i,2:end),smoothing_int);
+
 % Isolate 1980 and 2017
 idx_1930 = find(YEARS == 1930);
 idx_1980 = find(YEARS == 1980);
@@ -76,11 +80,9 @@ print('-dpng','-r600',[Figfolderpath])
 %% Plotting Surplus lineplots
 figure(2)
 
-smoothing_int = [5 5];
-
 for i = 1:size(AGS_AGHA_TS,1)
     subplot(3,3,i)
-    movmeanAGS = movmean(AGS_AGHA_TS(i,2:end),smoothing_int);
+    
     plot(YEARS, movmeanAGS, '-', 'LineWidth',2.5, 'Color', '#0868AC') 
     hold on
    plot(YEARS, movmeanAGS, '-', 'LineWidth', 1, 'Color', '#43A2CA') 
