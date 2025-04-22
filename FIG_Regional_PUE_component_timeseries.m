@@ -1,6 +1,6 @@
 clc, clear, close all
 % ------------------------------------------------------------------------
-% MAKING HUC TIMESERIES FOR FIGURE 4. This uses the mean PUE of all 
+% MAKING HUC TIMESERIES FOR FIGURE 4. This uses the median PUE of all 
 % gridcells 
 % ------------------------------------------------------------------------
 smoothing_int = [5 5];
@@ -19,13 +19,13 @@ YEARS = 1930:2017;
 OUTPUT_folderName = '../OUTPUTS/HUC2/';
 %% Opening files
 
-MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_meanHUC2Components.txt']);
+MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
 MANURE_AGHA = sortrows(MANURE_AGHA,'descend');
 
-FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_meanHUC2Components.txt']);
+FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianHUC2Components.txt']);
 FERT_AGHA = sortrows(FERT_AGHA,'descend');
 
-CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_meanHUC2Components.txt']);
+CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
 % Read in land use
@@ -283,20 +283,20 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(2)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(3)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(4)
 set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_mean.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])

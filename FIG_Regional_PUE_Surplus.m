@@ -8,6 +8,7 @@ YEARS = 1930:2017;
 fontSize_p = 10;
 plot_dim_1 = [100,100,350,400];
 plot_dim_2 = [100,100,275,325];
+plot_dim_3 = [100,100,450,400];
 
 % Now getting the regional values
 PUE_AGHA = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
@@ -19,11 +20,15 @@ idx_1930 = find(YEARS == 1930);
 idx_1980 = find(YEARS == 1980);
 idx_2017 = find(YEARS == 2017);
 
+PUE_AGHA_TS = PUE_AGHA ;
 PUE_AGHA = PUE_AGHA(:,[1, idx_1980+1, idx_2017+1]);
 PUE_AGHA = sortrows(PUE_AGHA,'ascend');
 
+
+AGS_AGHA_TS = AGS_AGHA;
 AGS_AGHA = AGS_AGHA(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
-AGS_AGHA = sortrows(AGS_AGHA,'ascend');
+AGS_AGHA = sortrows(AGS_AGHA, 1, 'ascend');
+AGS_AGHA_TS = sortrows(AGS_AGHA_TS, 1, 'descend');
 
 % Insert a column in indexes that are sequential of region numbers.
 PUE_AGHA = [PUE_AGHA, [1:size(PUE_AGHA,1)]'];
@@ -68,13 +73,46 @@ set(gcf, 'Position',plot_dim_1)
 Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_PUE_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])
 
+%% Plotting Surplus lineplots
+figure(2)
+
+smoothing_int = [5 5];
+
+for i = 1:size(AGS_AGHA_TS,1)
+    subplot(3,3,i)
+    plot(YEARS, movmeanAGS, '-', 'LineWidth',2.5, 'Color', '#0868AC') 
+    hold on
+    plot(YEARS, movmeanAGS, '-', 'LineWidth', 1, 'Color', '#43A2CA') 
+    
+    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
+        {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+        {'k','k','k'});
+    set(gca,'XColor',[0,0,0])
+    set(gca,'YColor',[0,0,0])
+    set(gca,'ZColor',[0,0,0])
+    set(gca,'XMinorTick','on','YMinorTick','on')
+    set(gca,'TickLength',[0.03, 0])
+    ylim([-5,15])
+
+    if i == 1 | i == 4 | i == 7
+        yticks([-5, 0, 5, 10, 15])
+    else
+        yticks([])
+    end
+end
+
+set(gcf, 'Position',plot_dim_3)
+Figfolderpath =  [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_Timeseries.png'];
+print('-dpng','-r600',[Figfolderpath])
+
+
 %% Plotting surplus lollichart
 % Plotting a scatter plot with lines a zero
-figure(2)
+figure(3)
 plot([0,0], [0,10], ':', 'Color','#ABABAB', 'LineWidth',1)
 
 hold on
-for i = 1:length(PUE_AGHA(:,3))
+for i = 1:length(AGS_AGHA(:,3))
    plot(AGS_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
 end
 
@@ -111,7 +149,7 @@ Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_LolliChart.png
 print('-dpng','-r600',[Figfolderpath])
 
 %% Plotting surplus bar chart
-figure(3)
+figure(4)
 h = barh(AGS_AGHA(:,end), AGS_AGHA(:,2:4)', 0.95);
 h(1).FaceColor = '#bdc9e1';
 h(2).FaceColor = '#79A6BF';
@@ -155,7 +193,7 @@ FERT_AGHA = sortrows(FERT_AGHA,'ascend');
 FERT_AGHA = [FERT_AGHA, [1:size(FERT_AGHA,1)]'];
 
 % Plotting fertilizer lollichart
-figure(4)
+figure(5)
 
 for i = 1:length(FERT_AGHA(:,3))
     plot(FERT_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
@@ -201,8 +239,7 @@ LVSK_AGHA = sortrows(LVSK_AGHA,'ascend');
 LVSK_AGHA = [LVSK_AGHA, [1:size(LVSK_AGHA,1)]'];
 
 % Plotting livestock lollichart
-figure(5)
-
+figure(6)
 
 for i = 1:length(LVSK_AGHA(:,3))
     plot(LVSK_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
@@ -294,7 +331,7 @@ PCT_MANU = sortrows(PCT_MANU,'ascend');
 PCT_MANU = [PCT_MANU, [1:size(PCT_MANU,1)]'];
 
 % Plotting livestock lollichart
-figure(5)
+figure(7)
 
 for i = 1:length(PCT_MANU(:,3))
     plot(PCT_MANU(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
