@@ -1,7 +1,6 @@
 %% Agricultural surplus and PUE regional figures
 clc, clear, close all
 
-% First start by calculating national cumsum
 OUTPUT_folderName = '../OUTPUTS/HUC2/';
 
 YEARS = 1930:2017;
@@ -16,8 +15,8 @@ PUE_AGHA = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 AGS_AGHA = readmatrix([OUTPUT_folderName, 'Ag_Surplus_medianHUC2Components.txt']);
 
 smoothing_int = [5 5];
-PUE_AGHA(i,2:end) = movmean(PUE_AGHA(i,2:end),smoothing_int);
-AGS_AGHA(i,2:end) = movmean(AGS_AGHA(i,2:end),smoothing_int);
+PUE_AGHA(:,2:end) = movmean(PUE_AGHA(:, 2:end),smoothing_int, 2);
+AGS_AGHA(:,2:end) = movmean(AGS_AGHA(:, 2:end),smoothing_int, 2);
 
 % Isolate 1980 and 2017
 idx_1930 = find(YEARS == 1930);
@@ -74,7 +73,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_1)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_PUE_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_PUE_LolliChart_smooth.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Plotting Surplus lineplots
@@ -83,9 +82,9 @@ figure(2)
 for i = 1:size(AGS_AGHA_TS,1)
     subplot(3,3,i)
     
-    plot(YEARS, movmeanAGS, '-', 'LineWidth',2.5, 'Color', '#0868AC') 
+    plot(YEARS, AGS_AGHA_TS(i, 2:end), '-', 'LineWidth',2.5, 'Color', '#0868AC') 
     hold on
-   plot(YEARS, movmeanAGS, '-', 'LineWidth', 1, 'Color', '#43A2CA') 
+   plot(YEARS, AGS_AGHA_TS(i, 2:end), '-', 'LineWidth', 1, 'Color', '#43A2CA') 
     
     set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
         {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
@@ -148,7 +147,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_1)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_LolliChart_smooth.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Plotting surplus bar chart
@@ -184,6 +183,8 @@ print('-dpng','-r600',[Figfolderpath])
 %% Fertilizer regional figures
 % Now getting the regional values
 FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianHUC2Components.txt']);
+FERT_AGHA(:,2:end) = movmean(FERT_AGHA(:, 2:end),smoothing_int, 2);
+
 % Isolate 1930, 1980 and 2017
 idx_1930 = find(YEARS == 1930);
 idx_1980 = find(YEARS == 1980);
@@ -229,12 +230,14 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Fert_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Fert_LolliChart_smooth.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Livestock regional figures
 % Now getting the regional values
 LVSK_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
+LVSK_AGHA(:,2:end) = movmean(LVSK_AGHA(:, 2:end),smoothing_int, 2);
+
 % Isolate 1930, 1980 and 2017
 LVSK_AGHA = LVSK_AGHA(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
 LVSK_AGHA = sortrows(LVSK_AGHA,'ascend');
@@ -275,20 +278,22 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Lvsk_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Lvsk_LolliChart_smooth.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Crop regional figures
 % Now getting the regional values
 CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
+CROP_AGHA(:,2:end) = movmean(CROP_AGHA(:, 2:end),smoothing_int, 2);
+
 % Isolate 1930, 1980 and 2017
 CROP_AGHA = CROP_AGHA(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
 CROP_AGHA = sortrows(CROP_AGHA,'ascend');
 % Insert a column in indexes that are sequential of region numbers.
 CROP_AGHA = [CROP_AGHA, [1:size(CROP_AGHA,1)]'];
 
-% Plotting livestock lollichart
-figure(6)
+% Plotting crop uptake lollichart
+figure(7)
 hold on
 for i = 1:length(CROP_AGHA(:,3))
     plot(CROP_AGHA(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)
@@ -320,7 +325,7 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Crop_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Crop_LolliChart_smooth.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 %% Percent Manure of total inputs regional figures
@@ -333,8 +338,8 @@ PCT_MANU = sortrows(PCT_MANU,'ascend');
 % Insert a column in indexes that are sequential of region numbers.
 PCT_MANU = [PCT_MANU, [1:size(PCT_MANU,1)]'];
 
-% Plotting livestock lollichart
-figure(7)
+% Plotting % manure of total inputs lollichart
+figure(8)
 
 for i = 1:length(PCT_MANU(:,3))
     plot(PCT_MANU(i,2:4), [i,i,i], 'Color','#E8EAEB', 'LineWidth',8)

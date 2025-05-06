@@ -89,9 +89,7 @@ save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
 
 
 %% Calculating PUE and combined inputs
-%HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_meanHUC2_fromgrid.txt']);
-% Using the regional crop, man, and fert mean instead of the average PUE
-HUC_PUE = [CROP_AGHA(:,1), CROP_AGHA(:,2:end)./(FERT_AGHA(:,2:end) + MANURE_AGHA(:,2:end))];
+HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
 HUC_PUE = sortrows(HUC_PUE,1,'descend');
 
 for i = 1:height(HUC_PUE)

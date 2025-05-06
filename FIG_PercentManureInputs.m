@@ -11,8 +11,7 @@ trendINPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
 fontSize_p = 11;
 fontSize_p2 = 8; 
 plot_dim = [200,200,400,200];
-plot_dim_2 = [200,200,400,425];
-mSize = 4; 
+plot_dim_2 = [200,200,400,425]; 
 
 % Loading in the files
 PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
@@ -57,7 +56,8 @@ PCT_MANU = sortrows(PCT_MANU,'ascend');
 PUE_AGHA = PUE_AGHA(:,[1, find(YEARS == 2017)+1]);
 PUE_AGHA = sortrows(PUE_AGHA,'ascend');
 
-% Insert a column in indexes that are sequential of region numbers.
+% Insert a column in indexes that are sequential for 
+% plotting and do not correspond to region numbers.
 D_reg = [PUE_AGHA, PCT_MANU(:,2), [1:size(PUE_AGHA,1)]'];
 regionID = {'9';'8';'7';'6';'5';...
     '4';'3';'2';'1'};
@@ -88,15 +88,15 @@ scatter(D_ss(:,1), D_ss(:,4), 20, ...
 hold on
 
 % Adding regions
-RegCol =  [228,26,28;
-           55,126,184;
+RegCol =  [228,26,28; % region 9
+           55,126,184; % region 8
            77,175,74;
            152,78,163;
            255,127,0;
            255,255,51;
            166,86,40;
            247,129,191;
-           195,243,227]./255;
+           195,243,227]./255; % region 1
 
 xlabel('PUE (2017) [-]')
 xlim([0,2])
