@@ -100,5 +100,5 @@ set(gcf,'position',plot_dim)
 
 hold off;
 set(gcf,'position',[200,200,400,400])
-Figfolderpath = [OUTPUTfilepath,'PS_CumuSurplus_scatter.png'];
+Figfolderpath = [OUTPUTfilepath,'ConcepFigure_PS_CumuSurplus.png'];
 print('-dpng','-r600',[Figfolderpath])
