@@ -39,10 +39,10 @@ for sheet in sheetNames:
 
     T_all.drop(T_all.loc[T_all['Year']==2018].index, inplace=True)
     
-    T_all.to_csv(file+'fertilizeruse_ersdata_reformatted.csv',
-                 index=False)
-#%%  Filter data for Nebraska
-State_Name = 'Illinois'
+T_all.to_csv(file+'fertilizeruse_ersdata_reformatted.csv',
+             index=False)
+#%%  Filter data for specified state
+State_Name = 'Arkansas'
 State_data = T_all[T_all['State'] == State_Name]
 
 # Create a list of all the table columns for easier reference
@@ -59,14 +59,14 @@ table_columns = [
 
 # Create short titles for each subplot
 short_titles = [
-    'Corn Fertilized Acreage %',
-    'Corn Rate/Acre',
-    'Cotton Fertilized Acreage %',
+    'Corn P2O5 Fertilized Acreage %',
+    'Corn P2O5 Rate/Acre',
+    'Cotton P2O5 P2O5 Fertilized Acreage %',
     'Cotton Rate/Acre',
-    'Soybean Fertilized Acreage %',
-    'Soybean Rate/Acre',
-    'Wheat Fertilized Acreage %',
-    'Wheat Rate/Acre'
+    'Soybean P2O5 P2O5 Fertilized Acreage %',
+    'Soybean P2O5 Rate/Acre',
+    'Wheat P2O5 Fertilized Acreage %',
+    'Wheat P2O5 Rate/Acre'
 ]
 
 # Creating scatter plot for the specified state
@@ -109,7 +109,7 @@ Cotton_pctFert = [State_data.loc[State_data['Year'] <= 1980].iloc[:,4].mean(),
 
 
 Soybean_pctFert = [State_data.loc[State_data['Year'] <= 1980].iloc[:,6].mean(), 
-                   State_data.loc[State_data['Year'] >= 1990].iloc[:,6].mean(),
+                   State_data.loc[State_data['Year'] >= 1980].iloc[:,6].mean(),
                   State_data.loc[State_data['Year'] <= 2017].iloc[:,6].mean()]
 
 Wheat_pctFert = [State_data.loc[State_data['Year'] <= 1980].iloc[:,8].mean(),
