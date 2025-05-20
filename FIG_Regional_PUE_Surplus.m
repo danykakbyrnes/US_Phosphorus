@@ -103,7 +103,6 @@ set(gcf, 'Position',plot_dim_3)
 Figfolderpath =  [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_Timeseries.png'];
 print('-dpng','-r600',[Figfolderpath])
 
-
 %% Plotting surplus lollichart
 % Plotting a scatter plot with lines a zero
 figure(3)
