@@ -30,7 +30,7 @@ idx_1977 = find(YEAR == 1977);
 idx_1980 = find(YEAR == 1980);
 
 
-fprintf(fileID,['3.1 3.1 Agricultural Phosphorus Usages across the ' ...
+fprintf(fileID,['3.1 Agricultural Phosphorus Usages across the ' ...
     'Contiguous United States \n']); 
 fprintf(fileID,['----------------------------------------------------' ...
     '-----------------------------------------\n']); 
@@ -127,9 +127,7 @@ fprintf(fileID,'Median PUE 2017: %.3f (IQR: %.3f-%.3f) \n\n', ...
     PUE_quantiles(2,end), ...
     PUE_quantiles(4,end));
 
-fprintf(fileID,'Regional Median PUE\n');
-fprintf(fileID,['----------------------------------------------------' ...
-    '-----------------------------------------\n']); 
+fprintf(fileID,'Regional Median PUE\n\n');
 
 fprintf(fileID,'Region 1: 1930: %.3f, 1980: %.3f, 2017: %.3f \n', ...
     PUE_Median_HUC2{REG_1_idx, [2,idx_1980+1,end]});
@@ -193,7 +191,7 @@ fprintf(fileID,'Median Ag Surplus 2017: %.3f (IQR: %.3f-%.3f) \n\n', ...
 
 fprintf(fileID,'Region 5 Dec. in PS from 1980 to 2017: %.2f\n', ...
     AgS_Median_HUC2{REG_5_idx,idx_1980+1} - AgS_Median_HUC2{REG_5_idx, end});
-fprintf(fileID,'Region 6 Dec. in PS from 1980 to 2017: %.2f\n', ...
+fprintf(fileID,'Region 6 Dec. in PS from 1980 to 2017: %.2f\n\n', ...
     AgS_Median_HUC2{REG_6_idx,idx_1980+1} - AgS_Median_HUC2{REG_6_idx, end});
 
 %% -------------------------------------------------------------------------
@@ -205,35 +203,49 @@ CSfilepath =  ['..\OUTPUTS\Cumulative_Phosphorus\'];
 CS_Median_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_medianHUC2_fromgrid.txt']);
 
 % Regional Indexes for PUE
-REG_1_idx = find(CS_Median_HUC2.Var1 == 17);
-REG_2_idx = find(CS_Median_HUC2.Var1 == 14);
-REG_3_idx = find(CS_Median_HUC2.Var1 == 12);
-REG_4_idx = find(CS_Median_HUC2.Var1 == 10);
-REG_5_idx = find(CS_Median_HUC2.Var1 == 8);
-REG_6_idx = find(CS_Median_HUC2.Var1 == 7);
-REG_7_idx = find(CS_Median_HUC2.Var1 == 3);
-REG_8_idx = find(CS_Median_HUC2.Var1 == 2);
-REG_9_idx = find(CS_Median_HUC2.Var1 == 1);
+REG_1_idx = find(CS_Median_HUC2.REG == 17);
+REG_2_idx = find(CS_Median_HUC2.REG == 14);
+REG_3_idx = find(CS_Median_HUC2.REG == 12);
+REG_4_idx = find(CS_Median_HUC2.REG == 10);
+REG_5_idx = find(CS_Median_HUC2.REG == 8);
+REG_6_idx = find(CS_Median_HUC2.REG == 7);
+REG_7_idx = find(CS_Median_HUC2.REG == 3);
+REG_8_idx = find(CS_Median_HUC2.REG == 2);
+REG_9_idx = find(CS_Median_HUC2.REG == 1);
 
-fprintf(fileID,'Regional Cumulative Surplus\n'); 
+AgS_REG_3_idx = find(AgS_Median_HUC2.REG == 12);
+AgS_REG_6_idx = find(AgS_Median_HUC2.REG == 7);
+
+fprintf(fileID,'3.4 Cumulative Agricultural Surplus\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
-fprintf(fileID,'Region 7 (2017): %.3f \n', ...
+fprintf(fileID,'Region 7 (2017): %.1f \n', ...
     CS_Median_HUC2{REG_7_idx, end});
-fprintf(fileID,'Region 8 (2017): %.3f \n', ...
+fprintf(fileID,'Region 8 (2017): %.1f \n', ...
     CS_Median_HUC2{REG_8_idx, end});
 
-% Nationally Cumulative P Surplus in 1980 and 2017
-[CS_1980,~] = readgeoraster([CSfilepath,'CumSum_1980.tif']);
-[CS_2017,~] = readgeoraster([CSfilepath,'CumSum_2017.tif']);
+fprintf(fileID, 'Region 3 (2017) surplus and cumu surplus: %.2f kg/ha/y, %.2f kg/ha \n', ...
+    [AgS_Median_HUC2{AgS_REG_3_idx, end}, ...
+    CS_Median_HUC2{REG_3_idx, end}]);
+fprintf(fileID,'Region 6 (2017) surplus and cumu surplus: %.2f kg/ha/y, %.2f kg/ha \n', ...
+    [AgS_Median_HUC2{AgS_REG_6_idx, end}, ...
+    CS_Median_HUC2{REG_6_idx, end}]);
 
-CS_1980_v = CS_1980(:);
-CS_1980_v(isnan(CS_1980_v)) = []; % Removing all non-ag land. 
+% Reading in agricultural surplus 2017
+[AgSurp_tif,~] = readgeoraster([INPUTfilepath,agSFolder,'\AgSurplus_2017.tif']);
+
+% Calculating the area with negative phosphorus surplus
+idx_pos = find(AgSurp_tif > 0); % Ag Surp has 0 values for non-ag land
+idx_neg = find(AgSurp_tif < 0);
+
+Neg_AgLand = length(idx_neg)/(length(idx_pos)+length(idx_neg));
+Pos_AgLand = length(idx_pos)/(length(idx_pos)+length(idx_neg));
+
+% Cumulative P Surplus in 2017
+[CS_2017,~] = readgeoraster([CSfilepath,'CumSum_2017.tif']);
 CS_2017_v = CS_2017(:);
 CS_2017_v(isnan(CS_2017_v)) = []; % Removing all non-ag land. 
 
-Pos_CS_1980 = sum(CS_1980_v > 0)/length(CS_1980_v)*100;
 Pos_CS_2017 = sum(CS_2017_v > 0)/length(CS_2017_v)*100;
-Neg_CS_1980 = sum(CS_1980_v < 0)/length(CS_1980_v)*100;
 Neg_CS_2017 = sum(CS_2017_v < 0)/length(CS_2017_v)*100;
 
 % For the fraction of land with negative CS, we want to just look at the
@@ -256,76 +268,14 @@ binary_AgS_CS_2017 = binary_CS_2017 + binary_AgS_2017;
 % Fraction of agricultural land that has negative CS and PS
 Neg_AG_Pos_CS = sum(binary_AgS_CS_2017 == 2)./sum(binary_AgS_2017);
 
-fprintf(fileID,'Percent of area with Positive CS in 1980 and 2017: %.1f and %.1f \n', Pos_CS_1980, Pos_CS_2017);
-fprintf(fileID,'Percent of area with Negative CS in 1980 and 2017: %.1f and %.1f \n', Neg_CS_1980, Neg_CS_2017);
+fprintf(fileID,'Percent of area with Positive CS 2017: %.1f \n', Pos_CS_2017);
+fprintf(fileID,'Percent of area with Negative CS 2017: %.1f \n', Neg_CS_2017);
 fprintf(fileID,'Percent of aPS grids with Negative aPS: %.1f %% \n', Neg_AgLand*100);
-fprintf(fileID,'Percent of Neg Ag land with positive CS in 2017: %.1f %%\n\n', Neg_AG_Pos_CS*100);
+fprintf(fileID,'Percent of land with Neg aPS with positive CS in 2017: %.1f %%\n\n', Neg_AG_Pos_CS*100);
 
-%% Section 3.2
+%% -------------------------------------------------------------------------
+% Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation
 % -------------------------------------------------------------------------
-% Section 3.2 Phosphorus Use Efficiency and Relevant to Regional Nutrient Management
-% -------------------------------------------------------------------------
-PUE_HUC2 = readtable([HUCINPUTfilepath, 'PUE_medianHUC2_fromgrid.txt']);
-load([HUCINPUTfilepath, 'HUC2_AgLandUse.mat']) %HUCLU
-
-Fert_Median_HUC2 = readtable([HUCINPUTfilepath, 'Fert_medianHUC2Components.txt']);
-Lvstk_Median_HUC2 = readtable([HUCINPUTfilepath, 'Lvsk_meanHUC2Components.txt']);
-Crop_Median_HUC2 = readtable([HUCINPUTfilepath, 'Crop_meanHUC2Components.txt']);
-
-% Region 17 = Region 1
-% Region 14 = Region 2
-% Region 12 = Region 3
-% Region 10 = Region 4
-% Region 8 = Region 5
-% Region 7 = Region 6
-% Region 3 = Region 7
-% Region 2 = Region 8
-% Region 1 = Region 9
-
-% Region 1-3
-Reg_AC = [17, 14, 12];
-RegionAC_LU = HUCLU(ismember(HUCLU(:,1), Reg_AC),[2:end]);
-RegionAC_Crop = Crop_Median_HUC2{ismember(Crop_Median_HUC2{:,1}, Reg_AC),[2:end]};
-RegionAC_Fert = Fert_Median_HUC2{ismember(Fert_Median_HUC2{:,1}, Reg_AC),[2:end]};
-RegionAC_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_AC),[2:end]};
-
-% Region 4-6
-Reg_DF = [10, 8, 7];
-RegionDF_LU = HUCLU(ismember(HUCLU(:,1), Reg_DF),[2:end]);
-RegionDF_Crop = Crop_Median_HUC2{ismember(Crop_Median_HUC2{:,1}, Reg_DF),[2:end]};
-RegionDF_Fert = Fert_Median_HUC2{ismember(Fert_Median_HUC2{:,1}, Reg_DF),[2:end]};
-RegionDF_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_DF),[2:end]};
-RegionDF_Mean_LU_1930_2017 =  mean([RegionDF_LU(:,1),RegionDF_LU(:,end)]);
-RegionDF_Min_LU_1930_2017 =  min(min(RegionDF_LU));
-
-% Region 7-8
-Reg_GH = [3, 2];
-RegionGH_LU = HUCLU(ismember(HUCLU(:,1), Reg_GH),[2:end]);
-RegionGH_Crop = Crop_Median_HUC2{ismember(Crop_Median_HUC2{:,1}, Reg_GH),[2:end]};
-RegionGH_Fert = Fert_Median_HUC2{ismember(Fert_Median_HUC2{:,1}, Reg_GH),[2:end]};
-RegionGH_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_GH),[2:end]};
-
-% Region 9
-Reg_I = 1;
-RegionI_LU = HUCLU(HUCLU(:,1) == Reg_I,[2:end]);
-RegionI_Crop = Crop_Median_HUC2{ismember(Crop_Median_HUC2{:,1}, Reg_I),[2:end]};
-RegionI_Fert = Fert_Median_HUC2{ismember(Fert_Median_HUC2{:,1}, Reg_I),[2:end]};
-RegionI_Lvstk = Lvstk_Median_HUC2{ismember(Lvstk_Median_HUC2{:,1}, Reg_I),[2:end]};
-
-Region2_LU_1930_2017 = [RegionAC_LU(2,1),RegionAC_LU(2,end)];
-Region9_LU_1930_2017 = [RegionI_LU(1),RegionI_LU(end)];
-
-fprintf(fileID,'Regional PUE and Components \n'); 
-fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
-%fprintf(fileID,'Region D-F Minumum Ag Land: %.1f\n', RegionDF_Min_LU_1930_2017*100);
-fprintf(fileID,'Region 2 Ag Land: %.3f and %.3f \n\n', Region2_LU_1930_2017*100);
-fprintf(fileID,'Region 9 Ag Land: %.3f and %.3f \n\n', Region9_LU_1930_2017*100);
-
-%% Section 3.3
-% -------------------------------------------------------------------------
-% Section 3.3 Toward a Holistic Approach for Landscape Socio-Environmental Evaluation
-% -------------------------------------------------------------------------
-
 load([QuadrantINPUTfolderName,'QuadrantMapping.mat']) % D
 load([QuadrantINPUTfolderName,'Lvstk_Fert_Ratio_Grid.mat']) %Lvsk_Fert_Quadrant
 
@@ -380,7 +330,7 @@ Q4_frac_2017 = height(Q4_LF_Quadrant_2017)/height(TotalNumelLand_2017);
 Q4_ManureFert_1980 = quantile(Q4_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
 Q4_ManureFert_2017 = quantile(Q4_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
-fprintf(fileID,'Framework Figure (Figure 7)\n'); 
+fprintf(fileID,'Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Q1 Fraction 1980 and 2017: %.3f and %.3f \n', Q1_frac_1980, Q1_frac_2017)
 fprintf(fileID,'Q2 Fraction 1980 and 2017: %.3f and %.3f \n', Q2_frac_1980, Q2_frac_2017)
@@ -398,27 +348,5 @@ fprintf(fileID,'Q3 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q3_
 fprintf(fileID,'Q3 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_2017*100)
 fprintf(fileID,'Q4 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_1980*100)
 fprintf(fileID,'Q4 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_2017*100)
-
-
-%% stuff i don't use
-% Reading in the three components
-[Livestock_tif,~] = readgeoraster([INPUTfilepath, livestockFolder,'\Lvst_2017.tif']);
-[Fertilizer_tif,~] = readgeoraster([INPUTfilepath, fertilizerFolder,'\Fertilizer_Ag_2017.tif']);
-[AgSurp_tif,~] = readgeoraster([INPUTfilepath,agSFolder,'\AgSurplus_2017.tif']);
-
-% Calculating the area with negative phosphorus surplus
-idx_pos = find(AgSurp_tif > 0); % Ag Surp has 0 values for non-ag land
-idx_neg = find(AgSurp_tif < 0);
-
-Neg_AgLand = length(idx_neg)/(length(idx_pos)+length(idx_neg));
-Pos_AgLand = length(idx_pos)/(length(idx_pos)+length(idx_neg));
-
-Pos_agSurp_FracLivestock = sum(Livestock_tif(idx_pos) > Fertilizer_tif(idx_pos))/size(idx_pos,1)*100;
-Neg_agSurp_FracFertilizer = sum(Livestock_tif(idx_neg) < Fertilizer_tif(idx_neg))/size(idx_pos,1)*100;
-
-fprintf(fileID,'Unused \n');
-fprintf(fileID,'Fraction of Positive Ag Surplus grids with mostly manure inputs: %.1f (mostly Fert: %.1f) \n',Pos_agSurp_FracLivestock, 100-Pos_agSurp_FracLivestock);
-fprintf(fileID,'Fraction of Negative Ag Surplus grids with mostly fertilizer inputs: %.1f (mostly Manure: %.1f) \n\n',Neg_agSurp_FracFertilizer, 100-Neg_agSurp_FracFertilizer);
-
 
 fclose(fileID);

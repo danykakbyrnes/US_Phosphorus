@@ -26,18 +26,16 @@ SURP2017_v = SURP2017_v(DisnanIDX < 1, :);
 D = [SURP2017_v, CS2017_v];
 
 % Organizing regional data
-YEARS = 1930:2017;
-SURPcumu_AGHA = SURPcumu_AGHA(:,[1, find(SURPcumu_AGHA(1,:) == 2017)]);
-SURPcumu_AGHA(1,:) = [];
-SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend');
+SURPcumu_AGHA = SURPcumu_AGHA(:,[1, end]); % Isolating 2017
+SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend'); % sorting by first row
 
-AGS_AGHA = AGS_AGHA(:,[1, find(YEARS == 2017)+1]);
+YEARS = 1930:2017;
+AGS_AGHA = AGS_AGHA(:,[1, find(YEARS == 2017)+1]); % Isolating 2017
 AGS_AGHA = sortrows(AGS_AGHA,'ascend');
 
 % Insert a column in indexes that are sequential for 
 % plotting and do not correspond to region numbers.
 D_reg = [AGS_AGHA(:,2), SURPcumu_AGHA(:,2), [1:size(AGS_AGHA,1)]'];
-
 
 %% scatter plot version of gridded data and regions
 % Subsetting D so it can actually run
