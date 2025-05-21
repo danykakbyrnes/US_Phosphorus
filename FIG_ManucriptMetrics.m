@@ -332,21 +332,21 @@ Q4_ManureFert_2017 = quantile(Q4_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
 fprintf(fileID,'Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
-fprintf(fileID,'Q1 Fraction 1980 and 2017: %.3f and %.3f \n', Q1_frac_1980, Q1_frac_2017)
-fprintf(fileID,'Q2 Fraction 1980 and 2017: %.3f and %.3f \n', Q2_frac_1980, Q2_frac_2017)
-fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017)
-fprintf(fileID,'Q4 Fraction 1980 and 2017: %.3f and %.3f \n\n', Q4_frac_1980, Q4_frac_2017)
+fprintf(fileID,'Q1 Fraction 1980 and 2017: %.3f and %.3f \n', Q1_frac_1980, Q1_frac_2017);
+fprintf(fileID,'Q2 Fraction 1980 and 2017: %.3f and %.3f \n', Q2_frac_1980, Q2_frac_2017);
+fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017);
+fprintf(fileID,'Q4 Fraction 1980 and 2017: %.3f and %.3f \n\n', Q4_frac_1980, Q4_frac_2017);
 
 fprintf(fileID,'Fraction of Q2 going to Q1 in 2017 %.1f%% \n', Perc_D2_D1*100)
 fprintf(fileID,'Fraction of Q2 going to Q2 in 2017 %.1f%% \n', Perc_D2_D2*100)
 
-fprintf(fileID,'Q1 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_1980*100)
-fprintf(fileID,'Q1 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_2017*100)
-fprintf(fileID,'Q2 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q2_ManureFert_1980*100)
-fprintf(fileID,'Q2 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q2_ManureFert_2017*100)
-fprintf(fileID,'Q3 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_1980*100)
-fprintf(fileID,'Q3 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_2017*100)
-fprintf(fileID,'Q4 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_1980*100)
-fprintf(fileID,'Q4 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_2017*100)
+fprintf(fileID,'Q1 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_1980*100);
+fprintf(fileID,'Q1 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q1_ManureFert_2017*100);
+fprintf(fileID,'Q2 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q2_ManureFert_1980*100);
+fprintf(fileID,'Q2 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q2_ManureFert_2017*100);
+fprintf(fileID,'Q3 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_1980*100);
+fprintf(fileID,'Q3 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q3_ManureFert_2017*100);
+fprintf(fileID,'Q4 Median Manure Fraction 1980: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_1980*100);
+fprintf(fileID,'Q4 Median Manure Fraction 2017: %.2f (IQR = %.2f - %.2f)\n', Q4_ManureFert_2017*100);
 
 fclose(fileID);
