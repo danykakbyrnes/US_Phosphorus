@@ -199,28 +199,27 @@ fprintf(fileID,'Region 6 Dec. in PS from 1980 to 2017: %.2f\n', ...
 %% -------------------------------------------------------------------------
 % 3.4 Cumulative Agricultural Surplus 
 % -------------------------------------------------------------------------
-% Regional Cumulative Ag surplus. The format of the text file is different
-% than other files because it was run seperately.
+% Regional Cumulative Ag surplus
 CSfilepath =  ['..\OUTPUTS\Cumulative_Phosphorus\'];
-CS_Median_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_medianHUC2_fromgrid.txt']);
+CS_Mean_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_medianHUC2_fromgrid.txt']);
 
 % Regional Indexes for PUE
-REG_1_idx = find(CS_Median_HUC2.Var1 == 17);
-REG_2_idx = find(CS_Median_HUC2.Var1 == 14);
-REG_3_idx = find(CS_Median_HUC2.Var1 == 12);
-REG_4_idx = find(CS_Median_HUC2.Var1 == 10);
-REG_5_idx = find(CS_Median_HUC2.Var1 == 8);
-REG_6_idx = find(CS_Median_HUC2.Var1 == 7);
-REG_7_idx = find(CS_Median_HUC2.Var1 == 3);
-REG_8_idx = find(CS_Median_HUC2.Var1 == 2);
-REG_9_idx = find(CS_Median_HUC2.Var1 == 1);
+REG_1_idx = find(CS_Mean_HUC2.REG == 17);
+REG_2_idx = find(CS_Mean_HUC2.REG == 14);
+REG_3_idx = find(CS_Mean_HUC2.REG == 12);
+REG_4_idx = find(CS_Mean_HUC2.REG == 10);
+REG_5_idx = find(CS_Mean_HUC2.REG == 8);
+REG_6_idx = find(CS_Mean_HUC2.REG == 7);
+REG_7_idx = find(CS_Mean_HUC2.REG == 3);
+REG_8_idx = find(CS_Mean_HUC2.REG == 2);
+REG_9_idx = find(CS_Mean_HUC2.REG == 1);
 
 fprintf(fileID,'Regional Cumulative Surplus\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Region 7 (2017): %.3f \n', ...
-    CS_Median_HUC2{REG_7_idx, end});
+    CS_Mean_HUC2{fREGA_idx, end});
 fprintf(fileID,'Region 8 (2017): %.3f \n', ...
-    CS_Median_HUC2{REG_8_idx, end});
+    CS_Mean_HUC2{fREGB_idx, end});
 
 % Nationally Cumulative P Surplus in 1980 and 2017
 [CS_1980,~] = readgeoraster([CSfilepath,'CumSum_1980.tif']);
