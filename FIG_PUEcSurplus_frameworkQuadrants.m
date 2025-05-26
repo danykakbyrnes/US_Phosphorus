@@ -39,8 +39,8 @@ CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_1980.tif';
 [PUE1980,~] = readgeoraster(PUEfilepath); % single
 [CS1980,~] = readgeoraster(CUMSUMfilepath); % single
 
-PUE1980_v = PUE2017(:);
-CS1980_v = CS2017(:);
+PUE1980_v = PUE1980(:);
+CS1980_v = CS1980(:);
 
 clear PUE2017 CS2017 PUE1980 CS1980
 
@@ -88,7 +88,7 @@ for i = 1:length(D)
     end
 end
 
-save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
+%save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
 
 % D_copy is the unfiltered form of the data.
 D_allData = D;
@@ -210,4 +210,4 @@ Q_pct = [sum(D(:,5) == 1)/length(D), sum(D(:,6) == 1)/length(D);
      sum(D(:,5) == 2)/length(D), sum(D(:,6) == 2)/length(D); 
      sum(D(:,5) == 3)/length(D), sum(D(:,6) == 3)/length(D);
      sum(D(:,5) == 4)/length(D), sum(D(:,6) == 4)/length(D)]*100;
-save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')
+%save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')

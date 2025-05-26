@@ -44,11 +44,11 @@ for i = 1:numel(Q)
         if PUE2017(i) > loadstar_PUE
             Q(i)  = 1; 
         elseif PUE2017(i) <= loadstar_PUE
-            Q(i)  = 4; 
+            Q(i)  = 2; 
         end
     elseif CS2017(i) <= loadstar_CumSum
         if PUE2017(i) > loadstar_PUE
-            Q(i)  = 2;
+            Q(i)  = 4;
         elseif PUE2017(i) <= loadstar_PUE
              Q(i)  = 3; 
         end
@@ -68,11 +68,11 @@ for i = 1:numel(Q)
         if PUE1980(i) > loadstar_PUE
             Q(i)  = 1; 
         elseif PUE1980(i) <= loadstar_PUE
-            Q(i)  = 4; 
+            Q(i)  = 2; 
         end
     elseif CS1980(i) <= loadstar_CumSum
         if PUE1980(i) > loadstar_PUE
-            Q(i)  = 2;
+            Q(i)  = 4;
         elseif PUE1980(i) <= loadstar_PUE
              Q(i)  = 3; 
         end
