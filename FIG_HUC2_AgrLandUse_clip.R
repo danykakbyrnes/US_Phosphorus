@@ -24,7 +24,7 @@ HUC2_loc = '0 General Data/HUC2/'
 # read in HUC8 files
 HUC2 = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
 
-files = dir(paste0(INPUT_folders,'/1 Land Use Data/'))
+files = dir(paste0(INPUT_folders,'/1_Land_Use_Data/'))
 
 LU_extc = data.frame()
 
