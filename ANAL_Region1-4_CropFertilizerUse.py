@@ -42,7 +42,7 @@ for sheet in sheetNames:
 T_all.to_csv(file+'fertilizeruse_ersdata_reformatted.csv',
              index=False)
 #%%  Filter data for specified state
-State_Name = 'Arkansas'
+State_Name = 'Illinois'
 State_data = T_all[T_all['State'] == State_Name]
 
 # Create a list of all the table columns for easier reference
