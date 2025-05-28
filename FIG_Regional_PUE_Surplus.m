@@ -127,7 +127,7 @@ scatter(AGS_AGHA(:,4), AGS_AGHA(:,end), 70, ...
 % Adjusting axies
 ylim([0.5, 9.5])
 %xlim([0.29, 1.25])
-xlabel('kg-P ha^-^1 yr^-^1')
+xlabel('kg-P ha^-^1 y^-^1')
 
 a = gca;
 set(a,'yticklabel',regionID)
@@ -158,7 +158,7 @@ h(3).EdgeColor = '#386E72';
 
 % Adjusting axies
 xlim([-3, 25])
-xlabel('kg-P ha^-^1 yr^-^1')
+xlabel('kg-P ha^-^1 y^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
@@ -211,7 +211,7 @@ scatter(FERT_AGHA(:,4), FERT_AGHA(:,end), 70, ...
 % Adjusting axes
 ylim([0.5, 9.5])
 xlim([0, 25])
-xlabel('kg-P ha^-^1 yr^-^1')
+xlabel('kg-P ha^-^1 y^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
@@ -258,7 +258,7 @@ scatter(LVSK_AGHA(:,4), LVSK_AGHA(:,end), 70, ...
 % Adjusting axes
 ylim([0.5, 9.5])
 xlim([0, 25])
-xlabel('kg-P ha^-^1 yr^-^1')
+xlabel('kg-P ha^-^1 y^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
@@ -304,7 +304,7 @@ scatter(CROP_AGHA(:,4), CROP_AGHA(:,end), 70, ...
 % Adjusting axes
 ylim([0.5, 9.5])
 xlim([0, 25])
-xlabel('kg-P ha^-^1 yr^-^1')
+xlabel('kg-P ha^-^1 y^-^1')
 a = gca;
 set(a,'yticklabel',regionID)
 set(a,'XMinorTick','on','YMinorTick','off')
