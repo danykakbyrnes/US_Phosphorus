@@ -4,7 +4,7 @@ clc, clear
 
 % Read in gif files
 INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
+    'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
 OUTPUTfilepath = '..\OUTPUTS\PUE\';
 YEARS = 1930:2017;
 

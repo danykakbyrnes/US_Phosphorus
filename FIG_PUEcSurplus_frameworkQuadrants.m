@@ -186,7 +186,6 @@ data = D(:,[5,6]);
 %   Important: N must be the max number of categories in a layer 
 %   multiplied by the number of layers. 
 
-
 options.flow_transparency = 0.3;    % opacity of the flow paths
 options.bar_width = 30;             % width of the category blocks
 options.show_perc = false;          % show percentage over the blocks
@@ -210,4 +209,4 @@ Q_pct = [sum(D(:,5) == 1)/length(D), sum(D(:,6) == 1)/length(D);
      sum(D(:,5) == 2)/length(D), sum(D(:,6) == 2)/length(D); 
      sum(D(:,5) == 3)/length(D), sum(D(:,6) == 3)/length(D);
      sum(D(:,5) == 4)/length(D), sum(D(:,6) == 4)/length(D)]*100;
-%save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')
+save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')
