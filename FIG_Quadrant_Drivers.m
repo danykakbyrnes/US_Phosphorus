@@ -72,14 +72,15 @@ Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', ...
     {'CS_1980','CS_2017','PUE_1980','PUE_2017','Q_1980','Q_2017', ...
     'LvstkFertFract_1980','LvstkFertFract_2017'});
 
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant_v', 'Lvsk_Fert_Quadrant')
+save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], ...
+    'Lvsk_Fert_Quadrant_v', 'Lvsk_Fert_Quadrant')
 
-PUE_LvstkRatio = [D(:,4), LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
+    PUE_LvstkRatio = [D(:,4), LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
 
-unyears = unique(Lvsk_Fert_Quadrant.QYear);
+unyears = unique(Lvsk_Fert_Quadrant_v.QYear);
 for j = 1:2
     subplot(1,2,j)
-    Lvsk_Fert_Quadrant_j = Lvsk_Fert_Quadrant(Lvsk_Fert_Quadrant.QYear == unyears(j),:);
+    Lvsk_Fert_Quadrant_j = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.QYear == unyears(j),:);
     for i = 1:4
         
         sLvsk_Fert_Quadrant = Lvsk_Fert_Quadrant_j(Lvsk_Fert_Quadrant_j.Q == i,:);

@@ -285,9 +285,6 @@ Q2_Q2_2 = Lvsk_Fert_Quadrant(find(Lvsk_Fert_Quadrant.Q_1980 == 2 & Lvsk_Fert_Qua
 median(Q2_Q1_2.LvstkFertFract_1980)
 median(Q2_Q1_2.LvstkFertFract_2017)
 
-median(Q2_Q2_2.LvstkFertFract_1980,'omitnan')
-median(Q2_Q2_2.LvstkFertFract_2017,'omitnan')
-
 Perc_D2_D1 = size(Q2_Q1,1)/size(Q2_1980,1);
 Perc_D2_D2 = size(Q2_Q2,1)/size(Q2_1980,1);
 

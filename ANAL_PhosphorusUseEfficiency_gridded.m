@@ -18,7 +18,6 @@ parpool('local', 12);
 Rinfo = geotiffinfo([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
 
 % calculate PUE and save the tif file
-
 parfor i = 1:length(YEARS)
    
     YEAR_i = YEARS(i);
@@ -34,7 +33,7 @@ parfor i = 1:length(YEARS)
 
     % Calculating PUE with integers. 
     PUE = Crop_i ./(Livestock_i + Fertilizer_i);
-    PUE(isinf(PUE)) = 0;
+    PUE(isinf(PUE)) = NaN;
     
     geotiffwrite([OUTPUTfilepath, '\PUE_', num2str(YEAR_i),'.tif'], PUE, ...
     georef, 'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
