@@ -108,8 +108,8 @@ set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
     {'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
-ylabel('PUE (2017) [-]')
-xlabel('Surplus (2017) [kg-P ha^-^1 y^-^1]')
+ylabel('PUE')
+xlabel('Surplus (kg-P ha^-^1 y^-^1)')
 
 Figfolderpath = ['..\OUTPUTS\PS_PUE\ConcepFigure_Surplus_v_PUE.png'];
 print('-dpng','-r600',[Figfolderpath])
@@ -174,8 +174,8 @@ set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
     {'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
-ylabel('1 - PUE (2017) [-]')
-xlabel('Surplus (2017) [kg-P ha^-^1 y^-^1]')
+ylabel('1 - PUE')
+xlabel('Surplus (kg-P ha^-^1 y^-^1)')
 
 Figfolderpath = ['..\OUTPUTS\PS_PUE\ConcepFigure_Surplus_v_PUE_V2.png'];
 print('-dpng','-r600',[Figfolderpath])
@@ -237,8 +237,8 @@ set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
     {'k','k','k'});
 set(gcf,'position',plot_dim_1)
 
-xlabel('PUE (2017) [-]')
-ylabel('Surplus (2017) [kg-P ha^-^1 y^-^1]')
+xlabel('PUE')
+ylabel('Surplus(kg-P ha^-^1 y^-^1)')
 
 Figfolderpath = ['..\OUTPUTS\PS_PUE\ConcepFigure_PUE_v_surplus.png'];
 print('-dpng','-r600',[Figfolderpath])

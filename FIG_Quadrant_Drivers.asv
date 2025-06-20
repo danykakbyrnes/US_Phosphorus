@@ -63,16 +63,15 @@ Lvsk_Fert_Quadrant_v = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6),...
                       repmat(2017,size(D,1),1);
                       LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5),...
                       repmat(1980,size(D,1),1)];
-Lvsk_Fert_Quadrant = [D, LVSTK2017_v./(FERT2017_v+LVSTK2017_v), LVSTK1980_v./(FERT1980_v+LVSTK1980_v)];
+Lvsk_Fert_Quadrant_2 = [D, LVSTK2017_v./(FERT2017_v+LVSTK2017_v), LVSTK1980_v./(FERT1980_v+LVSTK1980_v)];
+
+Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', ...
+    {'LvstkFertFract','Q','QYear'});
 
 Lvsk_Fert_Quadrant_v =  array2table(Lvsk_Fert_Quadrant_v, 'VariableNames', ...
     {'LvstkFertFract','Q','QYear'});
 
-Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', ...
-    {'CS_1980','CS_2017','PUE_1980','PUE_2017','Q_1980','Q_2017', ...
-    'LvstkFertFract_1980','LvstkFertFract_2017'});
-
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant_v', 'Lvsk_Fert_Quadrant')
+save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], 'Lvsk_Fert_Quadrant_v')
 
 PUE_LvstkRatio = [D(:,4), LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
 

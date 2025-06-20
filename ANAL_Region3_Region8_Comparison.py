@@ -4,7 +4,6 @@ Created on Tue May  6 13:58:56 2025
 
 @author: danyk
 """
-
 import geopandas as gpd
 import os
 import rasterio
@@ -21,7 +20,7 @@ os.chdir(directory)
 # Filepaths to shapefile and raster (ESPG 5070)
 shpFile = 'INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'
 raster = 'OUTPUTS/PUE/PUE_2017.tif'
-    
+
 # Sorting HUC2 regions
 HUC2 = gpd.read_file(shpFile)
 HUC2.sort_values(by=['REG'], 
