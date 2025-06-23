@@ -268,7 +268,7 @@ fprintf(fileID,'Percent of land with Neg aPS with positive CS in 2017: %.1f %%\n
 % Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation
 % -------------------------------------------------------------------------
 load([QuadrantINPUTfolderName,'QuadrantMapping.mat']) % D
-Reg_Quadrants = readmatrix([QuadrantINPUTfolderName,'Regional_Quadrants.txt']);
+Reg_Quadrants = readmatrix([QuadrantINPUTfolderName,'Regional_Quadrants_2017.txt']);
 % Cleaning the quadrant data to only include land use that hae data in it.
 DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
 leaveOut = D(DisnanIDX ~= 0, :);
@@ -316,19 +316,24 @@ Q3_frac_2017 = length(D(find(D(:,8) == 3)))./size(D,1)*100;
 Q4_frac_1980 = length(D(find(D(:,7) == 4)))./size(D,1)*100;
 Q4_frac_2017 = length(D(find(D(:,8) == 4)))./size(D,1)*100;
 
-
 fprintf(fileID,'Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
-fprintf(fileID,'Q2 Fraction 1980 and 2017: %.3f and %.3f \n', Q2_frac_1980, Q2_frac_2017);
-fprintf(fileID,'Q1 Fraction 1980 and 2017: %.3f and %.3f \n', Q1_frac_1980, Q1_frac_2017);
-fprintf(fileID,'Q4 Fraction 1980 and 2017: %.3f and %.3f \n', Q4_frac_1980, Q4_frac_2017);
+fprintf(fileID,'Q2 Fraction in 2017: %.3f \n', Q2_frac_2017);
+fprintf(fileID,'Q1 Fraction on 2017: %.3f \n', Q1_frac_2017);
 fprintf(fileID, 'Q4 proportion in Arid West (Reg 2) and Lower Miss. (Reg 5): %.3f and %.3f \n', Reg_Quadrants(2,5)/Reg_Quadrants(2,6), ...
     Reg_Quadrants(5,5)./Reg_Quadrants(5,6));
-fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017);
 fprintf(fileID, 'Q3 proportion in Northern Plains (Reg 4): %.3f \n\n', Reg_Quadrants(4,4)./Reg_Quadrants(4,6));
 
-fprintf(fileID,'Land going from Q2 to Q1: %.1f%% \n', quadrantChangeMatrix(1,2));
+fprintf(fileID,'Q2 Fraction in 1980 and 2017: %.3f \n', Q2_frac_1980, Q2_frac_2017);
+fprintf(fileID,'Q1 Fraction in 1980 and 2017: %.3f \n', Q1_frac_1980, Q1_frac_2017);
+fprintf(fileID,'Land going from Q2 to Q1: %.1f%% \n\n', quadrantChangeMatrix(1,2));
 fprintf(fileID,'Propor. of MAN-derived P inputs in Q2 -> Q2: %.1f%% \n', Q2_Q2_med_2017);
-fprintf(fileID,'Propor. of MAN-derived P inputs in Q1 -> Q2: %.1f%% \n', Q1_Q2_med_2017);
+fprintf(fileID,'Propor. of MAN-derived P inputs in Q1 -> Q2: %.1f%% \n\n', Q1_Q2_med_2017);
+
+fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017);
+fprintf(fileID,'Land going from Q3 to Q2: %.1f%% \n', quadrantChangeMatrix(2,3));
+fprintf(fileID,'Propor. of FERT-derived P inputs in Q3 -> Q2: %.1f%% \n', 1-Q3_Q2_med_2017);
+fprintf(fileID,'Land going from Q4 to Q3: %.1f%% \n', quadrantChangeMatrix(3,4));
+fprintf(fileID,'Q4 Fraction in 1980 and 2017: %.3f \n\n', Q4_frac_1980, Q4_frac_2017);
 
 fclose(fileID);
