@@ -59,6 +59,6 @@ with rasterio.open(raster) as src:
 df_HUC_Q_count = pd.DataFrame(HUC_Q_count,
                               columns=['REG', 'Q1', 'Q2', 'Q3', 'Q4', 'TotCell'])
 
-df_HUC_Q_count.to_csv("OUTPUTS/Quadrants/Regional_Quadrants.txt",
+df_HUC_Q_count.to_csv("OUTPUTS/Quadrants/Regional_Quadrants_2017.txt",
                       index=False,
                       sep='\t')
