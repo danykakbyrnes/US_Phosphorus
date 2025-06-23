@@ -288,34 +288,82 @@ end
 total_1980_cells = size(D, 1);  % Total number of grid cells in 1980
 quadrantChangeMatrix = (quadrantChangeMatrix ./ total_1980_cells) * 100;
 
+Q1_Q1 = D(find(D(:,7) == 1 & D(:,8) == 1),:);
+Q1_Q2 = D(find(D(:,7) == 1 & D(:,8) == 2),:);
+Q1_Q3 = D(find(D(:,7) == 1 & D(:,8) == 3),:);
+Q1_Q4 = D(find(D(:,7) == 1 & D(:,8) == 4),:);
+
+Q2_Q1 = D(find(D(:,7) == 2 & D(:,8) == 1),:);
+Q2_Q2 = D(find(D(:,7) == 2 & D(:,8) == 2),:);
+Q2_Q3 = D(find(D(:,7) == 2 & D(:,8) == 3),:);
+Q2_Q4 = D(find(D(:,7) == 2 & D(:,8) == 4),:);
+
+Q3_Q1 = D(find(D(:,7) == 3 & D(:,8) == 1),:);
+Q3_Q2 = D(find(D(:,7) == 3 & D(:,8) == 2),:);
+Q3_Q3 = D(find(D(:,7) == 3 & D(:,8) == 3),:);
+Q3_Q4 = D(find(D(:,7) == 3 & D(:,8) == 4),:);
+
+Q4_Q1 = D(find(D(:,7) == 4 & D(:,8) == 1),:);
+Q4_Q2 = D(find(D(:,7) == 4 & D(:,8) == 2),:);
+Q4_Q3 = D(find(D(:,7) == 4 & D(:,8) == 3),:);
+Q4_Q4 = D(find(D(:,7) == 4 & D(:,8) == 4),:);
+
+
 Q2_Q1_med_2017 = median(D(find(D(:,7) == 2 & D(:,8) == 1),6));
-Q2_Q2_med_2017 = median(D(find(D(:,7) == 2 & D(:,8) == 2),6));
+Q2_Q2_med_2017 = median(Q2_Q2(:,6));
 
-Q3_Q1_med_2017 = median(D(find(D(:,7) == 3 & D(:,8) == 1),6));
-Q3_Q2_med_2017 = median(D(find(D(:,7) == 3 & D(:,8) == 2),6));
-Q3_Q3_med_2017 = median(D(find(D(:,7) == 3 & D(:,8) == 3),6));
-Q3_Q4_med_2017 = median(D(find(D(:,7) == 3 & D(:,8) == 4),6));
+Q3_Q1_med_2017 = median(Q3_Q1(:,6));
+Q3_Q2_med_2017 = median(Q3_Q2(:,6));
+Q3_Q3_med_2017 = median(Q3_Q3(:,6));
+Q3_Q4_med_2017 = median(Q3_Q4(:,6));
 
-Q1_Q1_med_2017 = median(D(find(D(:,7) == 1 & D(:,8) == 1),6));
-Q1_Q2_med_2017 = median(D(find(D(:,7) == 1 & D(:,8) == 2),6));
-Q1_Q4_med_2017 = median(D(find(D(:,7) == 1 & D(:,8) == 4),6));
+Q1_Q1_med_2017 = median(Q1_Q1(:,6));
+Q1_Q2_med_2017 = median(Q1_Q2(:,6));
+Q1_Q4_med_2017 = median(Q1_Q4(:,6));
 
-Q4_Q2_med_2017 = median(D(find(D(:,7) == 4 & D(:,8) == 2),6));
-Q4_Q3_med_2017 = median(D(find(D(:,7) == 4 & D(:,8) == 3),6));
-Q4_Q4_med_2017 = median(D(find(D(:,7) == 4 & D(:,8) == 4),6));
+Q4_Q2_med_2017 = median(Q4_Q2(:,6));
+Q4_Q3_med_2017 = median(Q4_Q3(:,6));
+Q4_Q4_med_2017 = median(Q4_Q4(:,6));
 
-Q1_frac_1980 = length(D(find(D(:,7) == 1)))./size(D,1)*100;
-Q1_frac_2017 = length(D(find(D(:,8) == 1)))./size(D,1)*100;
+TotalNumelLand_1980 = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.QYear == 1980,:);
+TotalNumelLand_2017 = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.QYear == 2017,:);
 
-Q2_frac_1980 = length(D(find(D(:,7) == 2)))./size(D,1)*100;
-Q2_frac_2017 = length(D(find(D(:,8) == 2)))./size(D,1)*100;
+% Quadrant 1
+Q1_LF_Quadrant = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.Q == 1,:);
+Q1_LF_Quadrant_1980 = Q1_LF_Quadrant(Q1_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q1_LF_Quadrant_2017 = Q1_LF_Quadrant(Q1_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q1_frac_1980 = height(Q1_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q1_frac_2017 = height(Q1_LF_Quadrant_2017)/height(TotalNumelLand_2017);
+Q1_ManureFert_1980 = quantile(Q1_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
+Q1_ManureFert_2017 = quantile(Q1_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
-Q3_frac_1980 = length(D(find(D(:,7) == 3)))./size(D,1)*100;
-Q3_frac_2017 = length(D(find(D(:,8) == 3)))./size(D,1)*100;
+% Quadrant 2
+Q2_LF_Quadrant = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.Q == 2,:);
+Q2_LF_Quadrant_1980 = Q2_LF_Quadrant(Q2_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q2_LF_Quadrant_2017 = Q2_LF_Quadrant(Q2_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q2_frac = height(Q2_LF_Quadrant)/height(Lvsk_Fert_Quadrant_v);
+Q2_frac_1980 = height(Q2_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q2_frac_2017 = height(Q2_LF_Quadrant_2017)/height(TotalNumelLand_2017);
+Q2_ManureFert_1980 = quantile(Q2_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
+Q2_ManureFert_2017 = quantile(Q2_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
-Q4_frac_1980 = length(D(find(D(:,7) == 4)))./size(D,1)*100;
-Q4_frac_2017 = length(D(find(D(:,8) == 4)))./size(D,1)*100;
+% Quadrant 3
+Q3_LF_Quadrant = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.Q == 3,:);
+Q3_LF_Quadrant_1980 = Q3_LF_Quadrant(Q3_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q3_LF_Quadrant_2017 = Q3_LF_Quadrant(Q3_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q3_frac_1980 = height(Q3_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q3_frac_2017 = height(Q3_LF_Quadrant_2017)/height(TotalNumelLand_2017);
+Q3_ManureFert_1980 = quantile(Q3_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
+Q3_ManureFert_2017 = quantile(Q3_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
+% Quadrant 4
+Q4_LF_Quadrant = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.Q == 4,:);
+Q4_LF_Quadrant_1980 = Q4_LF_Quadrant(Q4_LF_Quadrant.QYear == 1980,:).LvstkFertFract;
+Q4_LF_Quadrant_2017 = Q4_LF_Quadrant(Q4_LF_Quadrant.QYear == 2017,:).LvstkFertFract;
+Q4_frac_1980 = height(Q4_LF_Quadrant_1980)/height(TotalNumelLand_1980);
+Q4_frac_2017 = height(Q4_LF_Quadrant_2017)/height(TotalNumelLand_2017);
+Q4_ManureFert_1980 = quantile(Q4_LF_Quadrant_1980,[0.5, 0.25, 0.75]);
+Q4_ManureFert_2017 = quantile(Q4_LF_Quadrant_2017,[0.5, 0.25, 0.75]);
 
 fprintf(fileID,'Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    

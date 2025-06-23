@@ -20,22 +20,6 @@ colourPalette = [1,102,94;
                  90,180,172;
                  216,179,101]./255;
 
-
-% Read in the 2017 livestock and fertilzier rasters
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
-livestockFolder = 'Lvst_Agriculture_LU\';
-
-[LVSTK2017,georef] = readgeoraster([trendINPUTfilepath,livestockFolder,...
-                               'Lvst_2017.tif']);
-Rinfo = geotiffinfo([trendINPUTfilepath,livestockFolder,...
-                               'Lvst_2017.tif']);
-[FERT2017,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
-                              'Fertilizer_Ag_2017.tif']);
-
-[LVSTK1980,~] = readgeoraster([trendINPUTfilepath,livestockFolder,...
-                                'Lvst_1980.tif']);
-[FERT1980,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
-                                'Fertilizer_Ag_1980.tif']);
 %% FIGURE 7 BOXPLOTS: Two boxplot of each quadrant 
 % Cleaning the data.  
 % D = CS1980, CS2017, PUE1980, PUE2017, Q1980, Q2017. This means that we
@@ -44,66 +28,41 @@ Rinfo = geotiffinfo([trendINPUTfilepath,livestockFolder,...
 % Loading quadrant info (uncleaned data)   
 load([OUTPUTfilepath,'QuadrantMapping.mat'])
 
-DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
-D = D(DisnanIDX == 0, :);
+DisnanIDX = [(D(:,5) == 0) + (D(:,6) == 0)];
+D = D(DisnanIDX < 1, :);
 
-LVSTK2017_v = double(LVSTK2017(:));
-FERT2017_v = double(FERT2017(:));
+D =  array2table(D, 'VariableNames', ...
+    {'CS_1980','CS_2017','PUE_1980','PUE_2017','LvstkFertFract_1980',...
+    'LvstkFertFract_2017','Q_1980','Q_2017'});
 
-LVSTK1980_v = double(LVSTK1980(:));
-FERT1980_v = double(FERT1980(:));
+for i = 1:4
+    % 1980
+    subplot(1,2,1)
+    D_subset = D(D.Q_1980 == i,:);
+    b_1980 = boxchart(D_subset.Q_1980,...
+        D_subset.LvstkFertFract_1980,'MarkerStyle',...
+        'none','BoxFaceColor',colourPalette(i,:));
+    hold on     
 
-LVSTK2017_v = LVSTK2017_v(DisnanIDX == 0, :);
-FERT2017_v = FERT2017_v(DisnanIDX == 0, :);
-LVSTK1980_v = LVSTK1980_v(DisnanIDX == 0, :);
-FERT1980_v = FERT1980_v(DisnanIDX == 0, :);
-
-% Removing the boxes that have no quadrant in 
-Lvsk_Fert_Quadrant_v = [LVSTK2017_v./(FERT2017_v+LVSTK2017_v), D(:,6),... 
-                      repmat(2017,size(D,1),1);
-                      LVSTK1980_v./(FERT1980_v+LVSTK1980_v), D(:,5),...
-                      repmat(1980,size(D,1),1)];
-Lvsk_Fert_Quadrant = [D, LVSTK2017_v./(FERT2017_v+LVSTK2017_v), LVSTK1980_v./(FERT1980_v+LVSTK1980_v)];
-
-Lvsk_Fert_Quadrant_v =  array2table(Lvsk_Fert_Quadrant_v, 'VariableNames', ...
-    {'LvstkFertFract','Q','QYear'});
-
-Lvsk_Fert_Quadrant =  array2table(Lvsk_Fert_Quadrant, 'VariableNames', ...
-    {'CS_1980','CS_2017','PUE_1980','PUE_2017','Q_1980','Q_2017', ...
-    'LvstkFertFract_1980','LvstkFertFract_2017'});
-
-save([OUTPUTfilepath,'Lvstk_Fert_Ratio_Grid.mat'], ...
-    'Lvsk_Fert_Quadrant_v', 'Lvsk_Fert_Quadrant')
-
-    PUE_LvstkRatio = [D(:,4), LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
-
-unyears = unique(Lvsk_Fert_Quadrant_v.QYear);
-for j = 1:2
-    subplot(1,2,j)
-    Lvsk_Fert_Quadrant_j = Lvsk_Fert_Quadrant_v(Lvsk_Fert_Quadrant_v.QYear == unyears(j),:);
-    for i = 1:4
-        
-        sLvsk_Fert_Quadrant = Lvsk_Fert_Quadrant_j(Lvsk_Fert_Quadrant_j.Q == i,:);
-        b_1980 = boxchart(sLvsk_Fert_Quadrant.Q,...
-            sLvsk_Fert_Quadrant.LvstkFertFract,'MarkerStyle',...
-            'none','BoxFaceColor',colourPalette(i,:));
-        hold on     
-    
-        oLvsk_Fert_Quadrant = Lvsk_Fert_Quadrant_j(Lvsk_Fert_Quadrant_j.Q ~= i,:);
-        pv(j, i) = ranksum(sLvsk_Fert_Quadrant.LvstkFertFract, oLvsk_Fert_Quadrant.LvstkFertFract);
-    end
-    box on
-    set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
-        {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
-        {'k','k','k'});
-    set(gca,'XColor',[0,0,0])
-    set(gca,'YColor',[0,0,0])
-    set(gca,'ZColor',[0,0,0])
-    
-    ylim([0,1.05])
-    xticks([1,2,3,4])
-    xticklabels({'Q1','Q2','Q3','Q4'})
+    % 2017
+    subplot(1,2,2)
+    D_subset = D(D.Q_2017 == i,:);
+    b_2017 = boxchart(D_subset.Q_2017,...
+        D_subset.LvstkFertFract_2017,'MarkerStyle',...
+        'none','BoxFaceColor',colourPalette(i,:));
+    hold on
 end
+box on
+set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
+    {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
+    {'k','k','k'});
+set(gca,'XColor',[0,0,0])
+set(gca,'YColor',[0,0,0])
+set(gca,'ZColor',[0,0,0])
+
+ylim([0,1.05])
+xticks([1,2,3,4])
+xticklabels({'Q1','Q2','Q3','Q4'})
 
 subplot(1,2,1)
 ylabel('')
@@ -119,6 +78,22 @@ print('-dpng','-r600',[Figfolderpath])
 
 % These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.
+% Read in the 2017 livestock and fertilzier rasters
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
+livestockFolder = 'Lvst_Agriculture_LU\';
+
+[LVSTK2017,georef] = readgeoraster([trendINPUTfilepath,livestockFolder,...
+                               'Lvst_2017.tif']);
+Rinfo = geotiffinfo([trendINPUTfilepath,livestockFolder,...
+                               'Lvst_2017.tif']);
+[FERT2017,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
+                              'Fertilizer_Ag_2017.tif']);
+
+[LVSTK1980,~] = readgeoraster([trendINPUTfilepath,livestockFolder,...
+                                'Lvst_1980.tif']);
+[FERT1980,~] = readgeoraster([trendINPUTfilepath,fertilizerFolder,...
+                                'Fertilizer_Ag_1980.tif']);
+
 [PUE2017,~] = readgeoraster([PUEfilepath, 'PUE_2017.tif']); % single
 [CS2017,~] = readgeoraster([CUMSUMfilepath, 'CumSum_2017.tif']); % single
 

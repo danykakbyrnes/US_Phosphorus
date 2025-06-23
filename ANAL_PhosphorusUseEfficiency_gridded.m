@@ -17,7 +17,7 @@ parpool('local', 12);
 [~,georef] = readgeoraster([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
 Rinfo = geotiffinfo([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
 
-% calculate PUE and save the tif file
+% Calculate PUE and save the tif file
 parfor i = 1:length(YEARS)
    
     YEAR_i = YEARS(i);

@@ -20,8 +20,10 @@ colourPalette = [1,102,94;
 INPUTfilepath = '..\INPUTS_103122\';
 OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
 HUC2filepath = '..\OUTPUTS\HUC2\';
-trendINPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
+TRENDfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
     'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
+livestockFolder = 'Lvst_Agriculture_LU\';
 
 % These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.
@@ -29,8 +31,16 @@ PUEfilepath = '..\OUTPUTS\PUE\PUE_2017.tif';
 CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_2017.tif';
 [PUE2017,~] = readgeoraster(PUEfilepath); % single
 [CS2017,~] = readgeoraster(CUMSUMfilepath); % single
+[LVSTK2017,~] = readgeoraster([TRENDfilepath,livestockFolder,...
+                               'Lvst_2017.tif']);
+[FERT2017,~] = readgeoraster([TRENDfilepath,fertilizerFolder,...
+                              'Fertilizer_Ag_2017.tif']);
+
 PUE2017_v = PUE2017(:);
 CS2017_v = CS2017(:);
+LVSTK2017_v = double(LVSTK2017(:));
+FERT2017_v = double(FERT2017(:));
+
 
 % Reading in 1980 data.
 PUEfilepath = '..\OUTPUTS\PUE\PUE_1980.tif';
@@ -42,10 +52,20 @@ CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\CumSum_1980.tif';
 PUE1980_v = PUE1980(:);
 CS1980_v = CS1980(:);
 
-clear PUE2017 CS2017 PUE1980 CS1980
+[LVSTK1980,~] = readgeoraster([TRENDfilepath,livestockFolder,...
+                                'Lvst_1980.tif']);
+[FERT1980,~] = readgeoraster([TRENDfilepath,fertilizerFolder,...
+                                'Fertilizer_Ag_1980.tif']);
+
+LVSTK1980_v = double(LVSTK1980(:));
+FERT1980_v = double(FERT1980(:));
+
+clear PUE2017 CS2017 PUE1980 CS1980 LVSTK2017 FERT2017 LVSTK1980 FERT1980
 
 % Creating a matrix with available data.
-D = [CS1980_v, CS2017_v,PUE1980_v, PUE2017_v]; 
+D = [CS1980_v, CS2017_v,PUE1980_v, PUE2017_v,...
+    LVSTK1980_v./(FERT1980_v + LVSTK1980_v),...
+    LVSTK2017_v./(FERT2017_v + LVSTK2017_v)]; 
 
 % Setting the quadrant divisions.
 loadstar_CumSum = 0;
@@ -57,15 +77,15 @@ for i = 1:length(D)
    
     if D(i,1) > loadstar_CumSum
         if D(i,3) > loadstar_PUE
-            D(i,5)  = 1; 
+            D(i,7)  = 1; 
         elseif D(i,3) <= loadstar_PUE
-            D(i,5)  = 2; 
+            D(i,7)  = 2; 
         end
     elseif D(i,1) <= loadstar_CumSum
         if D(i,3) > loadstar_PUE
-            D(i,5)  = 4;
+            D(i,7)  = 4;
         elseif D(i,3) <= loadstar_PUE
-            D(i,5)  = 3; 
+            D(i,7)  = 3; 
         end
     end
 end
@@ -75,15 +95,15 @@ for i = 1:length(D)
    
     if D(i,2) > loadstar_CumSum
         if D(i,4) > loadstar_PUE
-            D(i,6)  = 1; 
+            D(i,8)  = 1; 
         elseif D(i,4) <= loadstar_PUE
-            D(i,6)  = 2; 
+            D(i,8)  = 2; 
         end
     elseif D(i,2) <= loadstar_CumSum
         if D(i,4) > loadstar_PUE
-            D(i,6)  = 4;
+            D(i,8)  = 4;
         elseif D(i,4) <= loadstar_PUE
-            D(i,6)  = 3; 
+            D(i,8)  = 3; 
         end
     end
 end
@@ -98,17 +118,13 @@ D_allData = D;
 % that has both 1980 and 2017 data. Which means looking ONLY at the 
 % grid-cells that are still agricultural. If PUE is NaN
 % then there is no ag land in that year for the grid-cell.
-
-%DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
-%D = D(DisnanIDX == 0, :);
-DisnanIDX = [(D(:,5) == 0) + (D(:,6) == 0)];
+DisnanIDX = [(D(:,7) == 0) + (D(:,8) == 0)];
 D = D(DisnanIDX < 1, :);
 
 % D_copy is the cleaned form of the data.
 D_cleanedData = D;
 
 %% Quadrant Plot
-
 D = D_cleanedData;
 % To improve computation speed for plotting, we will only use 1% of the 
 % gridcells available.
@@ -116,12 +132,12 @@ I = sort(randperm(length(D),ceil(length(D)/100))');
 D = D(I,:);
 
 % Getting quadrant numbers
-unQ = unique(D(:,6));
+unQ = unique(D(:,8));
 
 % 2017
 figure(1)
 for i = 1:length(unQ)
-    temp_D = D(find(D(:,6) == unQ(i)),:); 
+    temp_D = D(find(D(:,8) == unQ(i)),:); 
     scatter(temp_D(:,4), temp_D(:,2), mSize, 'filled',...
               'MarkerFaceColor',colourPalette(i,:),...
               'MarkerFaceAlpha',0.05)
@@ -151,7 +167,7 @@ print('-dpng','-r600',[Figfolderpath])
 % 1980
 figure(2)
 for i = 1:length(unQ)
-    temp_D = D(find(D(:,5) == unQ(i)),:); 
+    temp_D = D(find(D(:,7) == unQ(i)),:); 
     scatter(temp_D(:,3),temp_D(:,1), mSize, 'filled',...
               'MarkerFaceColor',colourPalette(i,:),...
               'MarkerFaceAlpha',0.05)
@@ -180,7 +196,7 @@ print('-dpng','-r600',Figfolderpath)
 %% Creating a Sankey Flow Chart
 D = D_cleanedData;
 
-data = D(:,[5,6]);
+data = D(:,[7,8]);
 % Customizable options
 % Colormap: can be the name of matlab colormaps or a matrix of (N x 3).
 %   Important: N must be the max number of categories in a layer 
@@ -201,12 +217,12 @@ plotSankeyFlowChart(data,options);
 %set(gcf,'position',plot_dim_2)
 set(gcf,'position',plot_dim_alt)
 
-Figfolderpath = [OUTPUTfilepath,'SankeyPlot_',datestr(datetime,'mmddyy'),'.svg'];
+Figfolderpath = [OUTPUTfilepath,'SankeyPlot_', datestr(datetime,'mmddyy'),'.svg'];
 print('-dsvg',[Figfolderpath])
 
 % Percentages for Manuscript Metrics
-Q_pct = [sum(D(:,5) == 1)/length(D), sum(D(:,6) == 1)/length(D); 
-     sum(D(:,5) == 2)/length(D), sum(D(:,6) == 2)/length(D); 
-     sum(D(:,5) == 3)/length(D), sum(D(:,6) == 3)/length(D);
-     sum(D(:,5) == 4)/length(D), sum(D(:,6) == 4)/length(D)]*100;
+Q_pct = [sum(D(:,7) == 1)/length(D), sum(D(:,8) == 1)/length(D); 
+     sum(D(:,7) == 2)/length(D), sum(D(:,8) == 2)/length(D); 
+     sum(D(:,7) == 3)/length(D), sum(D(:,8) == 3)/length(D);
+     sum(D(:,7) == 4)/length(D), sum(D(:,8) == 4)/length(D)]*100;
 save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')
