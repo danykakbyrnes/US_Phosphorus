@@ -9,17 +9,10 @@ library(terra)
 
 setwd("B:/LabFiles/users/DanykaByrnes/")
 
-# ******************************************************************************
-# This script takes the N Surplus data and clips the watersheds with the data. 
-# The result is a shapefile with the countries clipped and an extra column that
-# calculates the fraction of the county that is within the watershed boundary. 
-# This later gets aggregated in the FigureGeneration.mat
+# Setting the years of analysis
+YEARS = c(1980, 2017)
 
-# ******************************************************************************
 # Setting up filepaths
-#YEARS = 1930:2017
-YEARS = c(1980,2017)
-
 HUC2INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
 INPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/Cumulative_Phosphorus/'
 OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
