@@ -21,7 +21,10 @@ DATA_HUC2_Surplus_Components.R
 
 DATA_HUC2_CumultativeSurplus.R
 	Clipping gTREND components and agricultural surplus to each HUC2 watershed for each year. 
-	
+
+DATA_HUC2_AgrLandUse_clip.R
+	Clipping agricultural land use to HUC2 watersheds for Figure 3.
+
 ** ANALYSIS SCRIPTS **
 
 
