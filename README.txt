@@ -16,9 +16,12 @@ DATA_PhosphorusUseEfficiency_gridded.m
 DATA_AgriculturalSurplus.m
 	**not created yet, it's in the gTREND folder but I should move it to this code folder
 
-DATA_HUC2_Components_clip.R
-	Clipping gTREND components and agricultural surplus 
+DATA_HUC2_Surplus_Components.R
+	Clipping gTREND components and agricultural surplus to each HUC2 watershed for each year. 
 
+DATA_HUC2_CumultativeSurplus.R
+	Clipping gTREND components and agricultural surplus to each HUC2 watershed for each year. 
+	
 ** ANALYSIS SCRIPTS **
 
 

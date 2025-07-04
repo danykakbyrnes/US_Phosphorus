@@ -9,19 +9,12 @@ library(terra)
 
 setwd("B:/LabFiles/users/DanykaByrnes/")
 
-# ******************************************************************************
-# This script takes the N Surplus data and clips the watersheds with the data. 
-# The result is a shapefile with the countries clipped and an extra column that
-# calculates the fraction of the county that is within the watershed boundary. 
-# This later gets aggregated in the FigureGeneration.mat
-
-# ******************************************************************************
 # Setting up filepaths
 YEARS = 1930:2017
 
 INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
 OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
-NSURPLUS_OUTPUT_folders = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P_Postpocessed_Gridded_2023-11-18/'
+PSURPLUS_OUTPUT_folders = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P_Postpocessed_Gridded_2023-11-18/'
 HUC2_loc = '0_General_Data/HUC2/'
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
@@ -35,9 +28,9 @@ Comp_extc = data.frame()
 Comp_extc2 = data.frame()
 
   for (i in 1:length(YEARS)) {
-    Lvstk_tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[1], YEARS[i],'.tif')
-    Fert_tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[2], YEARS[i],'.tif')
-    Crop_tif_folders = paste0(NSURPLUS_OUTPUT_folders, Components[3], YEARS[i],'.tif')
+    Lvstk_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[1], YEARS[i],'.tif')
+    Fert_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[2], YEARS[i],'.tif')
+    Crop_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[3], YEARS[i],'.tif')
     
     Lvstk_tif = terra::rast(Lvstk_tif_folders) # NaN are treated same was as NA.
     Fert_tif = terra::rast(Fert_tif_folders) # NaN are treated same was as NA.
@@ -47,7 +40,10 @@ Comp_extc2 = data.frame()
     for (j in 1:dim(HUC2)[1]) {
       
       clipped_raster = terra::crop(PCT_MANU_IN,extent(HUC2[j,]))
-      temp2 = terra::extract(clipped_raster, HUC2[j,], fun=mean, na.rm=TRUE)
+      temp2 = terra::extract(clipped_raster, 
+                             HUC2[j,],
+                             fun=mean,
+                             na.rm=TRUE)
       
       Comp_extc[j,1] = HUC2[j,]$REG
       Comp_extc[j,i+1] = temp2[2]
