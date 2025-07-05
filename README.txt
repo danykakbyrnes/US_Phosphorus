@@ -27,8 +27,15 @@ DATA_HUC2_AgrLandUse_clip.R
 
 ** ANALYSIS SCRIPTS **
 
+ANA_Region_5_6_Surplus.py
+	**Do i use this one??**
 
-** FUNCTIONS **
-ANAL_PhosphorusUseEfficiency_gridded.m
-	Reads in the gridded data from TREND Output files and calculates the PUE for the gridded data. 
+ANA_Region1-4_CropFertilizerUse.py
+	Exploring fertilizer use for the four main field crops (corn, soy, wheat, cotton) for each state. 
 
+** FIGURES **
+
+
+
+FIG_Region1-4_Cropland_Pasture.py
+	Exploring crop and pastureland P uptake for each region. This analysis used in Section 3.2 (Supplemental Figure 1) to understand the relative proportions of P removed by crop and pasture in regions 1 through 4.
