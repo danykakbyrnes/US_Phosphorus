@@ -27,14 +27,27 @@ DATA_HUC2_AgrLandUse_clip.R
 
 ** ANALYSIS SCRIPTS **
 
+ANA_Regional_Quadrant_Distribution.py
+	Exploring the quadrant distribution for each region. Script is used for analysis in Section 3.5. 
+
 ANA_Region_5_6_Surplus.py
 	**Do i use this one??**
 
 ANA_Region1-4_CropFertilizerUse.py
 	Exploring fertilizer use for the four main field crops (corn, soy, wheat, cotton) for each state. 
 
-** FIGURES **
+ANA_Region3_Region8_Comparison.py
+	Exploring the 2017 PUE distribution in Regions 3 and 8 to understand why median values of each component are similar magnitudes, but their median PUE is different. Script is used for analysis in Section 3.2 (Supplemental Figure 2). 
 
+** FIGURES **
+FIG_ManucriptMetrics.m
+	Script that outputs all the reported metrics in manuscript. 
+
+FIG_National_Timeseries_Plots.m
+	Summarizes and outputs national median, interquartile range, and 5th-95th percentile range. National statistics are plotted and used in Figure 1 and Figure 3b. 
+
+FIG_PercentManureInputs.m
+	Summarizes the proportion of manure-derived P inputs (%) 
 
 
 FIG_Region1-4_Cropland_Pasture.py

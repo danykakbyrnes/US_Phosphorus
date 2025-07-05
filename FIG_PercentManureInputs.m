@@ -149,13 +149,6 @@ xlim([0,2])
 ylim([0,1])
 ylabel('Manure to Total Input Ratio (2017)')
 
-% Line of best fit
-coefficients = polyfit(D(:,1), D(:,4), 1);
-y_fit = polyval(coefficients, [0.1,1.9]);
-hold on
-%plot([0.1,1.9], y_fit, ...
-%    'k:', 'LineWidth',3);
-
 colormap(map);
 colorbar;
 caxis([0, 8*10^4]);
@@ -196,5 +189,5 @@ xlim([0,2])
 
 %hold off;
 set(gcf,'position',[200,200,450,425])
-Figfolderpath = [OUTPUTfilepath,'manure_totalInput_hexplot_withRegions_12-2.png'];
+Figfolderpath = [OUTPUTfilepath,'manure_totalInput_hexplot_withRegions_12.png'];
 print('-dpng','-r600',[Figfolderpath])
