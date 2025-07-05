@@ -15,41 +15,41 @@ We use gTREND-phosphorus data found at XX.
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial TIF files are projected in EPSG:5070 - NAD83 / Conus Albers.
 
 #### `DATA_CumulativePhosphorusSurplus_gridded.m`
-**Purpose**: Generates gridded cumulative phosphorus surplus data.  
-**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF) files).  
-**Output**: Annual (1930-2017) geospatial TIF)files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).  
-**Language**: MATALB  
+- **Purpose**: Generates gridded cumulative phosphorus surplus data.  
+- **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF) files).  
+- **Output**: Annual (1930-2017) geospatial TIF)files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).  
+- **Language**: MATALB  
 
 #### `DATA_PhosphorusUseEfficiency_gridded.m`
-**Purpose**: Generates gridded phosphorus use efficiency (PUE) data.  
-**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  
-**Output**: Annual (1930-2017) geospatial TIF files of PUE (ratio of crop P removal to total manure P and fertilizer P inputs).  
-**Language**: MATLAB  
+- **Purpose**: Generates gridded phosphorus use efficiency (PUE) data.  
+- **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  
+- **Output**: Annual (1930-2017) geospatial TIF files of PUE (ratio of crop P removal to total manure P and fertilizer P inputs).  
+- **Language**: MATLAB  
 
 #### `DATA_AgriculturalSurplus.m`
 not created yet, it's in the gTREND folder but I should move it to this code folder
-**Purpose**:  
-**Input**:  
-**Output**:  
-**Language**: MATLAB  
+- **Purpose**:  
+- **Input**:  
+- **Output**:  
+- **Language**: MATLAB  
 
 #### `DATA_HUC2_Surplus_Components_PUE.R`
-**Purpose**: Extracts HUC2 watershed-level surplus, components, and PUE.  
-**Input**: gTREND components, agricultural surplus, and PUE TIF files.  
-**Output**: Text file of annual mean and median statistics (1930-2017) by HUC2 watershed for P components, agricultural surplus, and PUE.  
-**Language**: R  
+- **Purpose**: Extracts HUC2 watershed-level surplus, components, and PUE.  
+- **Input**: gTREND components, agricultural surplus, and PUE TIF files.  
+- **Output**: Text file of annual mean and median statistics (1930-2017) by HUC2 watershed for P components, agricultural surplus, and PUE.  
+- **Language**: R  
 	
 #### `DATA_HUC2_CumultativeSurplus.R`
-**Purpose**: Extracts HUC2 watershed-level cumulative surplus.  
-**Input**: Cumulative surplus 1980 and 2017 TIF files.  
-**Output**: Text file containing mean and median cumulative surplus statistics by HUC2 watershed for 1980 and 2017.  
-**Language**: R  
+- **Purpose**: Extracts HUC2 watershed-level cumulative surplus.  
+- **Input**: Cumulative surplus 1980 and 2017 TIF files.  
+- **Output**: Text file containing mean and median cumulative surplus statistics by HUC2 watershed for 1980 and 2017.  
+- **Language**: R  
 
 #### `DATA_HUC2_AgrLandUse_clip.R`
-**Purpose**: Extacts HUC2 watershed-level agricultural land use.  
-**Input**: Annual agricultural land use TIF files.  
-**Output**: Text file of percent agricultural land use (1930-2017) by HUC2 watershed.  
-**Language**: R  
+- **Purpose**: Extacts HUC2 watershed-level agricultural land use.  
+- **Input**: Annual agricultural land use TIF files.  
+- **Output**: Text file of percent agricultural land use (1930-2017) by HUC2 watershed.  
+- **Language**: R  
 
 #### `DATA_PUEcSurplus_frameworkMaps.m`
 - **Purpose**: Categorizes agricultural parcels for framework analysis
