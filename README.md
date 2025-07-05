@@ -1,6 +1,4 @@
-##############################################################################
-United States Phosphorus Use Efficiency Paper Scripts
-##############################################################################
+# United States Phosphorus Use Efficiency Paper Scripts
 
 The following scripts are used to recreate data and figures required for the paper titled [TBD]. 
 
@@ -16,7 +14,7 @@ We use gTREND-phosphorus data found at XX.
 
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial .tif files are projected in EPSG:5070 - NAD83 / Conus Albers.
 
-#### `DATA_CumulativePhosphorusSurplus_gridded.m`
+#### DATA_CumulativePhosphorusSurplus_gridded.m
 	**Purpose**: Generates gridded cumulative phosphorus surplus data.
 	**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal .tif files)
 	**Output**: Annual (1930-2017) geospatial .tif files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).
@@ -29,7 +27,7 @@ These scripts must be executed first to generate the required data files for sub
 	**Language**: MATLAB
 
 #### `DATA_AgriculturalSurplus.m`
-	**not created yet, it's in the gTREND folder but I should move it to this code folder
+	not created yet, it's in the gTREND folder but I should move it to this code folder
 	**Purpose**:
 	**Input**:
 	**Output**:
