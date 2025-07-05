@@ -59,8 +59,14 @@ FIG_PUEcSurplus_frameworkQuadrants.m
 	Categorizes each agricultural land use parcel in 1980 and 2017 based on land parcel's PUE and cumulative surplus. Script outputs a .mat file of vectorized data. It also outputs a quadrant plot in 1980 and 2017, along with a Sankey plot (Figure 8b, e-f).
 
 FIG_quadrantDrivers.m
-	Script generating boxplots of the distribution of proportion of manure-derived P inputs in each quadrant and maps of the proportion of manure-derived P inputs in 1980 and 2017. 
+	Generates boxplots of the distribution of proportion of manure-derived P inputs in each quadrant and maps of the proportion of manure-derived P inputs in 1980 and 2017. 
 	** THIS SCRIPT MIGHT BE UNUSED. 
+
+FIG_Regional_cSurplus.m
+	Generates lolli charts of cumulative surplus in 1980 and 2017. Output Figure 7c. 
+
+FIG_Regional_PUE_component_timeseries.m
+	Generates the median timeseries of PUE and surplus components (manure, fertilizer, and crop removal). Output Figures 3 and 4. 
 
 
 
