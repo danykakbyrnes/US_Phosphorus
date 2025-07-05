@@ -55,6 +55,13 @@ FIG_PercentManureInputs.m
 FIG_PUE_PS_conceptualFigure.m
 	Output plot of phosphorus surplus (x-axis) and 1-PUE (y-axis). Regional surplus and 1-PUE in 2017 are also plotted (Figure 6). 
 
+FIG_PUEcSurplus_frameworkQuadrants.m
+	Categorizes each agricultural land use parcel in 1980 and 2017 based on land parcel's PUE and cumulative surplus. Script outputs a .mat file of vectorized data. It also outputs a quadrant plot in 1980 and 2017, along with a Sankey plot (Figure 8b, e-f).
+
+FIG_quadrantDrivers.m
+	Script generating boxplots of the distribution of proportion of manure-derived P inputs in each quadrant and maps of the proportion of manure-derived P inputs in 1980 and 2017. 
+	** THIS SCRIPT MIGHT BE UNUSED. 
+
 
 
 
