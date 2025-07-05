@@ -6,25 +6,52 @@ The following scripts are used to recreate data and figures required for the pap
 
 We use gTREND-phosphorus data found at XX. 
 
-** DATA GENERATION SCRIPTS **
-* These scripts must be ran first to derive the data files required for the rest of the analysis and figure generation. *
+## To do
+1. Move agricultural surplus code to P surplus folder
+2. Change script so regions numbers match the manuscrip
 
-DATA_CumulativePhosphorusSurplus_gridded.m
-	Generating .tif files of cumulative surplus sourcing the gTREND data layers. Cumulative surplus is the summation of manure P inputs, fertilizer P inputs, and crop P removal. 
+## Usage Instructions
 
-DATA_PhosphorusUseEfficiency_gridded.m
-	Generating .tif files phosphorus use effiency sourcing the gTREND data layers. Phosphorus use efficiency is calculated by taking the ratio of crop P removal to total P input (manure and fertilizer).
+### 1. Data Generation (Run First)
 
-DATA_AgriculturalSurplus.m
+These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial .tif files are projected in EPSG:5070 - NAD83 / Conus Albers.
+
+#### `DATA_CumulativePhosphorusSurplus_gridded.m`
+	**Purpose**: Generates gridded cumulative phosphorus surplus data.
+	**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal .tif files)
+	**Output**: Annual (1930-2017) geospatial .tif files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).
+	**Language**: MATALB
+
+#### `DATA_PhosphorusUseEfficiency_gridded.m`
+	**Purpose**: Generates gridded phosphorus use efficiency (PUE) data.
+	**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal .tif files)
+	**Output**: Annual (1930-2017) geospatial .tif files of PUE (ratio of crop P removal to total manure P and fertilizer P inputs). 
+	**Language**: MATLAB
+
+#### `DATA_AgriculturalSurplus.m`
 	**not created yet, it's in the gTREND folder but I should move it to this code folder
+	**Purpose**:
+	**Input**:
+	**Output**:
+	**Language**: MATLAB
 
-DATA_HUC2_Surplus_Components_PUE.R
-	Clipping gTREND components, agricultural surplus, and PUE to each HUC2 watershed for each year. Calculation done for each year (1930 to 2017). 
+#### `DATA_HUC2_Surplus_Components_PUE.R`
+	**Purpose**: Extracts HUC2 watershed-level surplus, components, and PUE. 
+	**Input**: gTREND components, agricultural surplus, and PUE .tif files. 
+	**Output**: Text file of annual mean and median statistics (1930-2017) by HUC2 watershed for P components, agricultural surplus, and PUE.
+	**Language**: R
+	
+#### `DATA_HUC2_CumultativeSurplus.R`
+	**Purpose**: Extracts HUC2 watershed-level cumulative surplus.
+	**Input**: Cumulative surplus 1980 and 2017 .tif files.
+	**Output**: Text file containing mean and median cumulative surplus statistics by HUC2 watershed for 1980 and 2017.
+	**Language**: R
 
-DATA_HUC2_CumultativeSurplus.R
-	Clipping cumulative surplus to each HUC2 watershed for 1980 and 2017.
-
-DATA_HUC2_AgrLandUse_clip.R
+#### `DATA_HUC2_AgrLandUse_clip.R`
+	**Purpose**: Extacts HUC2 watershed-level agricultural land use.
+	**Input**: Annual agricultural land use .tif files. 
+	**Output**: Text file of percent agricultural land use (1930-2017) by HUC2 watershed. 
+	**Language**: R
 	Clipping annual agricultural land use to HUC2 watersheds for Figure 3.
 
 DATA_PUEcSurplus_frameworkMaps.m
@@ -63,13 +90,10 @@ FIG_quadrantDrivers.m
 	** THIS SCRIPT MIGHT BE UNUSED. 
 
 FIG_Regional_PUE_Surp_cSURP_lollicharts.m
-	Generates lolli charts for surplus (1930, 1980, and 2017), PUE and cumulative surplus (1980, 2017) in Figures 2c, 5c, and 7c.
+	Generates lolli charts for median surplus (1930, 1980, and 2017), median PUE and median cumulative surplus (1980, 2017) in Figures 2c, 5c, and 7c.
 
 FIG_Regional_PUE_component_timeseries.m
 	Generates the median timeseries of PUE and surplus components (manure, fertilizer, and crop removal). Also generates the total agricultural land use in each region. Output Figures 3 and 4. 
-
-
-
 
 FIG_PS_cumuSurplus_conceptualFigure.m
 	Outputs plot of 2017 phosphorus surplus (x-axis) and 2017 cumulative surplus (y-axis). Regional surplus and cumulative surplus in 2017 are also plotted (Supplemental Figure 3).

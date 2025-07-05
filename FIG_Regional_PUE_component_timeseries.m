@@ -6,8 +6,7 @@ clc, clear, close all
 smoothing_int = [5 5];
 
 fontSize_p = 9;
-plot_dim_1 = [100,100,450,400];
-plot_dim_3 = [100,100,450,400];
+plot_dim = [100,100,450,400];
 mSize = 36; 
 
 colourPalette = [1,102,94;
@@ -203,11 +202,11 @@ for i = 1:height(HUC_PUE)
 end
 
 figure(1)
-set(gcf, 'Position',plot_dim_3)
+set(gcf, 'Position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(2)
-set(gcf, 'Position',plot_dim_3)
+set(gcf, 'Position',plot_dim)
 Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])
