@@ -16,11 +16,11 @@ function plotSankeyFlowChart(data,options)
 % options.color_map = 'parula';      
 % options.flow_transparency = 0.2;   % opacity of the flow paths
 % options.bar_width = 40;            % width of the category blocks
-% options.show_perc = false;          % show percentage over the blocks
+% options.show_perc = false;         % show percentage over the blocks
 % options.text_color = [1 1 1];      % text color for the percentages
 % options.show_layer_labels = true;  % show layer names under the chart
-% options.show_cat_labels = true;   % show categories over the blocks.
-% options.show_legend = false;        % show legend with the category names. 
+% options.show_cat_labels = true;    % show categories over the blocks.
+% options.show_legend = false;       % show legend with the category names. 
 %                                    % if the data is not a table, then the
 %                                    % categories are labeled as catX-layerY
 % 
