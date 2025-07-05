@@ -14,11 +14,11 @@ We use gTREND-phosphorus data found at XX.
 
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial .tif files are projected in EPSG:5070 - NAD83 / Conus Albers.
 
-#### DATA_CumulativePhosphorusSurplus_gridded.m
-	**Purpose**: Generates gridded cumulative phosphorus surplus data.
-	**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal .tif files)
-	**Output**: Annual (1930-2017) geospatial .tif files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).
-	**Language**: MATALB
+#### `DATA_CumulativePhosphorusSurplus_gridded.m`
+**Purpose**: Generates gridded cumulative phosphorus surplus data.
+**Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal .tif files)
+**Output**: Annual (1930-2017) geospatial .tif files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).
+**Language**: MATALB
 
 #### `DATA_PhosphorusUseEfficiency_gridded.m`
 	**Purpose**: Generates gridded phosphorus use efficiency (PUE) data.
