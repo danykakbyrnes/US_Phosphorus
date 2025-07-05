@@ -200,83 +200,6 @@ for i = 1:height(HUC_PUE)
    set(gca,'XMinorTick','on','YMinorTick','on')
    set(gca,'TickLength',[0.03, 0])
 
-   %% FIGURE 3: MANURE, FERTILIZER, AND CROP TIMESERIES
-   figure(3)
-   
-    subplot(3,3,i)
-    movmeanComponents = [movmeanManure; movmeanFertilizer];
-    a = area(YEARS, movmeanCrop*-1);
-    a(1).FaceColor = faceColor(1, :);
-    a(1).EdgeColor = lineColor(1, :);
-    a(1).LineWidth = 0.75;
-    hold on
-    a = area(YEARS, movmeanComponents');
-    a(1).FaceColor = faceColor(2, :);
-    a(2).FaceColor = faceColor(3, :);
-
-    a(1).EdgeColor = lineColor(2, :);
-    a(2).EdgeColor = lineColor(3, :);
-
-    a(1).LineWidth = 1.5;
-    a(2).LineWidth = 0.75;
-
-  if i == 1 || i == 4 || i == 7
-       ylim([-25, 27])
-       yticks([-25, 0, 25])
-  else
-       ylim([-25, 27])
-       yticks([])
-  end
-   set(gca,'FontSize',fontSize_p, ...
-       {'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'}, ...
-       {'k','k','k'});
-   set(gca,'XColor',[0,0,0])
-   set(gca,'YColor',[0,0,0])
-   set(gca,'ZColor',[0,0,0])
-   set(gca,'XMinorTick','on','YMinorTick','on')
-   set(gca,'TickLength',[0.03, 0])
-
-   plot([1930,2017], [0,0], 'LineWidth',0.3, 'Color', '#454545')
-
-   %% FIGURE 4: MANURE, FERTILIZER, AND CROP TIMESERIES
-   figure(4)
-   
-    subplot(3,3,i)
-    movmeanComponents = [movmeanManure; movmeanFertilizer];
-    a = area(YEARS, movmeanCrop*-1);
-    a.FaceColor = faceColor(1, :);
-    a.EdgeColor = lineColor(1, :);
-    a.LineWidth = 1.25;
-    a.FaceAlpha = 0.4;
-    hold on
-    a = area(YEARS, movmeanManure);
-    a.FaceColor = faceColor(2, :);
-    a.EdgeColor = lineColor(2, :);
-    a.LineWidth = 1.25;
-    a.FaceAlpha = 0.4;
-
-    a = area(YEARS, movmeanFertilizer);
-    a.FaceColor = faceColor(3, :);
-    a.EdgeColor = lineColor(3, :);
-    a.LineWidth = 1.25;
-    a.FaceAlpha = 0.4;
-
-   set(gca,'FontSize',fontSize_p,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'});
-   set(gca,'XColor',[0,0,0])
-   set(gca,'YColor',[0,0,0])
-   set(gca,'ZColor',[0,0,0])
-   set(gca,'XMinorTick','on','YMinorTick','on')
-   set(gca,'TickLength',[0.03, 0])
-
-   plot([1930,2017], [0,0], 'LineWidth',0.3, 'Color', '#454545')
-
-  if i == 1 | i == 4 | i == 9
-       ylim([-25, 25])
-       yticks([-25, 0, 25])
-  else
-       ylim([-25, 25])
-       yticks([])
-  end
 end
 
 figure(1)
@@ -287,14 +210,4 @@ print('-dpng','-r600',[Figfolderpath])
 figure(2)
 set(gcf, 'Position',plot_dim_3)
 Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(3)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_areaplot_median.png'];
-print('-dpng','-r600',[Figfolderpath])
-
-figure(4)
-set(gcf, 'Position',plot_dim_3)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_overlap_areaplot_median.png'];
 print('-dpng','-r600',[Figfolderpath])

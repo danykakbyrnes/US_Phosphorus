@@ -50,7 +50,7 @@ FIG_National_Timeseries_Plots.m
 	Summarizes and outputs national median, interquartile range, and 5th-95th percentile range. National statistics are plotted and used in Figure 1 and Figure 3b. 
 
 FIG_PercentManureInputs.m
-	Calculates the proportion of manure-derived P inputs at the national-scale and at the regional scale. Outputs is PUE (2017) versus the proportion of manure-derived P inputs (Figure 2d). 
+	Calculates the proportion of manure-derived P inputs at the national-scale and at the regional scale. Outputs is PUE (2017) versus the proportion of manure-derived P inputs (Figure 2d). Generating the hexplot requires over computers with over 64GB of RAM. As such, we also include a script to generate a scatter plot. 
 
 FIG_PUE_PS_conceptualFigure.m
 	Output plot of phosphorus surplus (x-axis) and 1-PUE (y-axis). Regional surplus and 1-PUE in 2017 are also plotted (Figure 6). 
@@ -62,11 +62,11 @@ FIG_quadrantDrivers.m
 	Generates boxplots of the distribution of proportion of manure-derived P inputs in each quadrant and maps of the proportion of manure-derived P inputs in 1980 and 2017. 
 	** THIS SCRIPT MIGHT BE UNUSED. 
 
-FIG_Regional_cSurplus.m
-	Generates lolli charts of cumulative surplus in 1980 and 2017. Output Figure 7c. 
+FIG_Regional_PUE_Surp_cSURP_lollicharts.m
+	Generates lolli charts for surplus (1930, 1980, and 2017), PUE and cumulative surplus (1980, 2017) in Figures 2c, 5c, and 7c.
 
 FIG_Regional_PUE_component_timeseries.m
-	Generates the median timeseries of PUE and surplus components (manure, fertilizer, and crop removal). Output Figures 3 and 4. 
+	Generates the median timeseries of PUE and surplus components (manure, fertilizer, and crop removal). Also generates the total agricultural land use in each region. Output Figures 3 and 4. 
 
 
 
