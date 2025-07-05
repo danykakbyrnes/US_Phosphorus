@@ -73,15 +73,13 @@ for (a in 1:length(Components)) {
     }
   }
   colnames(MeanHUC2)[1] ="REG"
-  write.table(MeanHUC2, file = paste0(OUTPUT_folders, 
-                                       ComponentsName[a],
-                                      '_meanHUC2Components.txt'), 
+  write.table(MeanHUC2, 
+              file = paste0(OUTPUT_folders,ComponentsName[a],'_meanHUC2Components.txt'), 
               row.names = FALSE)
   
-  colnames(MedianHUC2) <- colnames(MeanHUC2)
-  write.table(MedianHUC2, file = paste0(OUTPUT_folders, 
-                                        ComponentsName[a],
-                                       '_medianHUC2Components.txt'), 
+  colnames(MedianHUC2) = colnames(MeanHUC2)
+  write.table(MedianHUC2, 
+              file = paste0(OUTPUT_folders,ComponentsName[a],'_medianHUC2Components.txt'), 
               row.names = FALSE)
 }
 
@@ -125,11 +123,11 @@ for (i in 1:length(YEARS)) {
     }
   }
   colnames(MeanHUC2)[1] ="REG"
-  write.table(MeanHUC2, file = paste0(OUTPUT_folders, 
-                                      'PUE_meanHUC2_fromgrid'), 
+  write.table(MeanHUC2, 
+              file = paste0(OUTPUT_folders,'PUE_meanHUC2_fromgrid.txt'), 
               row.names = FALSE)
   
-  colnames(MedianHUC2) <- colnames(MeanHUC2)
-  write.table(MedianHUC2, file = paste0(OUTPUT_folders, 
-                                        'PUE_medianHUC2_fromgrid'), 
+  colnames(MedianHUC2) = colnames(MeanHUC2)
+  write.table(MedianHUC2, 
+              file = paste0(OUTPUT_folders,'PUE_medianHUC2_fromgrid.txt'), 
               row.names = FALSE)
