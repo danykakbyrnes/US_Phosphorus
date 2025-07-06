@@ -1,4 +1,4 @@
-# United States Phosphorus Use Efficiency Paper Scripts
+# United States Phosphorus Use Efficiency Analysis
 
 The following scripts are used to recreate data and figures required for the paper titled [TBD]. 
 
