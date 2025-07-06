@@ -14,24 +14,24 @@ We use gTREND-phosphorus data found at XX.
 
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial TIF files are projected in EPSG:5070 - NAD83 / Conus Albers.
 
-#### `DATA_CumulativePhosphorusSurplus_gridded.m`
-- **Purpose**: Generates gridded cumulative phosphorus surplus data.  
-- **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF) files).  
-- **Output**: Annual (1930-2017) geospatial TIF)files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal).  
-- **Language**: MATALB  
-
 #### `DATA_PhosphorusUseEfficiency_gridded.m`
 - **Purpose**: Generates gridded phosphorus use efficiency (PUE) data.  
 - **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  
-- **Output**: Annual (1930-2017) geospatial TIF files of PUE (ratio of crop P removal to total manure P and fertilizer P inputs).  
+- **Output**: Annual (1930-2017) geospatial TIF files of PUE (ratio of crop P removal to total manure P and fertilizer P inputs). Maps in Figure 2 are produced in QGIS.  
 - **Language**: MATLAB  
 
 #### `DATA_AgriculturalSurplus.m`
 not created yet, it's in the gTREND folder but I should move it to this code folder
 - **Purpose**:  
 - **Input**:  
-- **Output**:  
+- **Output**: Maps in Figure 5 are produced in QGIS.  
 - **Language**: MATLAB  
+
+#### `DATA_CumulativePhosphorusSurplus_gridded.m`
+- **Purpose**: Generates gridded cumulative phosphorus surplus data.  
+- **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  
+- **Output**: Annual (1930-2017) geospatial TIF files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal). Maps in Figure 7 are produced in QGIS.  
+- **Language**: MATALB  
 
 #### `DATA_HUC2_Surplus_Components_PUE.R`
 - **Purpose**: Extracts HUC2 watershed-level surplus, components, and PUE.  
@@ -51,57 +51,95 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 - **Output**: Text file of percent agricultural land use (1930-2017) by HUC2 watershed.  
 - **Language**: R  
 
-#### `DATA_PUEcSurplus_frameworkMaps.m`
-- **Purpose**: Categorizes agricultural parcels for framework analysis
-- **Input**: PUE and cumulative surplus TIF files for 1980 and 2017
-- **Output**: TIF files of categorized land use parcels. Final maps are produced in QGIS.
-- **Language**: MATLAB
+#### `DATA_PUEcSurplus_typologyMaps.m`
+- **Purpose**: Categorizes agricultural parcels for framework analysis.  
+- **Input**: PUE and cumulative surplus TIF files for 1980 and 2017.  
+- **Output**: TIF files of categorized land use parcels in 1980 and 2017. Final maps are produced in QGIS.  
+- **Language**: MATLAB  
 
-	Categorizes each agricultural land use parcel in 1980 and 2017 based on land parcel's PUE and cumulative surplus. Script outputs the maps of the categorized land use parcels. Maps are then produced in QGIS.
+### 2. Analysis Scripts
 
-** ANALYSIS SCRIPTS **
+#### `ANA_Regional_Quadrant_Distribution.py`
+- **Purpose**: Analysis of quadrants distribution by region used in Section 3.5.  
+- **Input**: TIF files of categorized land use parcels in 1980 and 2017.  
+- **Language**: Python  
 
-ANA_Regional_Quadrant_Distribution.py
-	Exploring the quadrant distribution for each region. Script is used for analysis in Section 3.5. 
-
-ANA_Region_5_6_Surplus.py
+#### `ANA_Region_5_6_Surplus.py`
 	**Do i use this one??**
 
-ANA_Region1-4_CropFertilizerUse.py
-	Exploring fertilizer use for the four main field crops (corn, soy, wheat, cotton) for each state. 
+#### `ANA_Region1-4_CropFertilizerUse.py`
+- **Purpose**: Analysis of fertilizer use by state for the four main field crops (corn, soy, wheat, cotton) used in Section 3.3.  
+- **Input**: Mosheim, R. (2025). Fertilizer Use and Price - Documentation and Data Sources. https://www.ers.usda.gov/data-products/fertilizer-use-and-price/documentation-and-data-sources
+- **Language**: Python  
 
-ANA_Region3_Region8_Comparison.py
-	Exploring the 2017 PUE distribution in Regions 3 and 8 to understand why median values of each component are similar magnitudes, but their median PUE is different. Script is used for analysis in Section 3.2 (Supplemental Figure 2). 
+#### `ANA_Region3_Region8_Comparison.py`
+- **Purpose**: Analysis of 2017 PUE distribution in Region 3 and 8 used in Section 3.2 (Supplemental Figure 2).   
+- **Input**: gTREND 2017 crop and pasture P removal TIF files.
+- **Language**: Python  
 
-** FIGURES **
+### 3. Figure Generation
 
-FIG_National_Timeseries_Plots.m
-	Summarizes and outputs national median, interquartile range, and 5th-95th percentile range. National statistics are plotted and used in Figure 1 and Figure 3b. 
+#### `FIG_National_Timeseries_Plots.m`
+- **Purpose**: Generates figure of national-scale statistical summaries and time series.
+- **Input**: Annual PUE and surplus TIF files
+- **Output**: **Figures 1j-i and 5b** - Plots showing national median, IQR, and 5th-95th percentile for PUE and surplus. 
+- **Language**: MATLAB
 
-FIG_PercentManureInputs.m
-	Calculates the proportion of manure-derived P inputs at the national-scale and at the regional scale. Outputs is PUE (2017) versus the proportion of manure-derived P inputs (Figure 2d). Generating the hexplot requires over computers with over 64GB of RAM. As such, we also include a script to generate a scatter plot. 
+#### `FIG_PUE_PercentManureInputs.m`
+- **Purpose**: Generates figure of PUE versus the proportion of manure-derived phosphorus inputs.  
+- **Input**: National TIF files and regional HUC2 medians of manure P, fertilizer P, and PUE data.  
+- **Output**: **Figure 2d** - PUE vs. proportion of manure-derived P inputs (hexplot or scatter plot).  
+- **Requirements**: >64GB RAM for hexplot generation. Scatter plot can be used as an alternative if hexplot function cannot be run.
+- **Language**: MATLAB  
 
-FIG_PUE_PS_conceptualFigure.m
-	Output plot of phosphorus surplus (x-axis) and 1-PUE (y-axis). Regional surplus and 1-PUE in 2017 are also plotted (Figure 6). 
+#### `FIG_PUE_PS_conceptualFigure.m`
+- **Purpose**: Generates figure to showcase the relationship between surplus and PUE.  
+- **Input**: Gridded 2017 PUE and surplus data TIF files and regional medians.  
+- **Output**: **Figure 6** - Phosphorus surplus vs. (1-PUE) plot with regional data.  
+- **Language**: MATLAB
 
-FIG_PUEcSurplus_frameworkQuadrants.m
-	Categorizes each agricultural land use parcel in 1980 and 2017 based on land parcel's PUE and cumulative surplus. Script outputs a .mat file of vectorized data. It also outputs a quadrant plot in 1980 and 2017, along with a Sankey plot (Figure 8b, e-f).
+#### `FIG_PUEcSurplus_frameworkQuadrants.m`
+- **Purpose**: Generates figures for framework quadrant analysis and transitions of land parcels betwen 1980 and 2017. 
+- **Input**: Gridded PUE and cumulative surplus TIF files and regional medians in 1980 and 2017.
+- **Output**: **Figures 8b, 8e-f** - Quadrant plots and Sankey diagram; .mat file of vectorized data.  
+- **Language**: MATLAB
 
-FIG_quadrantDrivers.m
-	Generates boxplots of the distribution of proportion of manure-derived P inputs in each quadrant and maps of the proportion of manure-derived P inputs in 1980 and 2017. 
-	** THIS SCRIPT MIGHT BE UNUSED. 
+#### `FIG_quadrantDrivers.m`
+- **Purpose**: Analyzes drivers of quadrant classification.  
+- **Input**: Manure proportion data by quadrant.  
+- **Output**: Boxplots and maps of manure-derived P inputs (1980, 2017).  
+- **Language**: MATLAB
+** THIS SCRIPT MIGHT BE UNUSED. 
 
-FIG_Regional_PUE_Surp_cSURP_lollicharts.m
-	Generates lolli charts for median surplus (1930, 1980, and 2017), median PUE and median cumulative surplus (1980, 2017) in Figures 2c, 5c, and 7c.
+#### `FIG_Regional_PUE_Surp_cSURP_lollicharts.m`
+- **Purpose**: Generates regional summary visualizations.  
+- **Input**: Regional median data for surplus, PUE, and cumulative surplus in 1930, 1980, and 2017. 
+- **Output**: **Figures 2c, 5c, 7c** - Lollipop charts of median surplus, PUE, and cumulative surplus.  
+- **Language**: MATLAB
 
-FIG_Regional_PUE_component_timeseries.m
-	Generates the median timeseries of PUE and surplus components (manure, fertilizer, and crop removal). Also generates the total agricultural land use in each region. Output Figures 3 and 4. 
+#### `FIG_Regional_PUE_component_timeseries.m`
+- **Purpose**: Generates regional time series of PUE, manure, fertilizer, and crop removal.
+- **Input**: HUC2 watershed-level median PUE, component, and agricultural land use percentage data.
+- **Output**: **Figures 3 and 4** - Time series of PUE, components and agricultural land use.  
+- **Language**: MATLAB
 
-FIG_PS_cumuSurplus_conceptualFigure.m
-	Outputs plot of 2017 phosphorus surplus (x-axis) and 2017 cumulative surplus (y-axis). Regional surplus and cumulative surplus in 2017 are also plotted (Supplemental Figure 3).
+#### `FIG_PS_cumuSurplus_conceptualFigure.m`
+- **Purpose**: Generates supplemental figure showcasing the relationship between surplus and cumulative surplus.
+- **Input**: Gridded 2017 surplus and cumulative surplus TIF files and regional medians. 
+- **Output**: **Supplemental Figure 3** - Phosphorus surplus vs. cumulative surplus plot
+- **Language**: MATLAB
 
-FIG_Region1-4_Cropland_Pasture.py
-	Exploring crop and pastureland P uptake for each region. This analysis used in Section 3.2 (Supplemental Figure 1) to understand the relative proportions of P removed by crop and pasture in regions 1 through 4.
+#### `FIG_Region1-4_Cropland_Pasture.py`
+- **Purpose**: Generating figure of crop phosphorus uptake and pasture phosphorus uptake to compare regional magnitudes.
+- **Input**: Regional crop and pasture P uptake data in 1930, 1980, and 2017.
+- **Output**: **Supplemental Figure 1** - Figure of P removal by crop and pasture (used in  Section 3.2).  
+- **Language**: Python
+
+#### `FIG_ManucriptMetrics.m`
+- **Purpose**: Compiles all numerical metrics reported in the manuscript.  
+- **Input**: **  
+- **Output**: Text file of all the statistics and metrics reported in the manucript.  
+- **Language**: MATLAB
 
 FIG_ManucriptMetrics.m
 	Script that outputs all the reported metrics in manuscript. 
