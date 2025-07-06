@@ -2,7 +2,7 @@
 
 The following scripts are used to recreate data and figures required for the paper titled [TBD]. 
 
-The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset. We use gTREND-phosphorus data found at XX. 
+The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset. The dataset can be found at [XX]. 
 
 ## To do
 1. Move agricultural surplus code to P surplus repo
