@@ -141,5 +141,5 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 - **Output**: Text file of all the statistics and metrics reported in the manucript.  
 - **Language**: MATLAB
 
-FIG_ManucriptMetrics.m
-	Script that outputs all the reported metrics in manuscript. 
+## Contact
+If you have any questions, please direct questions to danyka[dot]byrnes[at]proton[dot]me.
