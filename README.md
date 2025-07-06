@@ -13,7 +13,7 @@ The analysis of phosphorus use across the US from 1930 to 2017 using the newly p
 
 ## Usage Instructions
 
-### 1. Data Generation (Run First)
+### 1. Data Generation
 
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial TIF files are projected in EPSG:5070 - NAD83 / Conus Albers.
 
