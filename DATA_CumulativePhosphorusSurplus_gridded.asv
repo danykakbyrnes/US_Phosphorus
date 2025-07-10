@@ -1,7 +1,7 @@
 clc, clear
 
 %% Calculating Cumulative P Surplus at the gridscale.
-loadenv('.env')
+loadenv(.env)
 % filepaths
 INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
     'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
