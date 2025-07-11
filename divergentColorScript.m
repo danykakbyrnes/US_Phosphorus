@@ -2,7 +2,7 @@ clc, clear
 
 % Script to create the color color ramp used in various figures. 
 
-INPUT_folderName = '../INPUTS_061322/';
+OUTPUTfilepath = getenv('GENERAL_INPUT');
 
 length = 200;
 
@@ -30,5 +30,5 @@ stop = [140,81,10];
 QColorRamp(:,:,4) = [linspace(start(1),stop(1),length)', linspace(start(2),...
     stop(2),length)', linspace(start(3),stop(3),length)'];
 
-save([INPUT_folderName, '0_General_Data/divergentColorRamp.mat'],...
+save([OUTPUTfilepath, 'divergentColorRamp.mat'],...
     'QColorRamp')

@@ -6,24 +6,22 @@ clc, clear, close all
 % ------------------------------------------------------------------------
 runTiffs = 1 ;
 % Read in tif files
-INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
-INPUTfilepathPUE = '..\OUTPUTS\PUE\';
-
-OUTPUT_folderName = '..\OUTPUTS\Component_Timeseries\';
-YEARS = 1930:2017;
+TREND_filepath = getenv('TREND_INPUT');
+PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
+OUTPUT_filepath = getenv('COMPONENT_TIMESERIES');
 
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
 agsurplusFolder = 'Ag_Surplus';
 
+YEARS = 1930:2017;
 % Aesthetic attributes
 % Plot Specs
 fontSize_p = 7;
 median_LW = 1;
 xticks_p = [1930, 1970, 2010];
-xtick_len = [0.5];
+xtick_len = 0.5;
 plot_dim = [50,50,130,120];
 plot_dim2 = [50,50,250,225];
 
@@ -35,8 +33,8 @@ Livestock_quantiles = zeros(5,length(YEARS));
 Livestock_average = zeros(1,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
-    file_lvsk_i = dir([INPUTfilepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([INPUTfilepath, livestockFolder,'\',file_lvsk_i.name]);
+    file_lvsk_i = dir([TREND_filepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
+    [Tif_i,~] = readgeoraster([TREND_filepath, livestockFolder,'\',file_lvsk_i.name]);
     
     % Converting the file
     Tif_i = single(Tif_i); 
@@ -56,8 +54,8 @@ Fertilizer_average = zeros(1,length(YEARS));
 
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
-    file_fert_i = dir([INPUTfilepath, fertilizerFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([INPUTfilepath, fertilizerFolder,'\',file_fert_i.name]);
+    file_fert_i = dir([TREND_filepath, fertilizerFolder,'\*_',num2str(YEAR_i),'.tif']);
+    [Tif_i,~] = readgeoraster([TREND_filepath, fertilizerFolder,'\',file_fert_i.name]);
     
     % Converting the file
     Tif_i = single(Tif_i); 
@@ -76,8 +74,8 @@ Crop_quantiles = zeros(5,length(YEARS));
 Crop_average = zeros(1,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
-    file_fert_i = dir([INPUTfilepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([INPUTfilepath, cropFolder,'\',file_fert_i.name]);
+    file_fert_i = dir([TREND_filepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
+    [Tif_i,~] = readgeoraster([TREND_filepath, cropFolder,'\',file_fert_i.name]);
     
     % Converting the file
     Tif_i = single(Tif_i); 
@@ -95,8 +93,8 @@ end
 AgSurplus_quantiles = zeros(5,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
-    file_agsur_i = dir([INPUTfilepath,agsurplusFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([INPUTfilepath,agsurplusFolder,'\',file_agsur_i.name]);
+    file_agsur_i = dir([TREND_filepath,agsurplusFolder,'\*_',num2str(YEAR_i),'.tif']);
+    [Tif_i,~] = readgeoraster([TREND_filepath,agsurplusFolder,'\',file_agsur_i.name]);
     
     % Converting the file
     Tif_i = single(Tif_i); 
@@ -109,15 +107,15 @@ for i = 1:length(YEARS)
     AgSurplus_quantiles(:,i) = QLV;
 end
 
-save([OUTPUT_folderName, '\ComponentQuantiles.mat'],'Fertilizer_quantiles','Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles')
+save([OUTPUT_filepath, '\ComponentQuantiles.mat'],'Fertilizer_quantiles','Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles')
 
 
 %% PUE
 PUE_quantiles = zeros(5,length(YEARS));
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
-    file_pue_i = dir([INPUTfilepathPUE,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([INPUTfilepathPUE,'\',file_pue_i.name]);
+    file_pue_i = dir([PUEINPUT_filepath,'\*_',num2str(YEAR_i),'.tif']);
+    [Tif_i,~] = readgeoraster([PUEINPUT_filepath,'\',file_pue_i.name]);
     
     % Converting the file    
     Tif_linear = Tif_i(:); 
@@ -127,15 +125,15 @@ for i = 1:length(YEARS)
     PUE_quantiles(:,i) = QLV;
 end
 PUE_mean = Crop_average./(Fertilizer_average+Livestock_average);
-save([OUTPUT_folderName, 'PUE_mean.mat'],'PUE_mean')
+save([OUTPUT_filepath, 'PUE_mean.mat'],'PUE_mean')
 
-save([OUTPUT_folderName, 'ComponentQuantiles.mat'],'Fertilizer_quantiles', ...
+save([OUTPUT_filepath, 'ComponentQuantiles.mat'],'Fertilizer_quantiles', ...
     'Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles', ...
     'PUE_quantiles')
 end
 
 %% Timeseries plots
-load([OUTPUT_folderName, 'ComponentQuantiles.mat'])
+load([OUTPUT_filepath, 'ComponentQuantiles.mat'])
 
 %% Livestock
 
@@ -178,9 +176,9 @@ box('on')
 
 % Saving the figure
 set(gcf,'position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'Livestock_grid_TS.svg'];
+Figfolderpath = [OUTPUT_filepath,'Livestock_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
-Figfolderpath = [OUTPUT_folderName,'Livestock_grid_TS.png'];
+Figfolderpath = [OUTPUT_filepath,'Livestock_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
 close all
 
@@ -222,9 +220,9 @@ box('on')
 
 % Saving the figure
 set(gcf,'position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'Fertilizer_grid_TS.svg'];
+Figfolderpath = [OUTPUT_filepath,'Fertilizer_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
-Figfolderpath = [OUTPUT_folderName,'Fertilizer_grid_TS.png'];
+Figfolderpath = [OUTPUT_filepath,'Fertilizer_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 close all
@@ -267,9 +265,9 @@ box('on')
 
 % Saving the figure
 set(gcf,'position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'Crop_grid_TS.svg'];
+Figfolderpath = [OUTPUT_filepath,'Crop_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
-Figfolderpath = [OUTPUT_folderName,'Crop_grid_TS.png'];
+Figfolderpath = [OUTPUT_filepath,'Crop_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
 close all
 
@@ -311,9 +309,9 @@ box('on')
 
 % Saving the figure
 set(gcf,'position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'AgSurp_grid_TS.svg'];
+Figfolderpath = [OUTPUT_filepath,'AgSurp_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
-Figfolderpath = [OUTPUT_folderName,'AgSurp_grid_TS.png'];
+Figfolderpath = [OUTPUT_filepath,'AgSurp_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
 close all
 
@@ -354,9 +352,9 @@ box('on')
 
 % Saving the figure
 set(gcf,'position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'PUE_grid_TS.svg'];
+Figfolderpath = [OUTPUT_filepath,'PUE_grid_TS.svg'];
 print('-dsvg','-r600',[Figfolderpath])
-Figfolderpath = [OUTPUT_folderName,'PUE_grid_TS.png'];
+Figfolderpath = [OUTPUT_filepath,'PUE_grid_TS.png'];
 print('-dpng','-r600',[Figfolderpath])
 close all
 
@@ -378,5 +376,5 @@ set(legend1,'EdgeColor',[1 1 1]);
 % set window size
 set(gcf, 'Position',  [100, 100, 300, 250])
 
-Figfolderpath = [OUTPUT_folderName,'PUE_meanNational.png'];
+Figfolderpath = [OUTPUT_filepath,'PUE_meanNational.png'];
 print('-dpng','-r600',[Figfolderpath])

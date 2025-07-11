@@ -1,20 +1,20 @@
 clc, clear
 
 % Folder names and filespaths
-OUTPUT_folderName = '..\OUTPUTS\';
+OUTPUT_folderName = getenv('OUTPUT');
 
 % Filepath of files to load
-QuadrantINPUTfolderName = '..\OUTPUTS\Quadrants\';
-HUCINPUTfilepath = '..\OUTPUTS\HUC2\';
-PUEINPUTfilepath = ['..\OUTPUTS\PUE\'];
-INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
-    fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
-    livestockFolder = 'Lvst_Agriculture_LU';
-    agSFolder = 'Ag_Surplus';
+QuadrantINPUT_folderName = getenv('QUADRANT_ANALYSIS');
+RegionalINPUT_filepath = getenv('REGIONAL_ANALYSIS');
+PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
+TRENDfilepath = getenv('TREND_INPUT');
+
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
+livestockFolder = 'Lvst_Agriculture_LU';
+agSFolder = 'Ag_Surplus';
 
 %% Calculating metrics for the paper
-fileID = fopen([OUTPUT_folderName,'ManuscriptMetrics_20250522.txt'],'w');
+fileID = fopen([OUTPUT_folderName,'ManuscriptMetrics.txt'],'w');
 fprintf(fileID,['----------------------------------------------------' ...
     '-----------------------------------------\n']); 
 fprintf(fileID,'     Results (Section 3) \n'); 
@@ -90,7 +90,7 @@ fprintf(fileID,'MANU - National median 2017: %.1f (5th-95th: %.1f-%.1f) \n\n', .
 % 3.2 Phosphorus use efficiency
 % -------------------------------------------------------------------------
 % National PUE metrics
-PUE_Median_HUC2 = readtable([HUCINPUTfilepath, ...
+PUE_Median_HUC2 = readtable([RegionalINPUT_filepath, ...
     'PUE_medianHUC2_fromgrid.txt']);
 
 % Regional Indexes for PUE
@@ -148,7 +148,7 @@ fprintf(fileID,'Region 3 2017 PUE: %.3f \n', ...
 %% ------------------------------------------------------------------------
 % 3.3 Annual phosphorus surplus 
 % -------------------------------------------------------------------------
-AgS_Median_HUC2 = readtable([HUCINPUTfilepath, ...
+AgS_Median_HUC2 = readtable([RegionalINPUT_filepath, ...
     'Ag_Surplus_medianHUC2Components.txt']);
 
 % Regional Indexes for Ag Surplus
@@ -190,7 +190,7 @@ fprintf(fileID,'Region 6 Dec. in PS from 1980 to 2017: %.2f\n\n', ...
 % Regional Cumulative Ag surplus. The format of the text file is different
 % than other files because it was run seperately.
 CSfilepath =  ['..\OUTPUTS\Cumulative_Phosphorus\'];
-CS_Median_HUC2 = readtable([HUCINPUTfilepath, 'CumSum_medianHUC2_fromgrid.txt']);
+CS_Median_HUC2 = readtable([RegionalINPUT_filepath, 'CumSum_medianHUC2_fromgrid.txt']);
 
 % Regional Indexes for PUE
 REG_1_idx = find(CS_Median_HUC2.REG == 17);
@@ -221,7 +221,7 @@ fprintf(fileID,'Region 6 (2017) surplus and cumu surplus: %.2f kg/ha/y, %.2f kg/
     CS_Median_HUC2{REG_6_idx, end}]);
 
 % Reading in agricultural surplus 2017
-[AgSurp_tif,~] = readgeoraster([INPUTfilepath,agSFolder,'\AgSurplus_2017.tif']);
+[AgSurp_tif,~] = readgeoraster([TRENDfilepath,agSFolder,'\AgSurplus_2017.tif']);
 
 % Calculating the area with negative phosphorus surplus
 idx_pos = find(AgSurp_tif > 0); % Ag Surp has 0 values for non-ag land
@@ -267,8 +267,8 @@ fprintf(fileID,'Percent of land with Neg aPS with positive CS in 2017: %.1f %%\n
 %% -------------------------------------------------------------------------
 % Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation
 % -------------------------------------------------------------------------
-load([QuadrantINPUTfolderName,'QuadrantMapping.mat']) % D
-Reg_Quadrants = readmatrix([QuadrantINPUTfolderName,'Regional_Quadrants_2017.txt']);
+load([QuadrantINPUT_folderName,'QuadrantMapping.mat']) % D
+Reg_Quadrants = readmatrix([QuadrantINPUT_folderName,'Regional_Quadrants_2017.txt']);
 % Cleaning the quadrant data to only include land use that hae data in it.
 DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
 leaveOut = D(DisnanIDX ~= 0, :);

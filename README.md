@@ -5,8 +5,9 @@ The following scripts are used to recreate data and figures required for the pap
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
 ## To do
-1. Move agricultural surplus code to P surplus repo
-2. Change script so regions numbers match the manuscrip
+1. Move agricultural surplus code to P surplus repo (and fix DATA_Regional_Surplus_Components_PUE.r, FIG_ManucriptMetrics.m, FIG_National_Timeseries_Plots.m,  FIG_PS_cumuSurplus_conceptualFigure.m)
+2. Change HUc2 file name to Regions
+3. Change script so regions numbers match the manuscript
 
 ## Data Source
 - **gTREND-phosphorus data**: Available at [XX - update with actual URL]

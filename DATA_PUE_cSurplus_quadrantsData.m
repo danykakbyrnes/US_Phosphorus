@@ -1,13 +1,15 @@
 clc, clear, close all
 
-% Read in gif files
-OUTPUTfilepath = '../OUTPUTS/Quadrants/';
-TRENDfilepath = ['../../3_TREND_Nutrients/TREND_Nutrients/OUTPUT/',...
-    'Grid_TREND_P_Version_1/TREND-P_Postpocessed_Gridded_2023-11-18/'];
+% Classifying each gridcell into a quadrant
+loadenv('.env')
+
+% Getting filepaths form .env file
+OUTPUTfilepath = getenv('QUADRANT_ANALYSIS');
+TRENDfilepath = getenv('TREND_INPUT');
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
 livestockFolder = 'Lvst_Agriculture_LU/';
-PUEFolder = '../OUTPUTS/PUE/';
-CUMSUMFolder = '../OUTPUTS/Cumulative_Phosphorus/';
+PUEFolder = getenv('PHOS_USE_EFFICIENCY');
+CUMSUMFolder = getenv('CUMULATIVE_PHOS');
 
 % These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.

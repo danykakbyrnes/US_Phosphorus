@@ -1,24 +1,23 @@
-# Clipping HUC2 Watershed to P components
-library(foreach)
-library(doParallel)
-library(snow)
+# Clipping cumulative surplus to Regions
 library(raster)
 library(tidyverse)
 library(sf)
 library(terra)
+library(dotenv)
 
-setwd("B:/LabFiles/users/DanykaByrnes/")
+load_dot_env(".env")
 
 # Setting the years of analysis
 YEARS = c(1980, 2017)
 
 # Setting up filepaths
-HUC2INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
-INPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/Cumulative_Phosphorus/'
-OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
+GenINPUT_folders = Sys.getenv("GENERAL_INPUT")
+INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
+OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
+RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
 
 # read in HUC8 files
-HUC2 = sf::read_sf(paste0(HUC2INPUT_folders, '0_General_Data/HUC2/merged_HUC2_5070_v3.shp'))
+Regions = sf::read_sf(paste0(GenINPUT_folders, RegionalShp_filepath))
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
 
@@ -26,13 +25,15 @@ Comp_extc2 = data.frame()
     tif_folders = paste0(INPUT_folders, 'CumSum_', YEARS[i],'.tif')
     R = terra::rast(tif_folders) # NaN are treated same was as NA.
     
-    for (j in 1:dim(HUC2)[1]) {
+    for (j in 1:dim(Regions)[1]) {
 
-      medianMask = terra::mask(R, HUC2[j,], inverse=FALSE)
-      maskDf1 = as.data.frame(medianMask, na.rm = TRUE) # this removes all NaNs
+      medianMask = terra::mask(R, Regions[j,], 
+                               inverse=FALSE)
+      maskDf1 = as.data.frame(medianMask, 
+                              na.rm = TRUE) # this removes all NaNs
       temp3 = median(unlist(maskDf1), na.rm = TRUE)
       
-      Comp_extc2[j,1] = HUC2[j,]$REG
+      Comp_extc2[j,1] = Regions[j,]$REG
       Comp_extc2[j,i+1] = temp3
     }
   }

@@ -1,23 +1,25 @@
 clc, clear
 
 %% Calculating PUE at the gridscale.
-
-% Read in gif files
-INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\'];
-OUTPUTfilepath = '..\OUTPUTS\PUE\';
-YEARS = 1930:2017;
+loadenv('.env')
+% Getting filepaths form .env file
+INPUTfilepath = getenv('TREND_INPUT');
+OUTPUTfilepath = getenv('PHOS_USE_EFFICIENCY');
 
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
 
-delete(gcp('nocreate')); % Close any pools that might already be running
-parpool('local', 12);
-[~,georef] = readgeoraster([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
-Rinfo = geotiffinfo([INPUTfilepath,'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
+YEARS = 1930:2017;
 
-% Calculate PUE and save the tif file
+% Getting metadata for TIFF files
+[~,georef] = readgeoraster([INPUTfilepath, ...
+    'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
+Rinfo = geotiffinfo([INPUTfilepath, ...
+    'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
+
+% Calculate PUE and save the TIFF file
+parpool('local', 12);
 parfor i = 1:length(YEARS)
    
     YEAR_i = YEARS(i);

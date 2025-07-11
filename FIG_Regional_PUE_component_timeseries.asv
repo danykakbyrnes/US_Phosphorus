@@ -1,8 +1,7 @@
 clc, clear, close all
 % ------------------------------------------------------------------------
-% MAKING REGIONAL TIMESERIES FOR FIGURE 3 and 4. 
-% This uses the median components and PUE of all grid cells within the
-% region.
+% MAKING REGIONAL TIMESERIES FOR FIGURE 4. 
+% This uses the median PUE of all gridcells 
 % ------------------------------------------------------------------------
 
 % filepaths
@@ -35,7 +34,7 @@ CROP_AGHA = sortrows(CROP_AGHA,'descend');
 % Read in land use
 HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
 
-%% Gap filling regional LU trajectories
+%% Reorganizing regoinal LU and map the LU to the dates. 
 unHUC = unique(HUCLU_diso(:,1)); 
 for i = 1:length(unHUC)
     

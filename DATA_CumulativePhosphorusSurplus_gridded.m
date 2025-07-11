@@ -1,17 +1,18 @@
 clc, clear
 
-%% Calculating Cumulative P Surplus at the gridscale.
+%% Creating TIFF files of Cumulative P Surplus at the gridscale. 
 loadenv('.env')
-% filepaths
-INPUTfilepath = ['..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\',...
-    'Grid_TREND_P_Version_1\TREND-P Postpocessed Gridded (2023-11-18)\'];
-OUTPUTfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
-YEARS = 1930:2017;
+% Getting filepaths form .env file
+INPUTfilepath = getenv('TREND_INPUT');
+OUTPUTfilepath = getenv('CUMULATIVE_PHOS');
 
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
 
+YEARS = 1930:2017;
+
+% Getting metadata for TIFF files
 [~,georef] = readgeoraster([INPUTfilepath,'Lvst_Agriculture_LU\Lvst_1930.tif']);
 Rinfo = geotiffinfo([INPUTfilepath,'Lvst_Agriculture_LU\Lvst_1930.tif']);
 

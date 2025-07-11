@@ -11,11 +11,14 @@ import rasterio.mask
 import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import mapping
-
-directory = r'B:/LabFiles/users/DanykaByrnes/9_Phosphorus_Use_Efficiency/'
+from dotenv import load_dotenv
 
 # Set the working directory
+directory = os.path.abspath(os.path.dirname(__file__))
 os.chdir(directory)
+
+# Load .env filepath
+load_dotenv()
 
 # Filepaths to shapefile and raster (ESPG 5070)
 shpFile = 'INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'

@@ -1,7 +1,9 @@
 clc, clear, close all
 
-%% FIGURE 7: Framework figure
+% Filepaths
+OUTPUT_filepath = getenv('QUADRANT_ANALYSIS');
 
+%% FIGURE 7: Framework figure
 % Aesthetic 
 fontSize_p = 11;
 fontSize_p2 = 8; 
@@ -16,9 +18,8 @@ colourPalette = [1,102,94;
                  90,180,172;
                  216,179,101]./255;
              
-% Read in gif files
-OUTPUTfilepath = '../OUTPUTS/Quadrants/';
-load([OUTPUTfilepath,'QuadrantMapping.mat'])
+%% Read and clean data
+load([OUTPUT_filepath,'QuadrantMapping.mat'])
 
 % D_copy is the unfiltered form of the data.
 D_allData = D;
@@ -35,7 +36,6 @@ D = D(DisnanIDX < 1, :);
 D_cleanedData = D;
 
 %% Quadrant Plot
-D = D_cleanedData;
 % To improve computation speed for plotting, we will only use 1% of the 
 % gridcells available.
 I = sort(randperm(length(D),ceil(length(D)/100))'); 
@@ -71,7 +71,7 @@ set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
 % Saving Figure
-Figfolderpath = [OUTPUTfilepath,'Quadrant_2017_',datestr(datetime,'mmddyy'),'.png'];
+Figfolderpath = [OUTPUT_filepath,'QuadrantPlot_2017.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 % 1980
@@ -100,7 +100,7 @@ set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
 
 % Saving Files
-Figfolderpath = [OUTPUTfilepath,'Quadrant_1980_', datestr(datetime,'mmddyy'),'.png'];
+Figfolderpath = [OUTPUT_filepath,'QuadrantPlot_1980.png'];
 print('-dpng','-r600',Figfolderpath)
 
 %% Creating a Sankey Flow Chart
@@ -127,7 +127,7 @@ plotSankeyFlowChart(data,options);
 %set(gcf,'position',plot_dim_2)
 set(gcf,'position',plot_dim_alt)
 
-Figfolderpath = [OUTPUTfilepath,'SankeyPlot_', datestr(datetime,'mmddyy'),'.svg'];
+Figfolderpath = [OUTPUT_filepath,'SankeyPlot.svg'];
 print('-dsvg',[Figfolderpath])
 
 % Percentages for Manuscript Metrics
@@ -135,4 +135,4 @@ Q_pct = [sum(D(:,7) == 1)/length(D), sum(D(:,8) == 1)/length(D);
      sum(D(:,7) == 2)/length(D), sum(D(:,8) == 2)/length(D); 
      sum(D(:,7) == 3)/length(D), sum(D(:,8) == 3)/length(D);
      sum(D(:,7) == 4)/length(D), sum(D(:,8) == 4)/length(D)]*100;
-save([OUTPUTfilepath,'QuadrantPct.mat'], 'Q_pct')
+save([OUTPUT_filepath,'QuadrantPct.mat'], 'Q_pct')

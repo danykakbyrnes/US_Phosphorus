@@ -1,14 +1,14 @@
 clc, clear
 
 % Read in gif files
-PUEfilepath = '..\OUTPUTS\PUE\';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
-OUTPUTfilepath = '..\OUTPUTS\Quadrants\';
-RasterINPUTfilepath = '..\..\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\';
+OUTPUTfilepath = getenv('QUADRANT_ANALYSIS');
+TRENDfilepath = getenv('TREND_INPUT');
+PUEFolder = getenv('PHOS_USE_EFFICIENCY');
+CUMSUMFolder = getenv('CUMULATIVE_PHOS');
 
 % Getting raster information
-[D_empty,georef] = readgeoraster([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
-Rinfo = geotiffinfo([RasterINPUTfilepath,'Surplus_P\Surplus_P_1930.tif']);
+[D_empty,georef] = readgeoraster([TRENDfilepath,'Surplus_P\Surplus_P_1930.tif']);
+Rinfo = geotiffinfo([TRENDfilepath,'Surplus_P\Surplus_P_1930.tif']);
 
 % Setting bounds of quadrant
 loadstar_CumSum = 0; 

@@ -24,13 +24,9 @@ RegCol =  [228,26,28; % region 9
 
 mSize = 10; 
 
-%% Reading in data
+%% Figure to explore the failures of PUE as a metric
 PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianHUC2_fromgrid.txt']);
 AGS_AGHA = readmatrix([INPUT_filepath,'Ag_Surplus_medianHUC2Components.txt']);
-
-% Importing the gridded data
-[SURP,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\AgSurplus_2017.tif']);
-[PUE,~] = readgeoraster([PUE_filepath, 'PUE_2017.tif']);
 
 % Making the grid cells the same between 1980 and 2017
 nanMask = isnan(PUE) | isnan(SURP);
@@ -118,14 +114,14 @@ set(gcf,'position',plot_dim_1)
 ylabel('PUE')
 xlabel('Surplus (kg-P ha^-^1 y^-^1)')
 
-Figfolderpath = [OUTPUT_filepath, 'ConcepFigure_Surplus_v_PUE.png'];
-print('-dpng','-r600',Figfolderpath)
+Figfolderpath = ['..\OUTPUTS\PS_PUE\ConcepFigure_Surplus_v_PUE.png'];
+print('-dpng','-r600',[Figfolderpath])
 
 %% 1-PUE on x-axis
 PUE_inv = 1-PUE;
 PUE_AGHA(:,4) = 1-PUE_AGHA(:,2);
 
-figure(2)
+figure(1)
 % Plotting the middle lines to section off the negative and positive
 % surplus
 plot([-200,1000], [0, 0],'k:')
@@ -185,7 +181,7 @@ ylabel('1 - PUE')
 xlabel('Surplus (kg-P ha^-^1 y^-^1)')
 
 Figfolderpath = [OUTPUT_filepath,'ConcepFigure_Surplus_v_PUE_V2.png'];
-print('-dpng','-r600',Figfolderpath)
+print('-dpng','-r600',[Figfolderpath])
 
 %% 1-PUE on x-axis
 figure(3)
@@ -248,4 +244,4 @@ xlabel('PUE')
 ylabel('Surplus(kg-P ha^-^1 y^-^1)')
 
 Figfolderpath = [OUTPUT_filepath,'ConcepFigure_PUE_v_surplus.png'];
-print('-dpng','-r600', Figfolderpath)
+print('-dpng','-r600',[Figfolderpath])

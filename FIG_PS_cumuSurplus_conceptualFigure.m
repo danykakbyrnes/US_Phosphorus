@@ -1,11 +1,12 @@
 clc, clear, close all
 
-OUTPUTfilepath = '..\OUTPUTS\PS_cumuPS\';
-CUMSUMfilepath = '..\OUTPUTS\Cumulative_Phosphorus\';
+OUTPUT_filepath = getenv('SURPLUS_CUMUSURP');
+CUMSUM_filepath = getenv('CUMULATIVE_PHOS');
+TREND_filepath = getenv('TREND_INPUT');
 
 % reading in gridded data
-[CS2017,~] = readgeoraster([CUMSUMfilepath,'CumSum_2017.tif']);
-[SURP2017,~] = readgeoraster('B:\LabFiles\users\DanykaByrnes\3_TREND_Nutrients\TREND_Nutrients\OUTPUT\Grid_TREND_P_Version_1\TREND-P_Postpocessed_Gridded_2023-11-18\Ag_Surplus\AgSurplus_2017.tif');
+[CS2017,~] = readgeoraster([CUMSUM_filepath,'CumSum_2017.tif']);
+[SURP2017,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\AgSurplus_2017.tif']);
 
 % Reading in regional medians
 SURPcumu_AGHA = readmatrix('..\OUTPUTS\HUC2\CumSum_medianHUC2_fromgrid.txt');
@@ -98,5 +99,5 @@ set(gcf,'position',plot_dim)
 
 hold off;
 set(gcf,'position',[200,200,400,400])
-Figfolderpath = [OUTPUTfilepath,'ConcepFigure_PS_CumuSurplus.png'];
+Figfolderpath = [OUTPUT_filepath,'ConcepFigure_PS_CumuSurplus.png'];
 print('-dpng','-r600',[Figfolderpath])

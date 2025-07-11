@@ -1,27 +1,19 @@
-# Clipping HUC2 Watershed to P components
-library(foreach)
-library(doParallel)
-library(snow)
+# Clipping P components to regions
 library(raster)
 library(tidyverse)
 library(sf)
 library(terra)
+library(dotenv)
 
-setwd("B:/LabFiles/users/DanykaByrnes/")
-
-# ******************************************************************************
-# This script takes the P Surplus data and clips the watersheds with the data. 
-# The result is a text file with the mean and median of the components for each 
-# HUC2 watershed.
-# ******************************************************************************
+load_dot_env(".env")
 
 # Setting up filepaths
-YEARS = 1930:2017
-INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
-OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
-PSURPLUS_OUTPUT_folders = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P_Postpocessed_Gridded_2023-11-18/'
-PUE_OUTPUT_folders = '9 Phosphorus Use Efficiency/OUTPUTS/PUE/'
-HUC2_filepath = '0_General_Data/HUC2/'
+GenINPUT_folder = Sys.getenv("GENERAL_INPUT")
+RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
+TREND_OUTPUT_folder = Sys.getenv("TREND_INPUT")
+PUE_OUTPUT_folder = Sys.getenv("PHOS_USE_EFFICIENCY")
+ASURP_OUTPUT_folder = Sys.getenv("AG_SURPLUS")
+OUTPUT_folder = Sys.getenv("REGIONAL_ANALYSIS")
 
 # Select which gTREND components to be clipped. 
 ComonentsName = c('Lvsk', 'Fert', 'Crop', 'Ag_Surplus')
@@ -31,8 +23,9 @@ Components = c('Lvst_Agriculture_LU/Lvst_',
                'Ag_Surplus/AgSurplus_')
 
 # read in HUC8 files
-HUC2 = sf::read_sf(paste0(INPUT_folders,HUC2_filepath,'merged_HUC2_5070_v3.shp'))
+Regions = sf::read_sf(paste0(GenINPUT_folder, RegionalShp_filepath))
 
+YEARS = 1930:2017
 for (a in 1:length(Components)) {
   
   # Creating empty dataframe to populate
@@ -40,8 +33,8 @@ for (a in 1:length(Components)) {
   MedianHUC2 = data.frame()
   
   for (i in 1:length(YEARS)) {
-    tif_folders = paste0(PSURPLUS_OUTPUT_folders,Components[a], YEARS[i],'.tif')
-    R = terra::rast(tif_folders)
+    tif_folder = paste0(TREND_OUTPUT_folder, Components[a], YEARS[i],'.tif')
+    R = terra::rast(tif_folder)
     
     # Replacing 0s with NA becaus we don't want 0s in our calculation
     temp = values(R)
@@ -50,48 +43,47 @@ for (a in 1:length(Components)) {
     temp = as.data.frame(temp)
     values(R) = temp
 
-    for (j in 1:dim(HUC2)[1]) {
-        # Calculating the mean for jth HUC2 watershed
+    for (j in 1:dim(Regions)[1]) {
+        # Calculating the mean for jth region
         mean_val = terra::extract(R, 
-                                  HUC2[j,],
+                                  Regions[j,],
                                   fun=mean,
                                   na.rm=TRUE)
-        MeanHUC2[j,1] = HUC2[j,]$REG
-        MeanHUC2[j,i+1] = mean_val[2]
+        MeanRegion[j,1] = Regions[j,]$REG
+        MeanRegion = mean_val[2]
         
-        # Calculating the median for jth HUC2 watershed
-        HUC2Mask = terra::mask(R,
-                               HUC2[j,],
+        # Calculating the median for jth region
+        RegionMask = terra::mask(R,
+                               Regions[j,],
                                inverse=FALSE)
-        maskDF = as.data.frame(HUC2Mask, 
+        maskDF = as.data.frame(RegionMask, 
                                na.rm = TRUE) # removes all NaNs
         median_val = median(unlist(maskDF), 
                             na.rm = TRUE)
         
-        MedianHUC2[j,1] = HUC2[j,]$REG
-        MedianHUC2[j,i+1] = median_val
+        MedianRegion[j,1] = Regions[j,]$REG
+        MedianRegion[j,i+1] = median_val
     }
   }
-  colnames(MeanHUC2)[1] ="REG"
-  write.table(MeanHUC2, 
-              file = paste0(OUTPUT_folders,ComponentsName[a],'_meanHUC2Components.txt'), 
+  colnames(MeanRegion)[1] ="REG"
+  write.table(MeanRegion, 
+              file = paste0(OUTPUT_folder,ComponentsName[a],'_meanHUC2Components.txt'), 
               row.names = FALSE)
   
-  colnames(MedianHUC2) = colnames(MeanHUC2)
-  write.table(MedianHUC2, 
-              file = paste0(OUTPUT_folders,ComponentsName[a],'_medianHUC2Components.txt'), 
+  colnames(MedianRegion) = colnames(MeanRegion)
+  write.table(MedianRegion, 
+              file = paste0(OUTPUT_folder,ComponentsName[a],'_medianHUC2Components.txt'), 
               row.names = FALSE)
 }
 
 ## Now processing PUE at the regional scale. 
-
 # Creating empty dataframe to populate
-MeanHUC2 = data.frame()
-MedianHUC2 = data.frame()
+MeanRegion = data.frame()
+MedianRegion = data.frame()
 
 for (i in 1:length(YEARS)) {
-  tif_folders = tif_folders = paste0(PUE_OUTPUT_folders, 'PUE_', YEARS[i],'.tif')
-  R = terra::rast(tif_folders)
+  tif_folder = paste0(PUE_OUTPUT_folder, 'PUE_', YEARS[i],'.tif')
+  R = terra::rast(tif_folder)
     
     # Removing 0s (PUE doesn't have 0 values, but implementing as a fail safe)
     temp = values(R)
@@ -100,34 +92,34 @@ for (i in 1:length(YEARS)) {
     temp = as.data.frame(temp)
     values(R) = temp
     
-    for (j in 1:dim(HUC2)[1]) {
-      # Calculating the mean for jth HUC2 watershed
+    for (j in 1:dim(Regions)[1]) {
+      # Calculating the mean for jth region
       mean_val = terra::extract(R, 
-                                HUC2[j,],
+                                Regions[j,],
                                 fun=mean,
                                 na.rm=TRUE)
-      MeanHUC2[j,1] = HUC2[j,]$REG
-      MeanHUC2[j,i+1] = mean_val[2]
+      MeanRegions[j,1] = Regions[j,]$REG
+      MeanRegions[j,i+1] = mean_val[2]
       
-      # Calculating the median for jth HUC2 watershed
-      HUC2Mask = terra::mask(R,
-                             HUC2[j,],
+      # Calculating the median for jth region
+      RegionMask = terra::mask(R,
+                             Regions[j,],
                              inverse=FALSE)
-      maskDF = as.data.frame(HUC2Mask, 
+      maskDF = as.data.frame(RegionMask, 
                              na.rm = TRUE) # removes all NaNs
       median_val = median(unlist(maskDF), 
                           na.rm = TRUE)
       
-      MedianHUC2[j,1] = HUC2[j,]$REG
-      MedianHUC2[j,i+1] = median_val
+      MedianRegion[j,1] = Regions[j,]$REG
+      MedianRegion[j,i+1] = median_val
     }
   }
-  colnames(MeanHUC2)[1] ="REG"
-  write.table(MeanHUC2, 
-              file = paste0(OUTPUT_folders,'PUE_meanHUC2_fromgrid.txt'), 
+  colnames(MeanRegion)[1] ="REG"
+  write.table(MeanRegion, 
+              file = paste0(OUTPUT_folder,'PUE_meanHUC2_fromgrid.txt'), 
               row.names = FALSE)
   
-  colnames(MedianHUC2) = colnames(MeanHUC2)
-  write.table(MedianHUC2, 
-              file = paste0(OUTPUT_folders,'PUE_medianHUC2_fromgrid.txt'), 
+  colnames(MedianRegion) = colnames(MeanRegion)
+  write.table(MedianRegion, 
+              file = paste0(OUTPUT_folder,'PUE_medianHUC2_fromgrid.txt'), 
               row.names = FALSE)

@@ -1,26 +1,27 @@
 # Clipping agricultural land use to Regions
-library(snow)
 library(raster)
 library(tidyverse)
 library(sf)
+library(dotenv)
 
-setwd("B:/LabFiles/users/DanykaByrnes/")
+load_dot_env(".env")
 
 # Setting up filepaths
-YEARS = 1930:2017
-INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_103122/'
-OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
-HUC2_loc = '0_General_Data/HUC2/'
+GenINPUT_folders = Sys.getenv("GENERAL_INPUT")
+LUINPUT_folders = Sys.getenv("LANDUSE_INPUT")
+OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
+RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
 
 # Read in Region shapefile files
-Regions = sf::read_sf(paste0(INPUT_folders, HUC2_loc,'merged_HUC2_5070_v3.shp'))
-files = dir(paste0(INPUT_folders,'/1_Land_Use_Data/'))
+Regions = sf::read_sf(paste0(GenINPUT_folders, RegionalShp_filepath))
+files = dir(LUINPUT_folders)
 
+YEARS = 1930:2017
 LU_extc = data.frame()
 
   for (i in 1:length(files)) {
     
-    LUtif_folders = paste0(INPUT_folders,'1_Land_Use_Data/', files[i])
+    LUtif_folders = paste0(LUINPUT_folders, files[i])
     YEAR_i = readr::parse_number(files[i])
     R = terra::rast(LUtif_folders)
 
@@ -35,15 +36,19 @@ LU_extc = data.frame()
                                 na.rm=TRUE, 
                                 df=TRUE)
         
-        # replacing all the non-cropland (0) with 1 
+        # Replacing all the non-cropland (0) with 1 to get total area
         temp = values(clipped_raster)
         temp = as.matrix(temp)
-        temp[temp == 0] = 1 # replacing all the numbers with 1 so I can get total area.
+        temp[temp == 0] = 1
         temp <- as.data.frame(temp)
         values(clipped_raster) = temp
         
         # Summing total cropland
-        TotalLand = terra::extract(clipped_raster, Regions[j,], fun=sum, na.rm=TRUE, df=TRUE)
+        TotalLand = terra::extract(clipped_raster, 
+                                   Regions[j,], 
+                                   fun=sum, 
+                                   na.rm=TRUE, 
+                                   df=TRUE)
         
         # Column 1 is HUC, Column 2 is year, column 3 is AG, Col 4 is total
         row = dim(LU_extc)[1]+1

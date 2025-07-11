@@ -17,16 +17,17 @@ fontSize_p2 = 8;
 plot_dim = [200,200,400,200];
 plot_dim_2 = [200,200,400,425]; 
 
-% Loading in data
+
+[PUE2017,~] = readgeoraster(PUEINPUT_filepath );
+
 [LVSTK2017,georef] = readgeoraster([TREND_filepath, livestockFolder,...
                                'Lvst_2017.tif']);
 Rinfo = geotiffinfo([TREND_filepath, livestockFolder,...
                                'Lvst_2017.tif']);
 [FERT2017,~] = readgeoraster([TREND_filepath,fertilizerFolder,...
                               'Fertilizer_Ag_2017.tif']);
-[PUE2017,~] = readgeoraster([PUEINPUT_filepath, 'PUE_2017.tif']);
 
-% Vectorizing the data
+% Manipuating the data
 PUE2017_v = double(PUE2017(:));
 LVSTK2017_v = double(LVSTK2017(:));
 FERT2017_v = double(FERT2017(:));
@@ -39,11 +40,11 @@ FERT2017_v = FERT2017_v(DisnanIDX < 1, :);
 
 % Removing the boxes that have no quadrant in 
 D = [PUE2017_v, LVSTK2017_v, FERT2017_v,...
-     LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
+                      LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
 
 % Regional data
 PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianHUC2_fromgrid.txt']);
-PCT_MANU = readmatrix([INPUT_filepath,'PCT_Manure_In_medianHUC2_fromgrid.txt']);
+PCT_MANU = readmatrix([INPUT_filepath, 'PCT_Manure_In_medianHUC2_fromgrid.txt']);
 
 % Isolate 2017
 YEARS = 1930:2017;
@@ -60,15 +61,19 @@ D_reg = [PUE_AGHA, PCT_MANU(:,2), [1:size(PUE_AGHA,1)]'];
 regionID = {'9';'8';'7';'6';'5';...
     '4';'3';'2';'1'};
 
-%% FIGURE 3: PUE vs. % manure
+%% FIGURE X: PUE vs. % manure
+
 % Color map
+%colorMap = [15,37,30;
+%            64, 150, 122;
+%            255, 255, 255]./255;
 colorMap = [96,96,96;
             175, 175, 175;
             255, 255, 255]./255;
 
 map = interp1([0;50;100], colorMap,linspace(100,0,248),'pchip');
 
-% Scatter plot version of gridded data
+%% scatter plot version of gridded data
 close all
 I = sort(randperm(length(D),ceil(length(D)/100))'); 
 D_ss = D(I,:);
