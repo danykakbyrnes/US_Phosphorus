@@ -13,7 +13,11 @@ The analysis of phosphorus use across the US from 1930 to 2017 using the newly p
 - **gTREND-phosphorus data**: Available at [XX - update with actual URL]
 
 ## Usage Instructions
-
+In all cases, set working directory to project root.
+Eg:
+```
+cd /home/username/repo_root/
+```
 ### 1. Data Generation
 
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial TIF files are projected in EPSG:5070 - NAD83 / Conus Albers.

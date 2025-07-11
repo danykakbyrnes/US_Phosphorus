@@ -13,12 +13,9 @@ import numpy as np
 from shapely.geometry import mapping
 from dotenv import load_dotenv
 
-# Set the working directory
-directory = os.path.abspath(os.path.dirname(__file__))
-os.chdir(directory)
-
 # Load .env filepath
 load_dotenv()
+os.getenv("GENERAL_INPUT")
 
 # Filepaths to shapefile and raster (ESPG 5070)
 shpFile = 'INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'
