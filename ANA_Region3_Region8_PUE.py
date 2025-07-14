@@ -15,11 +15,13 @@ from dotenv import load_dotenv
 
 # Load .env filepath
 load_dotenv()
-os.getenv("GENERAL_INPUT")
 
 # Filepaths to shapefile and raster (ESPG 5070)
-shpFile = 'INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'
-raster = 'OUTPUTS/PUE/PUE_2017.tif'
+Regional_filepath = os.getenv("GENERAL_INPUT")
+PUE_filepath = os.getenv("PHOS_USE_EFFICIENCY")
+
+shpFile = Regional_filepath + '/HUC2/noLakes_merged_HUC2_5070_v3.shp'
+PUE_raster = PUE_filepath+'PUE_2017.tif'
 
 # Sorting HUC2 regions
 HUC2 = gpd.read_file(shpFile)
@@ -34,7 +36,7 @@ HUC_3 = HUC2.iloc[2]
 HUC_8 = HUC2.iloc[7]
 
 # Reading in raster and masking using the regions.
-with rasterio.open(raster) as src:
+with rasterio.open(PUE_raster) as src:
     
     # Read the data into an array
     PUE_2017 = src.read(1)

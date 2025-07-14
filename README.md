@@ -22,6 +22,12 @@ cd /home/username/repo_root/
 
 These scripts must be executed first to generate the required data files for subsequent analysis and figure generation. All geospatial TIF files are projected in EPSG:5070 - NAD83 / Conus Albers.
 
+#### `DATA_AggregatingTRENDComponents.m`
+- **Purpose**: Aggregates Crop uptake, livestock manure P inputs, fertilizer, and agricultural surplus from raw gTREND data. 
+- **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  
+- **Output**: Annual (1930-2017) geospatial TIF files of the components and surplus. Maps in Figure 1 are produced in QGIS.  
+- **Language**: MATLAB  
+
 #### `DATA_PhosphorusUseEfficiency_gridded.m`
 - **Purpose**: Generates gridded phosphorus use efficiency (PUE) data.  
 - **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  

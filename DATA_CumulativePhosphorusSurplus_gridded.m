@@ -3,18 +3,18 @@ clc, clear
 %% Creating TIFF files of Cumulative P Surplus at the gridscale. 
 loadenv('.env')
 % Getting filepaths form .env file
-INPUTfilepath = getenv('TREND_INPUT');
+INPUTfilepath = getenv('POSTPROCESSED_TREND');
 OUTPUTfilepath = getenv('CUMULATIVE_PHOS');
 
-cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
-livestockFolder = 'Lvst_Agriculture_LU';
+cropFolder = 'CropUptake_Agriculture_Agriculture_LU\';
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
+livestockFolder = 'Lvst_Agriculture_LU\';
 
 YEARS = 1930:2017;
 
 % Getting metadata for TIFF files
-[~,georef] = readgeoraster([INPUTfilepath,'Lvst_Agriculture_LU\Lvst_1930.tif']);
-Rinfo = geotiffinfo([INPUTfilepath,'Lvst_Agriculture_LU\Lvst_1930.tif']);
+[~,georef] = readgeoraster([INPUTfilepath,livestockFolder,'Lvst_1930.tif']);
+Rinfo = geotiffinfo([INPUTfilepath,livestockFolder,'Lvst_1930.tif']);
 
 CumulativeP = zeros(georef.RasterSize);
 CumulativeP = single(CumulativeP);
@@ -30,7 +30,7 @@ for i = 1:length(YEARS)
     file_crop_i = dir([INPUTfilepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
     [Crop_i,~] = readgeoraster([INPUTfilepath, cropFolder,'\',file_crop_i.name]);
     
-    CumulativeP = CumulativeP + (Livestock_i + Fertilizer_i - Crop_i); 
+    CumulativeP = CumulativeP + (Livestock_i + Fertilizer_i - Crop_i);
 
    exportCumSum = CumulativeP; 
    exportCumSum(exportCumSum == 0) = NaN; 

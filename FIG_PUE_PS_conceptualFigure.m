@@ -3,7 +3,7 @@ clc, clear, close all
 %% Creating the Surplus v. PUE scatter plot figure. 
 % Filepaths
 INPUT_filepath = getenv('REGIONAL_ANALYSIS');
-TREND_filepath = getenv('TREND_INPUT');
+TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUE_filepath = getenv('PHOS_USE_EFFICIENCY');
 OUTPUT_filepath = getenv('SURPLUS_PUE');
 
@@ -29,7 +29,7 @@ PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianHUC2_fromgrid.txt']);
 AGS_AGHA = readmatrix([INPUT_filepath,'Ag_Surplus_medianHUC2Components.txt']);
 
 % Importing the gridded data
-[SURP,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\AgSurplus_2017.tif']);
+[SURP,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\Ag_Surplus_2017.tif']);
 [PUE,~] = readgeoraster([PUE_filepath, 'PUE_2017.tif']);
 
 % Making the grid cells the same between 1980 and 2017

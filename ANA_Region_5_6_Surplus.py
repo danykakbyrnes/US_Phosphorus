@@ -17,9 +17,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Filepaths to shapefile and raster (ESPG 5070)
-shpFile = '9_Phosphorus_Use_Efficiency/INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'
-raster = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P_Postpocessed_Gridded_2023-11-18/Ag_Surplus/AgSurplus_2017.tif'
-#raster = '9_Phosphorus_Use_Efficiency/OUTPUTS/PUE/PUE_2017.tif'
+Regional_filepath = os.getenv("GENERAL_INPUT")
+AgSURP_filepath = os.getenv("POSTPROCESSED_TREND")
+AgSURP_raster = AgSURP_filepath+'Ag_Surplus/AgSurplus_2017.tif'
+
+shpFile = Regional_filepath + '/HUC2/noLakes_merged_HUC2_5070_v3.shp'
+
 # Sorting HUC2 regions
 HUC2 = gpd.read_file(shpFile)
 HUC2.sort_values(by=['REG'], 
@@ -33,7 +36,7 @@ HUC_5 = HUC2.iloc[4]
 HUC_6 = HUC2.iloc[5]
 
 # Reading in raster and masking using the regions.
-with rasterio.open(raster) as src:
+with rasterio.open(AgSURP_raster) as src:
     
     # Read the data into an array
     PUE_2017 = src.read(1)

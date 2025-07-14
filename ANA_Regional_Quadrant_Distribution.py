@@ -12,16 +12,14 @@ import rasterio
 import rasterio.mask
 import numpy as np
 from shapely.geometry import mapping
-
-directory = r'B:/LabFiles/users/DanykaByrnes/9_Phosphorus_Use_Efficiency/'
-
-# Set the working directory
-os.chdir(directory)
+from dotenv import load_dotenv
 
 # Filepaths to shapefile and raster (ESPG 5070)
-shpFile = 'INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'
-raster = 'OUTPUTS/Quadrants/QuadrantMap_2017.tif'
-    
+Regional_filepath = os.getenv("GENERAL_INPUT")
+Quadrant_filepath = os.getenv("QUADRANT_ANALYSIS")
+Quadrant_raster = Quadrant_filepath + 'QuadrantMap_2017.tif'
+shpFile = Regional_filepath + '/HUC2/noLakes_merged_HUC2_5070_v3.shp'
+
 # Sorting HUC2 regions
 HUC2 = gpd.read_file(shpFile)
 HUC2.sort_values(by=['REG'], 
@@ -33,7 +31,7 @@ HUC2.sort_values(by=['REG'],
 HUC_Q_count = [None] * len(HUC2)
 
 # Reading in raster and masking using the regions.
-with rasterio.open(raster) as src:
+with rasterio.open(Quadrant_raster) as src:
     # Read the data into an array
     #PUE_2017 = src.read(1)
     # Saving metadata
@@ -59,6 +57,6 @@ with rasterio.open(raster) as src:
 df_HUC_Q_count = pd.DataFrame(HUC_Q_count,
                               columns=['REG', 'Q1', 'Q2', 'Q3', 'Q4', 'TotCell'])
 
-df_HUC_Q_count.to_csv("OUTPUTS/Quadrants/Regional_Quadrants_2017.txt",
+df_HUC_Q_count.to_csv(Quadrant_filepath + "Regional_Quadrants_2017.txt",
                       index=False,
                       sep='\t')

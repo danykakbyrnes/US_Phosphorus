@@ -4,7 +4,7 @@ clc, clear
 % Filepaths
 OUTPUT_filepath = getenv('PUE_DRIVERS');
 INPUT_filepath = getenv('REGIONAL_ANALYSIS');
-TREND_filepath = getenv('TREND_INPUT');
+TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 
 % Loading in the files
@@ -95,7 +95,7 @@ RegCol =  [228,26,28; % region 9
 xlabel('PUE (2017) [-]')
 xlim([0,2])
 ylim([0,1])
-ylabel('Manure to Total Input Ratio (2017)')
+ylabel('Proportion of manure-derived P inputs (2017)')
 
 % Adding regions
 groups = D_reg(:,3);
@@ -141,7 +141,7 @@ hexscatter(D(:,1), D(:,4), ...
 xlabel('PUE (2017) [-]')
 xlim([0,2])
 ylim([0,1])
-ylabel('Manure to Total Input Ratio (2017)')
+ylabel('Proportion of manure-derived P inputs (2017)')
 
 colormap(map);
 colorbar;

@@ -3,7 +3,7 @@ clc, clear
 %% Calculating PUE at the gridscale.
 loadenv('.env')
 % Getting filepaths form .env file
-INPUTfilepath = getenv('TREND_INPUT');
+INPUTfilepath = getenv('POSTPROCESSED_TREND');
 OUTPUTfilepath = getenv('PHOS_USE_EFFICIENCY');
 
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
@@ -13,10 +13,8 @@ livestockFolder = 'Lvst_Agriculture_LU';
 YEARS = 1930:2017;
 
 % Getting metadata for TIFF files
-[~,georef] = readgeoraster([INPUTfilepath, ...
-    'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
-Rinfo = geotiffinfo([INPUTfilepath, ...
-    'CropUptake_Agriculture_Agriculture_LU\CropUptake_1930.tif']);
+[~,georef] = readgeoraster([INPUTfilepath,livestockFolder,'Lvst_1930.tif']);
+Rinfo = geotiffinfo([INPUTfilepath,livestockFolder,'Lvst_1930.tif']);
 
 % Calculate PUE and save the TIFF file
 parpool('local', 12);

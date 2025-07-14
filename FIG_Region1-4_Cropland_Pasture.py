@@ -12,17 +12,17 @@ from rasterstats import zonal_stats
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from dotenv import load_dotenv
 
-# watershd shapefile path
-
-directory = r'B:/LabFiles/users/DanykaByrnes/9_Phosphorus_Use_Efficiency/'
-
-# Set the working directory
-os.chdir(directory)
+load_dotenv()
 
 # Filepaths to shapefile and raster (ESPG 5070)
-shpFile = 'INPUTS_051523/0_General_Data/HUC2/noLakes_merged_HUC2_5070_v3.shp'
-rasterFolders = 'B:/LabFiles/users/DanykaByrnes/3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P_Gridded_Outputs_2023-11-18/'
+Regional_filepath = os.getenv("GENERAL_INPUT")
+TREND_filepath = os.getenv("POSTPROCESSED_TREND")
+PUEDriver_filepath = os.getenv("PUE_DRIVERS")
+
+# Filepaths to shapefile and raster (ESPG 5070)
+shpFile = Regional_filepath + 'HUC2/noLakes_merged_HUC2_5070_v3.shp'
 
 # Read watershed shapefile
 HUC2 = gpd.read_file(shpFile)
@@ -36,8 +36,9 @@ crop_rasterFiles = ['CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1980
 cYear = ['Crop_1930', ' Crop_1980', 'Crop_2017', 'Past_1930', 'Past_1980', 'Past_2017']
 itr = 0
     
+# Initializing the data
 # Pulling the files from individual folders
-rasterFile = rasterFolders+'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1930.tif'
+rasterFile = TREND_filepath+'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1930.tif'
 
 # Reading first file in to initialize
 rf = ra.open(rasterFile)
@@ -56,7 +57,7 @@ n=n.drop(columns=["median"])
 # Loop years you are interested in and extract data         
 for file in crop_rasterFiles:
     itr = itr + 1
-    rasterFile = rasterFolders+file
+    rasterFile = TREND_filepath + file
     rf = ra.open(rasterFile)
     affine = rf.transform
     r = rf.read(1)
@@ -94,4 +95,4 @@ plt.subplot(3,3,1)
 plt.legend()
 
 plt.tight_layout()
-plt.savefig(directory+'OUTPUTS/PUE_drivers/Region_1-4_CropPasture.png')
+plt.savefig(PUEDriver_filepath+'Region_1-4_CropPasture.png')

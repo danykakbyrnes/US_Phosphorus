@@ -10,7 +10,7 @@ load_dot_env(".env")
 # Setting up filepaths
 GenINPUT_folder = Sys.getenv("GENERAL_INPUT")
 RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
-TREND_OUTPUT_folder = Sys.getenv("TREND_INPUT")
+TREND_OUTPUT_folder = Sys.getenv("POSTPROCESSED_TREND")
 PUE_OUTPUT_folder = Sys.getenv("PHOS_USE_EFFICIENCY")
 ASURP_OUTPUT_folder = Sys.getenv("AG_SURPLUS")
 OUTPUT_folder = Sys.getenv("REGIONAL_ANALYSIS")
@@ -20,7 +20,7 @@ ComonentsName = c('Lvsk', 'Fert', 'Crop', 'Ag_Surplus')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
                'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
                'CropUptake_Agriculture_Agriculture_LU/CropUptake_',
-               'Ag_Surplus/AgSurplus_')
+               'Ag_Surplus/Ag_Surplus_')
 
 # read in HUC8 files
 Regions = sf::read_sf(paste0(GenINPUT_folder, RegionalShp_filepath))

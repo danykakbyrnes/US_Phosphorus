@@ -6,14 +6,14 @@ clc, clear, close all
 % ------------------------------------------------------------------------
 runTiffs = 1 ;
 % Read in tif files
-TREND_filepath = getenv('TREND_INPUT');
+TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 OUTPUT_filepath = getenv('COMPONENT_TIMESERIES');
 
-cropFolder = 'CropUptake_Agriculture_Agriculture_LU';
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
-livestockFolder = 'Lvst_Agriculture_LU';
-agsurplusFolder = 'Ag_Surplus';
+cropFolder = 'CropUptake_Agriculture_Agriculture_LU\';
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
+livestockFolder = 'Lvst_Agriculture_LU/';
+agsurplusFolder = 'Ag_Surplus/';
 
 YEARS = 1930:2017;
 % Aesthetic attributes
@@ -28,108 +28,110 @@ plot_dim2 = [50,50,250,225];
 %% Running Code
 
 if runTiffs == 1
-% Reading in Manure Files 
-Livestock_quantiles = zeros(5,length(YEARS));
-Livestock_average = zeros(1,length(YEARS));
-for i = 1:length(YEARS)
-    YEAR_i = YEARS(i);
-    file_lvsk_i = dir([TREND_filepath, livestockFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([TREND_filepath, livestockFolder,'\',file_lvsk_i.name]);
-    
-    % Converting the file
-    Tif_i = single(Tif_i); 
-    
-    Tif_i(Tif_i == 0) = NaN; 
-    Tif_linear = Tif_i(:); 
+    % Reading in Manure Files 
+    Livestock_quantiles = zeros(5,length(YEARS));
+    Livestock_average = zeros(1,length(YEARS));
+    for i = 1:length(YEARS)
+        YEAR_i = YEARS(i);
+        file_lvsk_i = dir([TREND_filepath, livestockFolder,'*_',num2str(YEAR_i),'.tif']);
+        [Tif_i,~] = readgeoraster([TREND_filepath, livestockFolder,file_lvsk_i.name]);
         
-    QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
-    
-    Livestock_quantiles(:,i) = QLV;
-    Livestock_average(1,i) = mean(Tif_linear,'omitnan');
-end
-
-%% Reading in Fetilizer Files 
-Fertilizer_quantiles = zeros(5,length(YEARS));
-Fertilizer_average = zeros(1,length(YEARS));
-
-for i = 1:length(YEARS)
-    YEAR_i = YEARS(i);
-    file_fert_i = dir([TREND_filepath, fertilizerFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([TREND_filepath, fertilizerFolder,'\',file_fert_i.name]);
-    
-    % Converting the file
-    Tif_i = single(Tif_i); 
-    
-    Tif_i(Tif_i == 0) = NaN; 
-    Tif_linear = Tif_i(:); 
+        % Converting the file
+        Tif_i = single(Tif_i); 
         
-    QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
-    
-    Fertilizer_quantiles(:,i) = QLV;
-    Fertilizer_average(1,i) = mean(Tif_linear, 'omitnan');
-end
-
-%% Reading in Crop Files 
-Crop_quantiles = zeros(5,length(YEARS));
-Crop_average = zeros(1,length(YEARS));
-for i = 1:length(YEARS)
-    YEAR_i = YEARS(i);
-    file_fert_i = dir([TREND_filepath, cropFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([TREND_filepath, cropFolder,'\',file_fert_i.name]);
-    
-    % Converting the file
-    Tif_i = single(Tif_i); 
-    
-    Tif_i(Tif_i == 0) = NaN; 
-    Tif_linear = Tif_i(:); 
+        Tif_i(Tif_i == 0) = NaN; 
+        Tif_linear = Tif_i(:); 
+            
+        QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
         
-    QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
+        Livestock_quantiles(:,i) = QLV;
+        Livestock_average(1,i) = mean(Tif_linear,'omitnan');
+    end
     
-    Crop_quantiles(:,i) = QLV;
-    Crop_average(1,i) = mean(Tif_linear, 'omitnan');
-end
-
-%% Reading in Ag Surplus Files 
-AgSurplus_quantiles = zeros(5,length(YEARS));
-for i = 1:length(YEARS)
-    YEAR_i = YEARS(i);
-    file_agsur_i = dir([TREND_filepath,agsurplusFolder,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([TREND_filepath,agsurplusFolder,'\',file_agsur_i.name]);
+    %% Reading in Fetilizer Files 
+    Fertilizer_quantiles = zeros(5,length(YEARS));
+    Fertilizer_average = zeros(1,length(YEARS));
     
-    % Converting the file
-    Tif_i = single(Tif_i); 
-    
-    Tif_i(Tif_i == 0) = NaN; 
-    Tif_linear = Tif_i(:); 
+    for i = 1:length(YEARS)
+        YEAR_i = YEARS(i);
+        file_fert_i = dir([TREND_filepath, fertilizerFolder,'*_',num2str(YEAR_i),'.tif']);
+        [Tif_i,~] = readgeoraster([TREND_filepath, fertilizerFolder,file_fert_i.name]);
         
-    QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
-    
-    AgSurplus_quantiles(:,i) = QLV;
-end
-
-save([OUTPUT_filepath, '\ComponentQuantiles.mat'],'Fertilizer_quantiles','Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles')
-
-
-%% PUE
-PUE_quantiles = zeros(5,length(YEARS));
-for i = 1:length(YEARS)
-    YEAR_i = YEARS(i);
-    file_pue_i = dir([PUEINPUT_filepath,'\*_',num2str(YEAR_i),'.tif']);
-    [Tif_i,~] = readgeoraster([PUEINPUT_filepath,'\',file_pue_i.name]);
-    
-    % Converting the file    
-    Tif_linear = Tif_i(:); 
+        % Converting the file
+        Tif_i = single(Tif_i); 
         
-    QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
+        Tif_i(Tif_i == 0) = NaN; 
+        Tif_linear = Tif_i(:); 
+            
+        QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
+        
+        Fertilizer_quantiles(:,i) = QLV;
+        Fertilizer_average(1,i) = mean(Tif_linear, 'omitnan');
+    end
     
-    PUE_quantiles(:,i) = QLV;
-end
-PUE_mean = Crop_average./(Fertilizer_average+Livestock_average);
-save([OUTPUT_filepath, 'PUE_mean.mat'],'PUE_mean')
-
-save([OUTPUT_filepath, 'ComponentQuantiles.mat'],'Fertilizer_quantiles', ...
-    'Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles', ...
-    'PUE_quantiles')
+    %% Reading in Crop Files 
+    Crop_quantiles = zeros(5,length(YEARS));
+    Crop_average = zeros(1,length(YEARS));
+    for i = 1:length(YEARS)
+        YEAR_i = YEARS(i);
+        file_fert_i = dir([TREND_filepath, cropFolder,'*_',num2str(YEAR_i),'.tif']);
+        [Tif_i,~] = readgeoraster([TREND_filepath, cropFolder,file_fert_i.name]);
+        
+        % Converting the file
+        Tif_i = single(Tif_i); 
+        
+        Tif_i(Tif_i == 0) = NaN; 
+        Tif_linear = Tif_i(:); 
+            
+        QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
+        
+        Crop_quantiles(:,i) = QLV;
+        Crop_average(1,i) = mean(Tif_linear, 'omitnan');
+    end
+    
+    %% Reading in Ag Surplus Files 
+    AgSurplus_quantiles = zeros(5,length(YEARS));
+    for i = 1:length(YEARS)
+        YEAR_i = YEARS(i);
+        file_agsur_i = dir([TREND_filepath,agsurplusFolder,'*_',num2str(YEAR_i),'.tif']);
+        [Tif_i,~] = readgeoraster([TREND_filepath,agsurplusFolder,file_agsur_i.name]);
+        
+        % Converting the file
+        Tif_i = single(Tif_i); 
+        
+        Tif_i(Tif_i == 0) = NaN; 
+        Tif_linear = Tif_i(:); 
+            
+        QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
+        
+        AgSurplus_quantiles(:,i) = QLV;
+    end
+    
+    save([OUTPUT_filepath, '\ComponentQuantiles.mat'], ...
+        'Fertilizer_quantiles','Crop_quantiles', ...
+        'Livestock_quantiles','AgSurplus_quantiles')
+    
+    
+    %% PUE
+    PUE_quantiles = zeros(5,length(YEARS));
+    for i = 1:length(YEARS)
+        YEAR_i = YEARS(i);
+        file_pue_i = dir([PUEINPUT_filepath,'\*_',num2str(YEAR_i),'.tif']);
+        [Tif_i,~] = readgeoraster([PUEINPUT_filepath,'\',file_pue_i.name]);
+        
+        % Converting the file    
+        Tif_linear = Tif_i(:); 
+            
+        QLV = quantile(Tif_linear, [0.05, 0.25,0.5,0.75, 0.95]);
+        
+        PUE_quantiles(:,i) = QLV;
+    end
+    PUE_mean = Crop_average./(Fertilizer_average+Livestock_average);
+    save([OUTPUT_filepath, 'PUE_mean.mat'],'PUE_mean')
+    
+    save([OUTPUT_filepath, 'ComponentQuantiles.mat'],'Fertilizer_quantiles', ...
+        'Crop_quantiles','Livestock_quantiles','AgSurplus_quantiles', ...
+        'PUE_quantiles')
 end
 
 %% Timeseries plots

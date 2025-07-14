@@ -7,8 +7,12 @@ Created on Thu May  8 15:31:02 2025
 
 import pandas as pd
 import matplotlib.pyplot as plt
+from dotenv import load_dotenv
 
-file = 'B:/LabFiles/users/DanykaByrnes/9_Phosphorus_Use_Efficiency/OUTPUTS/PUE_drivers/'
+load_dotenv()
+
+# Filepaths to shapefile and raster (ESPG 5070)
+Regional_filepath = os.getenv("PUE_DRIVERS")
 
 sheetNames = ['Table11', 'Table12', # corn
               'Table17', 'Table18', # cotton 
@@ -16,7 +20,8 @@ sheetNames = ['Table11', 'Table12', # corn
               'Table29', 'Table30'] # wheat
 sheet = 'Table11' 
 for sheet in sheetNames:
-    T = pd.read_excel(file+'fertilizeruse_ersdata.xlsx', sheet_name=sheet)
+    T = pd.read_excel(Regional_filepath+'fertilizeruse_ersdata.xlsx',
+                      sheet_name=sheet)
     T.dropna(how='all', inplace=True)
     sheet_item = T.columns[0]
    
@@ -39,7 +44,7 @@ for sheet in sheetNames:
 
     T_all.drop(T_all.loc[T_all['Year']==2018].index, inplace=True)
     
-T_all.to_csv(file+'fertilizeruse_ersdata_reformatted.csv',
+T_all.to_csv(Regional_filepath+'fertilizeruse_ersdata_reformatted.csv',
              index=False)
 #%%  Filter data for specified state
 State_Name = 'Illinois'

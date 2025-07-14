@@ -2,18 +2,17 @@ clc, clear
 
 % Read in gif files
 OUTPUTfilepath = getenv('QUADRANT_ANALYSIS');
-TRENDfilepath = getenv('TREND_INPUT');
+TRENDfilepath = getenv('POSTPROCESSED_TREND');
 PUEFolder = getenv('PHOS_USE_EFFICIENCY');
 CUMSUMFolder = getenv('CUMULATIVE_PHOS');
 
-% Getting raster information
-[D_empty,georef] = readgeoraster([TRENDfilepath,'Surplus_P\Surplus_P_1930.tif']);
-Rinfo = geotiffinfo([TRENDfilepath,'Surplus_P\Surplus_P_1930.tif']);
+% Getting metadata for TIFF files
+[~,georef] = readgeoraster([TRENDfilepath,'Lvst_Agriculture_LU/Lvst_1930.tif']);
+Rinfo = geotiffinfo([TRENDfilepath,'Lvst_Agriculture_LU/Lvst_1930.tif']);
 
 % Setting bounds of quadrant
 loadstar_CumSum = 0; 
 loadstar_PUE = 1;
-
 
 [PUE2017,~] = readgeoraster([PUEfilepath, 'PUE_2017.tif']);
 [CS2017,~] = readgeoraster([CUMSUMfilepath,'CumSum_2017.tif']);

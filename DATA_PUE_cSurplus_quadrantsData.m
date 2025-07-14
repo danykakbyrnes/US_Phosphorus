@@ -5,11 +5,12 @@ loadenv('.env')
 
 % Getting filepaths form .env file
 OUTPUTfilepath = getenv('QUADRANT_ANALYSIS');
-TRENDfilepath = getenv('TREND_INPUT');
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
-livestockFolder = 'Lvst_Agriculture_LU/';
+TRENDfilepath = getenv('POSTPROCESSED_TREND');
 PUEFolder = getenv('PHOS_USE_EFFICIENCY');
 CUMSUMFolder = getenv('CUMULATIVE_PHOS');
+
+fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
+livestockFolder = 'Lvst_Agriculture_LU/';
 
 % These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.

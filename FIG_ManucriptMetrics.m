@@ -7,7 +7,7 @@ OUTPUT_folderName = getenv('OUTPUT');
 QuadrantINPUT_folderName = getenv('QUADRANT_ANALYSIS');
 RegionalINPUT_filepath = getenv('REGIONAL_ANALYSIS');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
-TRENDfilepath = getenv('TREND_INPUT');
+TRENDfilepath = getenv('POSTPROCESSED_TREND');
 
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
