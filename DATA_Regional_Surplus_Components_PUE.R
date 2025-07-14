@@ -66,12 +66,12 @@ for (a in 1:length(Components)) {
   }
   colnames(MeanRegion)[1] ="REG"
   write.table(MeanRegion, 
-              file = paste0(OUTPUT_folder,ComponentsName[a],'_meanRegionComponents.txt'), 
+              file = paste0(OUTPUT_folder,ComponentsName[a],'_meanRegion.txt'), 
               row.names = FALSE)
   
   colnames(MedianRegion) = colnames(MeanRegion)
   write.table(MedianRegion, 
-              file = paste0(OUTPUT_folder,ComponentsName[a],'_medianRegionComponents.txt'), 
+              file = paste0(OUTPUT_folder,ComponentsName[a],'_medianRegion.txt'), 
               row.names = FALSE)
 }
 
@@ -115,10 +115,10 @@ for (i in 1:length(YEARS)) {
   }
   colnames(MeanRegion)[1] ="REG"
   write.table(MeanRegion, 
-              file = paste0(OUTPUT_folder,'PUE_meanRegion_fromgrid.txt'), 
+              file = paste0(OUTPUT_folder,'PUE_meanRegion.txt'),
               row.names = FALSE)
   
   colnames(MedianRegion) = colnames(MeanRegion)
   write.table(MedianRegion, 
-              file = paste0(OUTPUT_folder,'PUE_medianRegion_fromgrid.txt'), 
+              file = paste0(OUTPUT_folder,'PUE_medianRegion.txt'), 
               row.names = FALSE)

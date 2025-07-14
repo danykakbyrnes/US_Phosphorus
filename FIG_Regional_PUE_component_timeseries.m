@@ -23,13 +23,13 @@ c = '#007a0c';
 YEARS = 1930:2017;
 
 %% Opening files
-MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianHUC2Components.txt']);
+MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianRegion.txt']);
 MANURE_AGHA = sortrows(MANURE_AGHA,'descend');
 
-FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianHUC2Components.txt']);
+FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianRegion.txt']);
 FERT_AGHA = sortrows(FERT_AGHA,'descend');
 
-CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
+CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianRegion.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
 % Read in land use
@@ -92,7 +92,7 @@ save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'REGLU')
 save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'REGAgHA')
 
 %% Calculating PUE and combined inputs
-REG_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
+REG_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianRegion.txt']);
 REG_PUE = sortrows(REG_PUE,1,'descend');
 
 for i = 1:height(REG_PUE)

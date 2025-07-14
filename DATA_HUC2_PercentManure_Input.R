@@ -1,31 +1,30 @@
-# Clipping HUC2 Watershed to P components
-library(foreach)
-library(doParallel)
-library(snow)
+# Clipping Proportion of total inputs from manure to each region
 library(raster)
 library(tidyverse)
 library(sf)
 library(terra)
 
-setwd("B:/LabFiles/users/DanykaByrnes/")
+load_dot_env()
+
+# Setting the years of analysis
+YEARS = c(1980, 2017)
 
 # Setting up filepaths
-YEARS = 1930:2017
+Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
+INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
+OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
+RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
 
-INPUT_folders = '9_Phosphorus_Use_Efficiency/INPUTS_051523/'
-OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
-PSURPLUS_OUTPUT_folders = '3_TREND_Nutrients/TREND_Nutrients/OUTPUT/Grid_TREND_P_Version_1/TREND-P_Postpocessed_Gridded_2023-11-18/'
-HUC2_loc = '0_General_Data/HUC2/'
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
                'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
                'CropUptake_Agriculture_Agriculture_LU/CropUptake_')
-OUTPUT_folders = '9_Phosphorus_Use_Efficiency/OUTPUTS/HUC2/'
 
-# read in HUC8 files
-HUC2 = sf::read_sf(paste0(INPUT_folders, '0_General_Data/HUC2/merged_HUC2_5070_v3.shp'))
-Comp_extc = data.frame()
-Comp_extc2 = data.frame()
+# read in Region shapefile
+Regions = sf::read_sf(paste0(Regional_filepath, RegionalShp_filepath))
+
+MeanRegion = data.frame()
+MedianRegion = data.frame()
 
   for (i in 1:length(YEARS)) {
     Lvstk_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[1], YEARS[i],'.tif')
@@ -36,34 +35,33 @@ Comp_extc2 = data.frame()
     Fert_tif = terra::rast(Fert_tif_folders) # NaN are treated same was as NA.
     Crop_tif = terra::rast(Crop_tif_folders) # NaN are treated same was as NA.
     
-    PCT_MANU_IN = Lvstk_tif/(Fert_tif+Lvstk_tif)
-    for (j in 1:dim(HUC2)[1]) {
+    for (j in 1:dim(Regions)[1]) {
       
-      clipped_raster = terra::crop(PCT_MANU_IN,extent(HUC2[j,]))
+      clipped_raster = terra::crop(PCT_MANU_IN,extent(Regions[j,]))
       temp2 = terra::extract(clipped_raster, 
-                             HUC2[j,],
+                             Regions[j,],
                              fun=mean,
                              na.rm=TRUE)
       
-      Comp_extc[j,1] = HUC2[j,]$REG
-      Comp_extc[j,i+1] = temp2[2]
+      MeanRegion[j,1] = Regions[j,]$REG
+      MeanRegion[j,i+1] = temp2[2]
       
-      medianMask = terra::mask(clipped_raster, HUC2[j,], inverse=FALSE)
+      medianMask = terra::mask(clipped_raster, Regions[j,], inverse=FALSE)
       maskDf1 = as.data.frame(medianMask)
       temp3 = apply(maskDf1,2,median)
-      Comp_extc2[j,1] = HUC2[j,]$REG
-      Comp_extc2[j,i+1] = temp3
+      MedianRegion[j,1] = Regions[j,]$REG
+      MedianRegion[j,i+1] = temp3
     }
   }
   ColNames = c(1930:2017)
-  colnames(Comp_extc)[1] ="REG"
-  colnames(Comp_extc)[2:ncol(Comp_extc)] = ColNames
-  write.table(Comp_extc, 
-              file = paste0(OUTPUT_folders,'PCT_Manure_In_meanHUC2_fromgrid.txt'),
+  colnames(MeanRegion)[1] ="REG"
+  colnames(MeanRegion)[2:ncol(MeanRegion)] = ColNames
+  write.table(MeanRegion, 
+              file = paste0(OUTPUT_folders,'Prop_Manure_In_meanRegion.txt'),
               row.names = FALSE)
-  colnames(Comp_extc2)[1] ="REG"
-  colnames(Comp_extc2)[2:ncol(Comp_extc2)] = ColNames
-  write.table(Comp_extc2, 
-              file = paste0(OUTPUT_folders,'PCT_Manure_In_medianHUC2_fromgrid.txt'),
+  colnames(MedianRegion)[1] ="REG"
+  colnames(MedianRegion)[2:ncol(MedianRegion)] = ColNames
+  write.table(MedianRegion, 
+              file = paste0(OUTPUT_folders,'Prop_Manure_In_medianRegion.txt'),
               row.names = FALSE)
   

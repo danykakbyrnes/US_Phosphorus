@@ -16,10 +16,9 @@ INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
 OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
 RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
 
-# read in HUC8 files
+# read in Region shapefile
 Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
-Comp_extc = data.frame()
-Comp_extc2 = data.frame()
+MedianRegion = data.frame()
 
   for (i in 1:length(YEARS)) {
     tif_folders = paste0(INPUT_folders, 'CumSum_', YEARS[i],'.tif')
@@ -33,13 +32,13 @@ Comp_extc2 = data.frame()
                               na.rm = TRUE) # this removes all NaNs
       temp3 = median(unlist(maskDf1), na.rm = TRUE)
       
-      Comp_extc2[j,1] = Regions[j,]$REG
-      Comp_extc2[j,i+1] = temp3
+      MedianRegion[j,1] = Regions[j,]$REG
+      MedianRegion[j,i+1] = temp3
     }
   }
   
 # Save median  
-colnames(Comp_extc2) = c("REG", "CumSum_1980", "CumSum_2017")
-write.table(Comp_extc2, 
-            file = paste0(OUTPUT_folders,'CumSum_medianHUC2_fromgrid.txt'), 
+colnames(MedianRegion) = c("REG", "CumSum_1980", "CumSum_2017")
+write.table(MedianRegion, 
+            file = paste0(OUTPUT_folders,'CumuSum_medianRegion.txt'), 
             row.names = FALSE)

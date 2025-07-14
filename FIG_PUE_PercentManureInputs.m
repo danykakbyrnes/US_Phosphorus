@@ -43,21 +43,21 @@ D = [PUE2017_v, LVSTK2017_v, FERT2017_v,...
      LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
 
 % Regional data
-PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianRegion_fromgrid.txt']);
-PCT_MANU = readmatrix([INPUT_filepath,'PCT_Manure_In_medianRegion_fromgrid.txt']);
+PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianRegion.txt']);
+Prop_MANU = readmatrix([INPUT_filepath,'Prop_Manure_In_medianRegion.txt']);
 
 % Isolate 2017
 YEARS = 1930:2017;
-PCT_MANU = PCT_MANU(:,[1, find(YEARS == 2017)+1]);
-PCT_MANU(1,:) = [];
-PCT_MANU = sortrows(PCT_MANU,'ascend');
+Prop_MANU = Prop_MANU(:,[1, find(YEARS == 2017)+1]);
+Prop_MANU(1,:) = [];
+Prop_MANU = sortrows(Prop_MANU,'ascend');
 
 PUE_AGHA = PUE_AGHA(:,[1, find(YEARS == 2017)+1]);
 PUE_AGHA = sortrows(PUE_AGHA,'ascend');
 
 % Insert a column in indexes that are sequential for 
 % plotting and do not correspond to region numbers.
-D_reg = [PUE_AGHA, PCT_MANU(:,2), [1:size(PUE_AGHA,1)]'];
+D_reg = [PUE_AGHA, Prop_MANU(:,2), [1:size(PUE_AGHA,1)]'];
 regionID = {'9';'8';'7';'6';'5';...
     '4';'3';'2';'1'};
 

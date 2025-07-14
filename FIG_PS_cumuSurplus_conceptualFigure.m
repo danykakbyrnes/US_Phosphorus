@@ -12,8 +12,8 @@ REGIONAL_filepath = getenv('REGIONAL_ANALYSIS');
 [SURP2017,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\Ag_Surplus_2017.tif']);
 
 % Reading in regional medians
-SURPcumu_AGHA = readmatrix([REGIONAL_filepath, 'CumSum_medianRegion_fromgrid.txt']);
-AGS_AGHA = readmatrix([REGIONAL_filepath, 'Ag_Surplus_medianRegionComponents.txt']);
+SURPcumu_AGHA = readmatrix([REGIONAL_filepath, 'CumSum_medianRegion.txt']);
+AGS_AGHA = readmatrix([REGIONAL_filepath, 'Ag_Surplus_medianRegion.txt']);
 
 % Figure aesthetic
 plot_dim = [100,100,400,350];

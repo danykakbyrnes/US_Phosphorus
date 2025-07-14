@@ -26,12 +26,12 @@ RegCol =  [228,26,28; % region 9
 mSize = 10; 
 
 %% Reading in data
-PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianHUC2_fromgrid.txt']);
-AGS_AGHA = readmatrix([INPUT_filepath,'Ag_Surplus_medianHUC2Components.txt']);
+PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianRegion.txt']);
+AGS_AGHA = readmatrix([INPUT_filepath,'Ag_Surplus_medianRegion.txt']);
 
 % Importing the gridded data
-[SURP,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\Ag_Surplus_2017.tif']);
 [PUE,~] = readgeoraster([PUE_filepath, 'PUE_2017.tif']);
+[SURP,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\Ag_Surplus_2017.tif']);
 
 % Making the grid cells the same between 1980 and 2017
 nanMask = isnan(PUE) | isnan(SURP);

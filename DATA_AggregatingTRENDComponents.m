@@ -1,6 +1,7 @@
-%% Calculating PUE at the gridscale.
-%
-%
+%% Aggregating the raw gTREND files
+% We use the raw gTREND components and aggregate the different components
+% into groups that we use for analysis.
+
 clc, clear
 
 % Read in gif files
@@ -25,7 +26,6 @@ mkdir([OUTPUT_filepath, folderName])
 
  delete(gcp('nocreate')); % Close any pools that might already be running
  parpool('local',workers);
- YEARS = [1930:2017];
 parfor i = 1:length(YEARS)
    YEAR_i = YEARS(i); 
    D = D_empty;
@@ -35,7 +35,7 @@ parfor i = 1:length(YEARS)
         [A,~] = readgeoraster([INPUT_filepath, folder_j,'\',file_j.name]);
         D = A + D; 
     end
-    geotiffwrite([LVSTK_filepath, folderName,'Lvst_',...
+    geotiffwrite([OUTPUT_filepath, folderName,'Lvst_',...
     num2str(YEAR_i),'.tif'], D, georef, ...
         'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
         'TiffTags',struct('Compression',Tiff.Compression.LZW));
@@ -59,12 +59,14 @@ for j = 1:length(CROP_files)
     [A,~] = readgeoraster([INPUT_filepath, folder_j,'\',file_j.name]);
     D = A + D; 
 end
-geotiffwrite([CROP_filepath, folderName,'CropUptake_',...
+geotiffwrite([OUTPUT_filepath, folderName,'CropUptake_',...
 num2str(YEAR_i),'.tif'], D, georef, ...
     'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
     'TiffTags',struct('Compression',Tiff.Compression.LZW));
 end
-%% Agriculture Fertilizer -- moving gTREND tiff to new folder
+%% Agriculture Fertilizer
+% Agricultural fertilizer does not need aggregation. We are just moving it
+% to the project folder. 
 
 delete(gcp('nocreate')); % Close any pools that might already be running
 parpool('local',workers);
@@ -75,7 +77,7 @@ files = dir([INPUT_filepath,folderName, '\*.tif']);
 
 parfor i = 1:length(files)
 [A,~] = readgeoraster([INPUT_filepath, folderName,'\',files(i).name]);
-geotiffwrite([FERT_filepath, folderName,'\',files(i).name], A, georef, ...
+geotiffwrite([OUTPUT_filepath, folderName,'\',files(i).name], A, georef, ...
 'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
 'TiffTags',struct('Compression',Tiff.Compression.LZW));
 end
