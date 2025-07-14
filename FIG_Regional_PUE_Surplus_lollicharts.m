@@ -7,7 +7,6 @@ clc, clear, close all
 % Filepaths
 loadenv(".env")
 OUTPUT_folderName = getenv('REGIONAL_ANALYSIS');
-CUMSUM_folderName = getenv('CUMULATIVE_PHOS');
 
 %% Aesthetics
 YEARS = 1930:2017;

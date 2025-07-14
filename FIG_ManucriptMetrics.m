@@ -8,6 +8,7 @@ QuadrantINPUT_folderName = getenv('QUADRANT_ANALYSIS');
 RegionalINPUT_filepath = getenv('REGIONAL_ANALYSIS');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 TRENDfilepath = getenv('POSTPROCESSED_TREND');
+CUMSUM_folderName = getenv('CUMULATIVE_PHOS');
 
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
 livestockFolder = 'Lvst_Agriculture_LU';
@@ -90,29 +91,29 @@ fprintf(fileID,'MANU - National median 2017: %.1f (5th-95th: %.1f-%.1f) \n\n', .
 % 3.2 Phosphorus use efficiency
 % -------------------------------------------------------------------------
 % National PUE metrics
-PUE_Median_HUC2 = readtable([RegionalINPUT_filepath, ...
-    'PUE_medianHUC2_fromgrid.txt']);
+PUE_Median_Region = readtable([RegionalINPUT_filepath, ...
+    'PUE_medianRegion.txt']);
 
 % Regional Indexes for PUE
-REG_1_idx = find(PUE_Median_HUC2.REG == 17);
-REG_2_idx = find(PUE_Median_HUC2.REG == 14);
-REG_3_idx = find(PUE_Median_HUC2.REG == 12);
-REG_4_idx = find(PUE_Median_HUC2.REG == 10);
-REG_5_idx = find(PUE_Median_HUC2.REG == 8);
-REG_6_idx = find(PUE_Median_HUC2.REG == 7);
-REG_7_idx = find(PUE_Median_HUC2.REG == 3);
-REG_8_idx = find(PUE_Median_HUC2.REG == 2);
-REG_9_idx = find(PUE_Median_HUC2.REG == 1);
+REG_1_idx = find(PUE_Median_Region.REG == 1);
+REG_2_idx = find(PUE_Median_Region.REG == 2);
+REG_3_idx = find(PUE_Median_Region.REG == 3);
+REG_4_idx = find(PUE_Median_Region.REG == 4);
+REG_5_idx = find(PUE_Median_Region.REG == 5);
+REG_6_idx = find(PUE_Median_Region.REG == 6);
+REG_7_idx = find(PUE_Median_Region.REG == 7);
+REG_8_idx = find(PUE_Median_Region.REG == 8);
+REG_9_idx = find(PUE_Median_Region.REG == 9);
 
 fprintf(fileID,'3.2 Phosphorus use efficiency \n'); 
 fprintf(fileID,['----------------------------------------------------' ...
     '-----------------------------------------\n']);
 fprintf(fileID,'Region 6: 2017: %.3f \n', ...
-    PUE_Median_HUC2{REG_6_idx, end});
+    PUE_Median_Region{REG_6_idx, end});
 fprintf(fileID,'Region 7, 8 and 9: 2017: %.1f, %.1f, and %.1f \n', ...
-    [PUE_Median_HUC2{REG_7_idx, end}, ...
-    PUE_Median_HUC2{REG_8_idx, end}, ...
-    PUE_Median_HUC2{REG_9_idx, end}]);
+    [PUE_Median_Region{REG_7_idx, end}, ...
+    PUE_Median_Region{REG_8_idx, end}, ...
+    PUE_Median_Region{REG_9_idx, end}]);
 
 fprintf(fileID,'Median PUE 2017: %.3f (IQR: %.3f-%.3f) \n\n', ...
     PUE_quantiles(3,end), ...
@@ -135,32 +136,32 @@ fprintf(fileID,'Median PUE 2017: %.3f (IQR: %.3f-%.3f) \n\n', ...
     PUE_quantiles(4,end));
 
 fprintf(fileID,'Region 7 2017 PUE: %.3f \n', ...
-    PUE_Median_HUC2{REG_7_idx, end});
+    PUE_Median_Region{REG_7_idx, end});
 
 fprintf(fileID,'Region 8 2017 PUE: %.3f \n', ...
-    PUE_Median_HUC2{REG_8_idx, end});
+    PUE_Median_Region{REG_8_idx, end});
 
 fprintf(fileID,'Region 2 2017 PUE: %.3f \n', ...
-    PUE_Median_HUC2{REG_2_idx, end});
+    PUE_Median_Region{REG_2_idx, end});
 
 fprintf(fileID,'Region 3 2017 PUE: %.3f \n', ...
-    PUE_Median_HUC2{REG_3_idx, end});
+    PUE_Median_Region{REG_3_idx, end});
 %% ------------------------------------------------------------------------
 % 3.3 Annual phosphorus surplus 
 % -------------------------------------------------------------------------
-AgS_Median_HUC2 = readtable([RegionalINPUT_filepath, ...
-    'Ag_Surplus_medianHUC2Components.txt']);
+AgS_Median_Region = readtable([RegionalINPUT_filepath, ...
+    'Ag_Surplus_medianRegion.txt']);
 
 % Regional Indexes for Ag Surplus
-REG_1_idx = find(AgS_Median_HUC2.REG == 17);
-REG_2_idx = find(AgS_Median_HUC2.REG == 14);
-REG_3_idx = find(AgS_Median_HUC2.REG == 12);
-REG_4_idx = find(AgS_Median_HUC2.REG == 10);
-REG_5_idx = find(AgS_Median_HUC2.REG == 8);
-REG_6_idx = find(AgS_Median_HUC2.REG == 7);
-REG_7_idx = find(AgS_Median_HUC2.REG == 3);
-REG_8_idx = find(AgS_Median_HUC2.REG == 2);
-REG_9_idx = find(AgS_Median_HUC2.REG == 1);
+REG_1_idx = find(AgS_Median_Region.REG == 1);
+REG_2_idx = find(AgS_Median_Region.REG == 2);
+REG_3_idx = find(AgS_Median_Region.REG == 3);
+REG_4_idx = find(AgS_Median_Region.REG == 4);
+REG_5_idx = find(AgS_Median_Region.REG == 5);
+REG_6_idx = find(AgS_Median_Region.REG == 6);
+REG_7_idx = find(AgS_Median_Region.REG == 7);
+REG_8_idx = find(AgS_Median_Region.REG == 8);
+REG_9_idx = find(AgS_Median_Region.REG == 9);
 
 fprintf(fileID,'3.3 Annual phosphorus surplus\n');
 fprintf(fileID,['----------------------------------------------------' ...
@@ -180,45 +181,44 @@ fprintf(fileID,'Median Ag Surplus 2017: %.3f (IQR: %.3f-%.3f) \n\n', ...
     AgSurplus_quantiles(4,end));
 
 fprintf(fileID,'Region 5 Dec. in PS from 1980 to 2017: %.2f\n', ...
-    AgS_Median_HUC2{REG_5_idx,idx_1980+1} - AgS_Median_HUC2{REG_5_idx, end});
+    AgS_Median_Region{REG_5_idx,idx_1980+1} - AgS_Median_Region{REG_5_idx, end});
 fprintf(fileID,'Region 6 Dec. in PS from 1980 to 2017: %.2f\n\n', ...
-    AgS_Median_HUC2{REG_6_idx,idx_1980+1} - AgS_Median_HUC2{REG_6_idx, end});
+    AgS_Median_Region{REG_6_idx,idx_1980+1} - AgS_Median_Region{REG_6_idx, end});
 
 %% -------------------------------------------------------------------------
 % 3.4 Cumulative Agricultural Surplus 
 % -------------------------------------------------------------------------
 % Regional Cumulative Ag surplus. The format of the text file is different
 % than other files because it was run seperately.
-CSfilepath =  ['..\OUTPUTS\Cumulative_Phosphorus\'];
-CS_Median_HUC2 = readtable([RegionalINPUT_filepath, 'CumSum_medianHUC2_fromgrid.txt']);
+CS_Median_Region = readtable([RegionalINPUT_filepath, 'CumSum_medianRegion.txt']);
 
 % Regional Indexes for PUE
-REG_1_idx = find(CS_Median_HUC2.REG == 17);
-REG_2_idx = find(CS_Median_HUC2.REG == 14);
-REG_3_idx = find(CS_Median_HUC2.REG == 12);
-REG_4_idx = find(CS_Median_HUC2.REG == 10);
-REG_5_idx = find(CS_Median_HUC2.REG == 8);
-REG_6_idx = find(CS_Median_HUC2.REG == 7);
-REG_7_idx = find(CS_Median_HUC2.REG == 3);
-REG_8_idx = find(CS_Median_HUC2.REG == 2);
-REG_9_idx = find(CS_Median_HUC2.REG == 1);
+REG_1_idx = find(CS_Median_Region.REG == 1);
+REG_2_idx = find(CS_Median_Region.REG == 2);
+REG_3_idx = find(CS_Median_Region.REG == 3);
+REG_4_idx = find(CS_Median_Region.REG == 4);
+REG_5_idx = find(CS_Median_Region.REG == 5);
+REG_6_idx = find(CS_Median_Region.REG == 6);
+REG_7_idx = find(CS_Median_Region.REG == 7);
+REG_8_idx = find(CS_Median_Region.REG == 8);
+REG_9_idx = find(CS_Median_Region.REG == 9);
 
-AgS_REG_3_idx = find(AgS_Median_HUC2.REG == 12);
-AgS_REG_6_idx = find(AgS_Median_HUC2.REG == 7);
+AgS_REG_3_idx = find(AgS_Median_Region.REG == 12);
+AgS_REG_6_idx = find(AgS_Median_Region.REG == 7);
 
 fprintf(fileID,'3.4 Cumulative Agricultural Surplus\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
 fprintf(fileID,'Region 7 (2017): %.1f \n', ...
-    CS_Median_HUC2{REG_7_idx, end});
+    CS_Median_Region{REG_7_idx, end});
 fprintf(fileID,'Region 8 (2017): %.1f \n', ...
-    CS_Median_HUC2{REG_8_idx, end});
+    CS_Median_Region{REG_8_idx, end});
 
 fprintf(fileID, 'Region 3 (2017) surplus and cumu surplus: %.2f kg/ha/y, %.2f kg/ha \n', ...
-    [AgS_Median_HUC2{AgS_REG_3_idx, end}, ...
-    CS_Median_HUC2{REG_3_idx, end}]);
+    [AgS_Median_Region{AgS_REG_3_idx, end}, ...
+    CS_Median_Region{REG_3_idx, end}]);
 fprintf(fileID,'Region 6 (2017) surplus and cumu surplus: %.2f kg/ha/y, %.2f kg/ha \n', ...
-    [AgS_Median_HUC2{AgS_REG_6_idx, end}, ...
-    CS_Median_HUC2{REG_6_idx, end}]);
+    [AgS_Median_Region{AgS_REG_6_idx, end}, ...
+    CS_Median_Region{REG_6_idx, end}]);
 
 % Reading in agricultural surplus 2017
 [AgSurp_tif,~] = readgeoraster([TRENDfilepath,agSFolder,'\AgSurplus_2017.tif']);
@@ -231,7 +231,7 @@ Neg_AgLand = length(idx_neg)/(length(idx_pos)+length(idx_neg));
 Pos_AgLand = length(idx_pos)/(length(idx_pos)+length(idx_neg));
 
 % Cumulative P Surplus in 2017
-[CS_2017,~] = readgeoraster([CSfilepath,'CumSum_2017.tif']);
+[CS_2017,~] = readgeoraster([CUMSUM_folderName,'CumSum_2017.tif']);
 CS_2017_v = CS_2017(:);
 CS_2017_v(isnan(CS_2017_v)) = []; % Removing all non-ag land. 
 
