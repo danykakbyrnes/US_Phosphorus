@@ -4,11 +4,6 @@ The following scripts are used to recreate data and figures required for the pap
 
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
-## To do
-1. Move agricultural surplus code to P surplus repo (and fix DATA_Regional_Surplus_Components_PUE.r, FIG_ManucriptMetrics.m, FIG_National_Timeseries_Plots.m,  FIG_PS_cumuSurplus_conceptualFigure.m)
-2. Change HUc2 file name to Regions
-3. Change script so regions numbers match the manuscript
-
 ## Data Source
 - **gTREND-phosphorus data**: Available at [XX - update with actual URL]
 
@@ -47,23 +42,36 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 - **Output**: Annual (1930-2017) geospatial TIF files of cumulative surplus (summation of manure P inputs, fertilizer P inputs, and crop P removal). Maps in Figure 7 are produced in QGIS.  
 - **Language**: MATALB  
 
-#### `DATA_HUC2_Surplus_Components_PUE.R`
-- **Purpose**: Extracts HUC2 watershed-level surplus, components, and PUE.  
+#### `DATA_Regional_Surplus_Components_PUE.R`
+- **Purpose**: Extacts regional-level surplus, components, and PUE.  
 - **Input**: gTREND components, agricultural surplus, and PUE TIF files.  
-- **Output**: Text file of annual mean and median statistics (1930-2017) by HUC2 watershed for P components, agricultural surplus, and PUE.  
+- **Output**: Text file of annual mean and median statistics (1930-2017) by region for P components, agricultural surplus, and PUE.  
 - **Language**: R  
 	
-#### `DATA_HUC2_CumultativeSurplus.R`
-- **Purpose**: Extracts HUC2 watershed-level cumulative surplus.  
+#### `DATA_Regional_CumultativeSurplus.R`
+- **Purpose**: Extacts regional-level cumulative surplus.  
 - **Input**: Cumulative surplus 1980 and 2017 TIF files.  
-- **Output**: Text file containing mean and median cumulative surplus statistics by HUC2 watershed for 1980 and 2017.  
+- **Output**: Text file containing mean and median cumulative surplus statistics by region  for 1980 and 2017.  
 - **Language**: R  
 
-#### `DATA_HUC2_AgrLandUse_clip.R`
-- **Purpose**: Extacts HUC2 watershed-level agricultural land use.  
+#### `DATA_Regional_AgrLandUse.R`
+- **Purpose**: Extacts regional-level agricultural land use.  
 - **Input**: Annual agricultural land use TIF files.  
-- **Output**: Text file of percent agricultural land use (1930-2017) by HUC2 watershed.  
+- **Output**: Text file of percent agricultural land use (1930-2017) by region.  
 - **Language**: R  
+
+#### `DATA_Regional_ProportionManure_Input`
+- **Purpose**: Extacts regional-level proportion of total P-input from manure inputs.
+- **Input**: Annual agricultural land use TIF files.  
+- **Output**: Text file of percent agricultural land use (1930-2017) by region.  
+- **Language**: R  
+
+
+#### `DATA_PUE_cSurplus_quadrantsData.m`
+- **Purpose**: Categorizes agricultural parcels for framework analysis.  
+- **Input**: PUE and cumulative surplus TIF files for 1980 and 2017.  
+- **Output**: Matlab file with vectorized grid-cell in 1980 and 2017.
+- **Language**: MATLAB  
 
 #### `DATA_PUEcSurplus_typologyMaps.m`
 - **Purpose**: Categorizes agricultural parcels for framework analysis.  
@@ -78,7 +86,7 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 - **Input**: TIF files of categorized land use parcels in 1980 and 2017.  
 - **Language**: Python  
 
-#### `ANA_Region_5_6_Surplus.py`
+#### `ANA_Region5_Region6_Surplus.py`
 	**Do i use this one??**
 
 #### `ANA_Region1-4_CropFertilizerUse.py`
@@ -86,7 +94,7 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 - **Input**: Mosheim, R. (2025). Fertilizer Use and Price - Documentation and Data Sources. https://www.ers.usda.gov/data-products/fertilizer-use-and-price/documentation-and-data-sources
 - **Language**: Python  
 
-#### `ANA_Region3_Region8_Comparison.py`
+#### `ANA_Region3_Region8_PUE.py`
 - **Purpose**: Analysis of 2017 PUE distribution in Region 3 and 8 used in Section 3.2 (Supplemental Figure 2).   
 - **Input**: gTREND 2017 crop and pasture P removal TIF files.
 - **Language**: Python  
@@ -99,10 +107,10 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 - **Output**: **Figures 1j-i and 5b** - Plots showing national median, IQR, and 5th-95th percentile for PUE and surplus. 
 - **Language**: MATLAB
 
-#### `FIG_PUE_PercentManureInputs.m`
+#### `FIG_PUE_ProportionManureInputs.m`
 - **Purpose**: Generates figure of PUE versus the proportion of manure-derived phosphorus inputs.  
-- **Input**: National TIF files and regional HUC2 medians of manure P, fertilizer P, and PUE data.  
-- **Output**: **Figure 2d** - PUE vs. proportion of manure-derived P inputs (hexplot or scatter plot).  
+- **Input**: National TIF files and regional medians of manure P, fertilizer P, and PUE data.  
+- **Output**: **Figure 2d** - PUE vs. proportion of manure-derived P inputs (hexplot or scatter plot). Using function 'hexscatter.m'. 
 - **Requirements**: >64GB RAM for hexplot generation. Scatter plot can be used as an alternative if hexplot function cannot be run.
 - **Language**: MATLAB  
 
@@ -115,7 +123,7 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 #### `FIG_PUEcSurplus_frameworkQuadrants.m`
 - **Purpose**: Generates figures for framework quadrant analysis and transitions of land parcels betwen 1980 and 2017. 
 - **Input**: Gridded PUE and cumulative surplus TIF files and regional medians in 1980 and 2017.
-- **Output**: **Figures 8b, 8e-f** - Quadrant plots and Sankey diagram; .mat file of vectorized data.  
+- **Output**: **Figures 8b, 8e-f** - Quadrant plots and Sankey diagram; .mat file of vectorized data.  Uses function 'plotSankeyFlowChart.m'.
 - **Language**: MATLAB
 
 #### `FIG_quadrantDrivers.m`
@@ -133,7 +141,7 @@ not created yet, it's in the gTREND folder but I should move it to this code fol
 
 #### `FIG_Regional_PUE_component_timeseries.m`
 - **Purpose**: Generates regional time series of PUE, manure, fertilizer, and crop removal.
-- **Input**: HUC2 watershed-level median PUE, component, and agricultural land use percentage data.
+- **Input**: Regional median PUE, component, and agricultural land use percentage data.
 - **Output**: **Figures 3 and 4** - Time series of PUE, components and agricultural land use.  
 - **Language**: MATLAB
 
