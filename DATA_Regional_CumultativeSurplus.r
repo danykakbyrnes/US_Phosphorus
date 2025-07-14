@@ -5,19 +5,19 @@ library(sf)
 library(terra)
 library(dotenv)
 
-load_dot_env(".env")
+load_dot_env()
 
 # Setting the years of analysis
 YEARS = c(1980, 2017)
 
 # Setting up filepaths
-GenINPUT_folders = Sys.getenv("GENERAL_INPUT")
+Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
 INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
 OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
-RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
+RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
 
 # read in HUC8 files
-Regions = sf::read_sf(paste0(GenINPUT_folders, RegionalShp_filepath))
+Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 Comp_extc = data.frame()
 Comp_extc2 = data.frame()
 

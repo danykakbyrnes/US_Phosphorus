@@ -1,16 +1,19 @@
 clc, clear, close all
 
+% Filepaths
+loadenv(".env")
 OUTPUT_filepath = getenv('SURPLUS_CUMUSURP');
 CUMSUM_filepath = getenv('CUMULATIVE_PHOS');
 TREND_filepath = getenv('POSTPROCESSED_TREND');
+REGIONAL_filepath = getenv('REGIONAL_ANALYSIS');
 
 % reading in gridded data
 [CS2017,~] = readgeoraster([CUMSUM_filepath,'CumSum_2017.tif']);
 [SURP2017,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\Ag_Surplus_2017.tif']);
 
 % Reading in regional medians
-SURPcumu_AGHA = readmatrix('..\OUTPUTS\HUC2\CumSum_medianHUC2_fromgrid.txt');
-AGS_AGHA = readmatrix('..\OUTPUTS\HUC2\Ag_Surplus_medianHUC2Components.txt');
+SURPcumu_AGHA = readmatrix([REGIONAL_filepath, 'CumSum_medianRegion_fromgrid.txt']);
+AGS_AGHA = readmatrix([REGIONAL_filepath, 'Ag_Surplus_medianRegionComponents.txt']);
 
 % Figure aesthetic
 plot_dim = [100,100,400,350];

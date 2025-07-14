@@ -2,6 +2,7 @@ clc, clear
 
 %% Finding the distribution of dominant manure inputs (vs. tot fertilizer) 
 % Filepaths
+loadenv(".env")
 OUTPUT_filepath = getenv('PUE_DRIVERS');
 INPUT_filepath = getenv('REGIONAL_ANALYSIS');
 TREND_filepath = getenv('POSTPROCESSED_TREND');
@@ -42,8 +43,8 @@ D = [PUE2017_v, LVSTK2017_v, FERT2017_v,...
      LVSTK2017_v./(FERT2017_v+LVSTK2017_v)];
 
 % Regional data
-PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianHUC2_fromgrid.txt']);
-PCT_MANU = readmatrix([INPUT_filepath,'PCT_Manure_In_medianHUC2_fromgrid.txt']);
+PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianRegion_fromgrid.txt']);
+PCT_MANU = readmatrix([INPUT_filepath,'PCT_Manure_In_medianRegion_fromgrid.txt']);
 
 % Isolate 2017
 YEARS = 1930:2017;

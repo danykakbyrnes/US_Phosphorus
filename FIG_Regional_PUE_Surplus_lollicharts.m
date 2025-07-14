@@ -5,6 +5,7 @@ clc, clear, close all
 % ------------------------------------------------------------------------
 
 % Filepaths
+loadenv(".env")
 OUTPUT_folderName = getenv('REGIONAL_ANALYSIS');
 CUMSUM_folderName = getenv('CUMULATIVE_PHOS');
 
@@ -71,7 +72,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_small)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_PUE_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_PUE_LolliChart.png'];
 print('-dpng','-r600', Figfolderpath)
 
 %% Plotting surplus lollichart
@@ -113,7 +114,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Surplus_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_Surplus_LolliChart.png'];
 print('-dpng','-r600', Figfolderpath)
 
 %% Plotting proportion of manure-derived P inputs regional lolli chart
@@ -159,19 +160,14 @@ set(a,'YColor',[0,0,0])
 set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_2)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_Pct_Manure_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_Pct_Manure_LolliChart.png'];
 
 %% Cumulative surplus lolli chart
-YEARS = 1930:2017;
 fontSize_p = 10;
 
-regionID = {'9';'8';'7';'6';'5';...
-    '4';'3';'2';'1'};
-
 % Plotting regional cumulative surplus lolli chart
-SURPcumu_AGHA = readmatrix([CUMSUM_folderName, 'CumSum_medianHUC2_fromgrid.txt']);
-SURPcumu_AGHA = SURPcumu_AGHA(2:end, :);
-SURPcumu_AGHA = sortrows(SURPcumu_AGHA,'ascend');
+SURPcumu_AGHA = readmatrix([OUTPUT_folderName, 'CumSum_medianHUC2_fromgrid.txt']);
+SURPcumu_AGHA = sortrows(SURPcumu_AGHA, 'descend');
 SURPcumu_AGHA = [SURPcumu_AGHA, [1:size(SURPcumu_AGHA,1)]'];
 
 % Isolate 1980 and 2017
@@ -211,5 +207,5 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim)
 
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_median_cumuSurplus_LolliChart.png'];
+Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_cumuSurplus_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])

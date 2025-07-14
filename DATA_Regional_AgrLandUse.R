@@ -7,13 +7,12 @@ library(dotenv)
 load_dot_env(".env")
 
 # Setting up filepaths
-GenINPUT_folders = Sys.getenv("GENERAL_INPUT")
+Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
 LUINPUT_folders = Sys.getenv("LANDUSE_INPUT")
 OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
-RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
 
 # Read in Region shapefile files
-Regions = sf::read_sf(paste0(GenINPUT_folders, RegionalShp_filepath))
+Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 files = dir(LUINPUT_folders)
 
 YEARS = 1930:2017

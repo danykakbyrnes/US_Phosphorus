@@ -1,6 +1,7 @@
 clc, clear
 
-% Read in gif files
+% Filepaths
+loadenv(".env")
 OUTPUTfilepath = getenv('QUADRANT_ANALYSIS');
 TRENDfilepath = getenv('POSTPROCESSED_TREND');
 PUEFolder = getenv('PHOS_USE_EFFICIENCY');

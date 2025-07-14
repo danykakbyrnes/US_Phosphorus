@@ -4,7 +4,7 @@ clc, clear, close all
 %   Read in each tif file, vetorize and take the median, and quanties per
 %   year. 
 % ------------------------------------------------------------------------
-runTiffs = 1 ; % or load 'ComponentQuantiles.mat'
+runTiffs = 1 ; % 
 
 % Filepaths
 loadenv(".env")
@@ -109,7 +109,7 @@ if runTiffs == 1
         AgSurplus_quantiles(:,i) = QLV;
     end
     
-    save([OUTPUT_filepath, 'ComponentQuantiles.mat'], ...
+    save([OUTPUT_filepath, '\ComponentQuantiles.mat'], ...
         'Fertilizer_quantiles','Crop_quantiles', ...
         'Livestock_quantiles','AgSurplus_quantiles')
     

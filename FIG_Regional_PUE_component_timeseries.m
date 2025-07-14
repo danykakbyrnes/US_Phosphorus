@@ -4,8 +4,8 @@ clc, clear, close all
 % This uses the median components and PUE of all grid cells within the
 % region.
 % ------------------------------------------------------------------------
-
-% filepaths
+% Filepaths
+loadenv(".env")
 OUTPUT_folderName = getenv('REGIONAL_ANALYSIS');
 
 %% Plot aesthetics
@@ -33,74 +33,74 @@ CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianHUC2Components.txt']);
 CROP_AGHA = sortrows(CROP_AGHA,'descend');
 
 % Read in land use
-HUCLU_diso = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
+RegionalLU = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
 
 %% Gap filling regional LU trajectories
-unHUC = unique(HUCLU_diso(:,1)); 
-for i = 1:length(unHUC)
+uniqueRegions = unique(RegionalLU(:,1)); 
+for i = 1:length(uniqueRegions)
     
-    HUCLU_i = HUCLU_diso(find(HUCLU_diso(:,1) == unHUC(i)),:);
+    RegionLU_i = RegionalLU(find(RegionalLU(:,1) == uniqueRegions(i)),:);
     
     for j = 1:length(YEARS)
        YEAR_j = YEARS(j);
        
         if YEAR_j <= 1938
             % Use 1938
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 1938),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == 1938),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == 1938),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == 1938),3)*(250*250)/10^4;
         elseif YEAR_j > 1938 && YEAR_j < 2006
             % Use the individual year
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == YEAR_j),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == YEAR_j),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == YEAR_j),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == YEAR_j),3)*(250*250)/10^4;
         elseif YEAR_j >= 2006 && YEAR_j < 2008
             % Use 2006
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2006),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == 2006),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == 2006),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == 2006),3)*(250*250)/10^4;
         elseif  YEAR_j >= 2008 && YEAR_j < 2011
             % Use 2008
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2008),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == 2008),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == 2008),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == 2008),3)*(250*250)/10^4;
         elseif  YEAR_j >= 2011 && YEAR_j < 2013
             % Use 2011
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2011),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == 2011),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == 2011),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == 2011),3)*(250*250)/10^4;
         elseif  YEAR_j >= 2013 && YEAR_j < 2016
             % Use 2013
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2013),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == 2013),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == 2013),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == 2013),3)*(250*250)/10^4;
         elseif  YEAR_j >= 2016
             % Use 2016
-            LUFrac = HUCLU_i(find(HUCLU_i(:,2) == 2016),end);
-            AgLand = HUCLU_i(find(HUCLU_i(:,2) == 2016),3)*(250*250)/10^4;
+            LUFrac = RegionLU_i(find(RegionLU_i(:,2) == 2016),end);
+            AgLand = RegionLU_i(find(RegionLU_i(:,2) == 2016),3)*(250*250)/10^4;
         end
 
-    HUCLU(i,1) = unHUC(i);
-    HUCLU(i,j+1) = LUFrac;
+    REGLU(i,1) = uniqueRegions(i);
+    REGLU(i,j+1) = LUFrac;
     
-    HUCAgHA(i,1) = unHUC(i);
-    HUCAgHA(i,j+1) = AgLand; % in hectares
+    REGAgHA(i,1) = uniqueRegions(i);
+    REGAgHA(i,j+1) = AgLand; % in hectares
 
     end
     
 end
 
-% Sort from largest HUC ID to smallers 
-HUCLU = sortrows(HUCLU,1,'descend');
-HUCAgHA = sortrows(HUCAgHA,1,'descend');
+% Sort from largest Region ID to smallers 
+REGLU = sortrows(REGLU,1,'descend');
+REGAgHA = sortrows(REGAgHA,1,'descend');
 
-save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'HUCLU')
-save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'HUCAgHA')
+save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'REGLU')
+save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'REGAgHA')
 
 %% Calculating PUE and combined inputs
-HUC_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
-HUC_PUE = sortrows(HUC_PUE,1,'descend');
+REG_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianHUC2_fromgrid.txt']);
+REG_PUE = sortrows(REG_PUE,1,'descend');
 
-for i = 1:height(HUC_PUE)
-% FIGURE 4: TIMESERIES OF PUE ACROSS HUC REGIONS
+for i = 1:height(REG_PUE)
+% FIGURE 4: TIMESERIES OF PUE ACROSS REGIONS
     figure(1) 
     subplot(3,3,i)
     yyaxis right
-    movmeanAGLAND = movmean(HUCLU(i,2:end),smoothing_int)*100;
+    movmeanAGLAND = movmean(REGLU(i,2:end), smoothing_int)*100;
     X = [YEARS, fliplr(YEARS)];
     Y = [zeros(1,length(YEARS)), fliplr(movmeanAGLAND)];
     pgon = polyshape(X,Y);
@@ -120,7 +120,7 @@ for i = 1:height(HUC_PUE)
     yyaxis left
     plot([1930,2017], [1,1], ':k', 'LineWidth',0.5)
     hold on
-    movmeanPUE = movmean(HUC_PUE(i,2:end),smoothing_int);
+    movmeanPUE = movmean(REG_PUE(i,2:end),smoothing_int);
     plot(YEARS, movmeanPUE, '-', 'LineWidth',2.5,'Color', '#42233A')
     plot(YEARS, movmeanPUE, '-', 'LineWidth',1, 'Color', '#8C4A7A')
     xlim([1930,2017])
@@ -166,17 +166,17 @@ for i = 1:height(HUC_PUE)
                 169, 205, 225]./255;
   
    subplot(3,3,i)
-   movmeanCrop = movmean(CROP_AGHA(i,2:end),smoothing_int);
+   movmeanCrop = movmean(CROP_AGHA(i,2:end), smoothing_int);
    plot(YEARS, movmeanCrop,'-k', 'LineWidth',2.5, 'Color', lineColor(1,:)) 
    hold on
    plot(YEARS, movmeanCrop,'-k', 'LineWidth',1, 'Color', faceColor(1,:)) 
    
-   movmeanManure = movmean(MANURE_AGHA(i,2:end),smoothing_int);
+   movmeanManure = movmean(MANURE_AGHA(i,2:end), smoothing_int);
    plot(YEARS,movmeanManure,'-k', 'LineWidth', 2.5, 'Color', lineColor(2,:)) 
    hold on
    plot(YEARS,movmeanManure,'-k', 'LineWidth',1, 'Color', faceColor(2,:)) 
    
-   movmeanFertilizer = movmean(FERT_AGHA(i,2:end),smoothing_int);
+   movmeanFertilizer = movmean(FERT_AGHA(i,2:end), smoothing_int);
    plot(YEARS, movmeanFertilizer,'-k', 'LineWidth', 2.5, 'Color', lineColor(3,:)) 
    hold on
    plot(YEARS,movmeanFertilizer,'-k', 'LineWidth', 1, 'Color', faceColor(3,:)) 
@@ -200,10 +200,10 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/HUC_PUE_grid_panel_median.png'];
+Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(2)
 set(gcf, 'Position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'HUCFigures/Component_grid_timeseries_median.png'];
+Figfolderpath = [OUTPUT_folderName,'Regional_Figures/Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])

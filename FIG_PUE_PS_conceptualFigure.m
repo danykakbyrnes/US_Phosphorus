@@ -2,6 +2,7 @@ clc, clear, close all
 
 %% Creating the Surplus v. PUE scatter plot figure. 
 % Filepaths
+loadenv(".env")
 INPUT_filepath = getenv('REGIONAL_ANALYSIS');
 TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUE_filepath = getenv('PHOS_USE_EFFICIENCY');

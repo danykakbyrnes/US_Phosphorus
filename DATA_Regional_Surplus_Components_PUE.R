@@ -5,11 +5,10 @@ library(sf)
 library(terra)
 library(dotenv)
 
-load_dot_env(".env")
+load_dot_env()
 
 # Setting up filepaths
-GenINPUT_folder = Sys.getenv("GENERAL_INPUT")
-RegionalShp_filepath = 'HUC2/merged_HUC2_5070_v3.shp'
+Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
 TREND_OUTPUT_folder = Sys.getenv("POSTPROCESSED_TREND")
 PUE_OUTPUT_folder = Sys.getenv("PHOS_USE_EFFICIENCY")
 ASURP_OUTPUT_folder = Sys.getenv("AG_SURPLUS")
@@ -22,15 +21,15 @@ Components = c('Lvst_Agriculture_LU/Lvst_',
                'CropUptake_Agriculture_Agriculture_LU/CropUptake_',
                'Ag_Surplus/Ag_Surplus_')
 
-# read in HUC8 files
-Regions = sf::read_sf(paste0(GenINPUT_folder, RegionalShp_filepath))
+# read in Region shapefile files
+Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 
 YEARS = 1930:2017
 for (a in 1:length(Components)) {
   
   # Creating empty dataframe to populate
-  MeanHUC2 = data.frame()
-  MedianHUC2 = data.frame()
+  MeanRegion = data.frame()
+  MedianRegion = data.frame()
   
   for (i in 1:length(YEARS)) {
     tif_folder = paste0(TREND_OUTPUT_folder, Components[a], YEARS[i],'.tif')
@@ -67,12 +66,12 @@ for (a in 1:length(Components)) {
   }
   colnames(MeanRegion)[1] ="REG"
   write.table(MeanRegion, 
-              file = paste0(OUTPUT_folder,ComponentsName[a],'_meanHUC2Components.txt'), 
+              file = paste0(OUTPUT_folder,ComponentsName[a],'_meanRegionComponents.txt'), 
               row.names = FALSE)
   
   colnames(MedianRegion) = colnames(MeanRegion)
   write.table(MedianRegion, 
-              file = paste0(OUTPUT_folder,ComponentsName[a],'_medianHUC2Components.txt'), 
+              file = paste0(OUTPUT_folder,ComponentsName[a],'_medianRegionComponents.txt'), 
               row.names = FALSE)
 }
 
@@ -116,10 +115,10 @@ for (i in 1:length(YEARS)) {
   }
   colnames(MeanRegion)[1] ="REG"
   write.table(MeanRegion, 
-              file = paste0(OUTPUT_folder,'PUE_meanHUC2_fromgrid.txt'), 
+              file = paste0(OUTPUT_folder,'PUE_meanRegion_fromgrid.txt'), 
               row.names = FALSE)
   
   colnames(MedianRegion) = colnames(MeanRegion)
   write.table(MedianRegion, 
-              file = paste0(OUTPUT_folder,'PUE_medianHUC2_fromgrid.txt'), 
+              file = paste0(OUTPUT_folder,'PUE_medianRegion_fromgrid.txt'), 
               row.names = FALSE)
