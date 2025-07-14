@@ -84,12 +84,9 @@ for i = 1:length(uniqueRegions)
     
 end
 
-% Sort from largest Region ID to smallers 
+% Sort the regions
 REGLU = sortrows(REGLU,1,'descend');
 REGAgHA = sortrows(REGAgHA,1,'descend');
-
-save([OUTPUT_folderName, 'HUC2_AgLandUse.mat'],'REGLU')
-save([OUTPUT_folderName, 'HUC2_AgLandUse_ha.mat'],'REGAgHA')
 
 %% Calculating PUE and combined inputs
 REG_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianRegion.txt']);

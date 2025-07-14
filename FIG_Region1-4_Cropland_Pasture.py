@@ -22,12 +22,12 @@ TREND_filepath = os.getenv("POSTPROCESSED_TREND")
 PUEDriver_filepath = os.getenv("PUE_DRIVERS")
 
 # Filepaths to shapefile and raster (ESPG 5070)
-shpFile = Regional_filepath + 'HUC2/noLakes_merged_HUC2_5070_v3.shp'
+shpFile = Regional_filepath + 'Regions/HUC2_Merged_Regions.shp' #noLakes_merged_HUC2_5070_v3
 
 # Read watershed shapefile
-HUC2 = gpd.read_file(shpFile)
-HUC2 = HUC2.set_index("REG")
-HUC2.sort_values(by='REG', ascending=False, inplace=True)
+Regions = gpd.read_file(shpFile)
+Regions = Regions.set_index("REG")
+Regions.sort_values(by='REG', ascending=False, inplace=True)
 crop_rasterFiles = ['CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1980.tif', 
                     'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_2017.tif',
                     'CropUptake_Pasture_Agriculture_LU/CropUptake_Pasture_1930.tif', 
@@ -48,10 +48,10 @@ r = rf.read(1)
 r[r == 0] = np.nan
 
 # Initializing the dataframe
-n = zonal_stats(HUC2, r, affine=affine, stats="median")
+n = zonal_stats(Regions, r, affine=affine, stats="median")
 n = pd.DataFrame(n)
 n["{}".format(cYear[itr])]=n["median"]
-n=n.set_index(HUC2.index)
+n=n.set_index(Regions.index)
 n=n.drop(columns=["median"])
     
 # Loop years you are interested in and extract data         
@@ -62,7 +62,7 @@ for file in crop_rasterFiles:
     affine = rf.transform
     r = rf.read(1)
     r[r == 0] = np.nan
-    df = zonal_stats(HUC2, r, affine=affine, stats="median")
+    df = zonal_stats(Regions, r, affine=affine, stats="median")
     df = pd.DataFrame(df)
     n["{}".format(cYear[itr])] = df['median'].values
     
