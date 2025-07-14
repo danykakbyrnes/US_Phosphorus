@@ -26,10 +26,10 @@ idx_2017 = find(YEARS == 2017);
 
 PUE_AGHA_TS = PUE_AGHA ;
 PUE_AGHA = PUE_AGHA(:,[1, idx_1980+1, idx_2017+1]);
-PUE_AGHA = sortrows(PUE_AGHA,'ascend');
+PUE_AGHA = sortrows(PUE_AGHA,'descend');
 
 AGS_AGHA = AGS_AGHA(:,[1, idx_1930+1, idx_1980+1, idx_2017+1]);
-AGS_AGHA = sortrows(AGS_AGHA, 1, 'ascend');
+AGS_AGHA = sortrows(AGS_AGHA, 1, 'descend');
 
 % Insert a column in indexes that are sequential of region numbers.
 PUE_AGHA = [PUE_AGHA, [1:size(PUE_AGHA,1)]'];

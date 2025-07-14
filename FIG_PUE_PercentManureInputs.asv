@@ -15,8 +15,8 @@ livestockFolder = 'Lvst_Agriculture_LU\';
 % Figure aesthetics 
 fontSize_p = 11;
 fontSize_p2 = 8; 
-plot_dim = [200,200,400,400];
-plot_dim_2 = [200,200,450,425]; 
+plot_dim = [200,200,400,200];
+plot_dim_2 = [200,200,400,425]; 
 
 % Loading in data
 [LVSTK2017,georef] = readgeoraster([TREND_filepath, livestockFolder,...
@@ -67,7 +67,7 @@ colorMap = [96,96,96;
             175, 175, 175;
             255, 255, 255]./255;
 
-map = interp1([0;50;100], colorMap, linspace(100,0,248),'pchip');
+map = interp1([0;50;100], colorMap,linspace(100,0,248),'pchip');
 
 % Scatter plot version of gridded data
 close all
@@ -130,7 +130,7 @@ set(gcf,'position',plot_dim_2)
 hold off;
 set(gcf,'position',[200,200,400,400])
 Figfolderpath = [OUTPUT_filepath,'PropManureTotalInput_scatterplot_withRegions.png'];
-print('-dpng','-r600',Figfolderpath)
+print('-dpng','-r600',[Figfolderpath])
 
 %% Hex and bin plots
 close all
@@ -146,7 +146,7 @@ ylabel('Proportion of manure-derived P inputs (2017)')
 
 colormap(map);
 colorbar;
-clim([0, 8*10^4]);
+caxis([0, 8*10^4]);
 
 box on
 set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
@@ -155,6 +155,11 @@ set(gca,'FontSize',fontSize_p,'LineStyleOrderIndex',3, ...
 set(gca,'XColor',[0,0,0])
 set(gca,'YColor',[0,0,0])
 set(gca,'ZColor',[0,0,0])
+
+set(gcf,'position',plot_dim_2)
+
+Figfolderpath = [OUTPUT_filepath,'manure_totalInput_hexplot.png'];
+print('-dpng','-r600',[Figfolderpath])
 
 % Adding regions
 groups = D_reg(:,3);
@@ -178,6 +183,6 @@ end
 xlim([0,2])
 
 %hold off;
-set(gcf,'position',plot_dim_2)
+set(gcf,'position',[200,200,450,425])
 Figfolderpath = [OUTPUT_filepath,'PropManureTotalInput_hexplot_withRegions.png'];
-print('-dpng','-r600',Figfolderpath)
+print('-dpng','-r600',[Figfolderpath])

@@ -19,7 +19,7 @@ load_dotenv()
 # Filepaths to shapefile and raster (ESPG 5070)
 Regional_filepath = os.getenv("GENERAL_INPUT")
 AgSURP_filepath = os.getenv("POSTPROCESSED_TREND")
-AgSURP_raster = AgSURP_filepath + 'Ag_Surplus/AgSurplus_2017.tif'
+AgSURP_raster = AgSURP_filepath + 'Ag_Surplus/Ag_Surplus_2017.tif'
 
 shpFile = Regional_filepath + 'Regions/HUC2_Merged_Regions.shp' #noLakes_merged_HUC2_5070_v3
 
