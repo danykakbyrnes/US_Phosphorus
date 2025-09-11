@@ -29,13 +29,6 @@ These scripts must be executed first to generate the required data files for sub
 - **Output**: Annual (1930-2017) geospatial TIF files of PUE (ratio of crop P removal to total manure P and fertilizer P inputs). Maps in Figure 2 are produced in QGIS.  
 - **Language**: MATLAB  
 
-#### `DATA_AgriculturalSurplus.m`
-not created yet, it's in the gTREND folder but I should move it to this code folder
-- **Purpose**:  
-- **Input**:  
-- **Output**: Maps in Figure 5 are produced in QGIS.  
-- **Language**: MATLAB  
-
 #### `DATA_CumulativePhosphorusSurplus_gridded.m`
 - **Purpose**: Generates gridded cumulative phosphorus surplus data.  
 - **Input**: gTREND data layers (annual fertilizer P input, manure P input, and crop P removal TIF files).  

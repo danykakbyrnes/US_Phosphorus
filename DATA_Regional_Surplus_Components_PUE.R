@@ -11,7 +11,6 @@ load_dot_env()
 Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
 TREND_OUTPUT_folder = Sys.getenv("POSTPROCESSED_TREND")
 PUE_OUTPUT_folder = Sys.getenv("PHOS_USE_EFFICIENCY")
-ASURP_OUTPUT_folder = Sys.getenv("AG_SURPLUS")
 OUTPUT_folder = Sys.getenv("REGIONAL_ANALYSIS")
 
 # Select which gTREND components to be clipped. 
@@ -25,6 +24,8 @@ Components = c('Lvst_Agriculture_LU/Lvst_',
 Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 
 YEARS = 1930:2017
+
+dir.create(OUTPUT_folder)
 for (a in 1:length(Components)) {
   
   # Creating empty dataframe to populate

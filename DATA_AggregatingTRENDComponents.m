@@ -3,13 +3,14 @@
 % into groups that we use for analysis.
 
 clc, clear
+loadenv('.env')
 
 % Read in gif files
 INPUT_filepath = getenv('TREND_INPUT');
 OUTPUT_filepath =  getenv('POSTPROCESSED_TREND');
 
 YEARS = [1930:2017];
-workers = 12; % Changed based on your available CPU cores
+workers = 8; % Changed based on your available CPU cores
 
 % Initializing the rasters.
 [D_empty,georef] = readgeoraster([INPUT_filepath,'Fertilizer_Agriculture_Agriculture_LU\Fertilizer_Ag_1930.tif']);
