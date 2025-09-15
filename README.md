@@ -5,7 +5,7 @@ The following scripts are used to recreate data and figures required for the pap
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
 ## Data Source
-- **gTREND-phosphorus data**: Available at [XX - update with actual URL]
+- **gTREND-phosphorus data**: Available at on Figshare (DOI forthcoming)
 
 ## Usage Instructions
 In all cases, set working directory to project root.
@@ -142,7 +142,7 @@ These scripts must be executed first to generate the required data files for sub
 
 #### `FIG_ManucriptMetrics.m`
 - **Purpose**: Compiles all numerical metrics reported in the manuscript.  
-- **Input**: **  
+- **Input**:  .mat Component quadrant summary, .mat file of vectorized data .txt of region median PUE, agricultural surplus, and cumulative surplus, .mat file of vectorized data, regional quadrant .txt.
 - **Output**: Text file of all the statistics and metrics reported in the manucript.  
 - **Language**: MATLAB
 
