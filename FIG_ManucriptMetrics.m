@@ -273,7 +273,7 @@ Reg_Quadrants = readmatrix([QuadrantINPUT_folderName,'Regional_Quadrants_2017.tx
 
 % Regional Indexes for PUE
 REG_1_idx = find(Reg_Quadrants(:,1) == 1);
-REG_2_idx = find(Reg_Quadrants(:,1) == 2);git add
+REG_2_idx = find(Reg_Quadrants(:,1) == 2);
 REG_3_idx = find(Reg_Quadrants(:,1) == 3);
 REG_4_idx = find(Reg_Quadrants(:,1) == 4);
 REG_5_idx = find(Reg_Quadrants(:,1) == 5);
