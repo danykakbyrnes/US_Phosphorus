@@ -8,17 +8,20 @@ Created on Thu May  8 15:31:02 2025
 import pandas as pd
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 # Filepaths to shapefile and raster (ESPG 5070)
 Regional_filepath = os.getenv("PUE_DRIVERS")
+os.makedirs(Regional_filepath, exist_ok=True)
 
 sheetNames = ['Table11', 'Table12', # corn
               'Table17', 'Table18', # cotton 
               'Table23', 'Table24', # soybeans
               'Table29', 'Table30'] # wheat
 sheet = 'Table11' 
+
 for sheet in sheetNames:
     T = pd.read_excel(Regional_filepath+'fertilizeruse_ersdata.xlsx',
                       sheet_name=sheet)

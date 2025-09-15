@@ -11,8 +11,9 @@ YEARS = c(1980, 2017)
 
 # Setting up filepaths
 Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
-INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
+INPUT_folders = Sys.getenv("POSTPROCESSED_TREND")
 OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
+
 RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
 
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
@@ -27,9 +28,9 @@ MeanRegion = data.frame()
 MedianRegion = data.frame()
 
   for (i in 1:length(YEARS)) {
-    Lvstk_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[1], YEARS[i],'.tif')
-    Fert_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[2], YEARS[i],'.tif')
-    Crop_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[3], YEARS[i],'.tif')
+    Lvstk_tif_folders = paste0(INPUT_folders, Components[1], YEARS[i],'.tif')
+    Fert_tif_folders = paste0(INPUT_folders, Components[2], YEARS[i],'.tif')
+    Crop_tif_folders = paste0(INPUT_folders, Components[3], YEARS[i],'.tif')
     
     Lvstk_tif = terra::rast(Lvstk_tif_folders) # NaN are treated same was as NA.
     Fert_tif = terra::rast(Fert_tif_folders) # NaN are treated same was as NA.

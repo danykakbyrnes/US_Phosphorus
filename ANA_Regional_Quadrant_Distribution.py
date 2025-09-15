@@ -14,6 +14,8 @@ import numpy as np
 from shapely.geometry import mapping
 from dotenv import load_dotenv
 
+load_dotenv()
+
 # Filepaths to shapefile and raster (ESPG 5070)
 Regional_filepath = os.getenv("GENERAL_INPUT")
 Quadrant_filepath = os.getenv("QUADRANT_ANALYSIS")

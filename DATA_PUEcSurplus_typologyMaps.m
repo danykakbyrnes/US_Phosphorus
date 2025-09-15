@@ -15,13 +15,11 @@ Rinfo = geotiffinfo([TRENDfilepath,'Lvst_Agriculture_LU/Lvst_1930.tif']);
 loadstar_CumSum = 0; 
 loadstar_PUE = 1;
 
-[PUE2017,~] = readgeoraster([TRENDfilepath, 'PUE/PUE_2017.tif']);
-[CS2017,~] = readgeoraster([TRENDfilepath, ...
-                            'Cumulative_Phosphorus/CumSum_2017.tif']);
+[PUE2017,~] = readgeoraster([PUEFolder, 'PUE/PUE_2017.tif']);
+[CS2017,~] = readgeoraster([CUMSUMFolder, 'CumSum_2017.tif']);
 
-[PUE1980,~] = readgeoraster([TRENDfilepath, 'PUE/PUE_1980.tif']);
-[CS1980,~] = readgeoraster([TRENDfilepath, ...
-                            'Cumulative_Phosphorus/CumSum_1980.tif']);
+[PUE1980,~] = readgeoraster([PUEFolder, 'PUE/PUE_1980.tif']);
+[CS1980,~] = readgeoraster([CUMSUMFolder, 'CumSum_1980.tif']);
 
 % Making the grid cells the same between 1980 and 2017
 nanMask = isnan(PUE2017) | isnan(CS2017) | isnan(PUE1980) | isnan(CS1980);
