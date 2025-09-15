@@ -14,7 +14,6 @@ YEARS = c(1980, 2017)
 Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
 INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
 OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
-RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
 
 # read in Region shapefile
 Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))

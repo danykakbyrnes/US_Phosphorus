@@ -14,8 +14,8 @@ PUE_OUTPUT_folder = Sys.getenv("PHOS_USE_EFFICIENCY")
 OUTPUT_folder = Sys.getenv("REGIONAL_ANALYSIS")
 
 # Select which gTREND components to be clipped. 
-ComonentsName = c('Lvsk', 'Fert', 'Crop', 'Ag_Surplus')
-Components = c('Lvst_Agriculture_LU/Lvst_', 
+ComponentsName = c('Lvsk', 'Fert', 'Crop', 'Ag_Surplus')
+Components = c('Lvst_Agriculture_LU/Lvst_',
                'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
                'CropUptake_Agriculture_Agriculture_LU/CropUptake_',
                'Ag_Surplus/Ag_Surplus_')
@@ -37,32 +37,33 @@ for (a in 1:length(Components)) {
     R = terra::rast(tif_folder)
     
     # Replacing 0s with NA becaus we don't want 0s in our calculation
-    temp = values(R)
-    temp = as.matrix(temp)
-    temp[temp == 0] = NA
-    temp = as.data.frame(temp)
-    values(R) = temp
-
+    #temp = values(R)
+    #temp = as.matrix(temp)
+    #temp[temp == 0] = NA
+    #temp = as.data.frame(temp)
+    #values(R) = temp
+    R[R == 0] <- NA
+    
     for (j in 1:dim(Regions)[1]) {
-        # Calculating the mean for jth region
-        mean_val = terra::extract(R, 
-                                  Regions[j,],
-                                  fun=mean,
-                                  na.rm=TRUE)
-        MeanRegion[j,1] = Regions[j,]$REG
-        MeanRegion = mean_val[2]
-        
-        # Calculating the median for jth region
-        RegionMask = terra::mask(R,
+      # Calculating the mean for jth region
+      mean_val = terra::extract(R, 
+                                Regions[j,],
+                                fun=mean,
+                                na.rm=TRUE)
+      MeanRegion[j,1] = Regions[j,]$REG
+      MeanRegion[j,i+1] = mean_val[2]
+      
+      # Calculating the median for jth region
+      RegionMask = terra::mask(R,
                                Regions[j,],
                                inverse=FALSE)
-        maskDF = as.data.frame(RegionMask, 
-                               na.rm = TRUE) # removes all NaNs
-        median_val = median(unlist(maskDF), 
-                            na.rm = TRUE)
-        
-        MedianRegion[j,1] = Regions[j,]$REG
-        MedianRegion[j,i+1] = median_val
+      maskDF = as.data.frame(RegionMask, 
+                             na.rm = TRUE) # removes all NaNs
+      median_val = median(unlist(maskDF), 
+                          na.rm = TRUE)
+      
+      MedianRegion[j,1] = Regions[j,]$REG
+      MedianRegion[j,i+1] = median_val
     }
   }
   colnames(MeanRegion)[1] ="REG"
@@ -84,42 +85,43 @@ MedianRegion = data.frame()
 for (i in 1:length(YEARS)) {
   tif_folder = paste0(PUE_OUTPUT_folder, 'PUE_', YEARS[i],'.tif')
   R = terra::rast(tif_folder)
+  
+  # Removing 0s (PUE doesn't have 0 values, but implementing as a fail safe)
+  #temp = values(R)
+  #temp = as.matrix(temp)
+  #temp[temp == 0] = NA
+  #temp = as.data.frame(temp)
+  #values(R) = temp
+  R[R == 0] <- NA
+  
+  for (j in 1:dim(Regions)[1]) {
+    # Calculating the mean for jth region
+    mean_val = terra::extract(R, 
+                              Regions[j,],
+                              fun=mean,
+                              na.rm=TRUE)
+    MeanRegion[j,1] = Regions[j,]$REG
+    MeanRegion[j,i+1] = mean_val[2]
     
-    # Removing 0s (PUE doesn't have 0 values, but implementing as a fail safe)
-    temp = values(R)
-    temp = as.matrix(temp)
-    temp[temp == 0] = NA
-    temp = as.data.frame(temp)
-    values(R) = temp
-    
-    for (j in 1:dim(Regions)[1]) {
-      # Calculating the mean for jth region
-      mean_val = terra::extract(R, 
-                                Regions[j,],
-                                fun=mean,
-                                na.rm=TRUE)
-      MeanRegions[j,1] = Regions[j,]$REG
-      MeanRegions[j,i+1] = mean_val[2]
-      
-      # Calculating the median for jth region
-      RegionMask = terra::mask(R,
+    # Calculating the median for jth region
+    RegionMask = terra::mask(R,
                              Regions[j,],
                              inverse=FALSE)
-      maskDF = as.data.frame(RegionMask, 
-                             na.rm = TRUE) # removes all NaNs
-      median_val = median(unlist(maskDF), 
-                          na.rm = TRUE)
-      
-      MedianRegion[j,1] = Regions[j,]$REG
-      MedianRegion[j,i+1] = median_val
-    }
+    maskDF = as.data.frame(RegionMask, 
+                           na.rm = TRUE) # removes all NaNs
+    median_val = median(unlist(maskDF), 
+                        na.rm = TRUE)
+    
+    MedianRegion[j,1] = Regions[j,]$REG
+    MedianRegion[j,i+1] = median_val
   }
-  colnames(MeanRegion)[1] ="REG"
-  write.table(MeanRegion, 
-              file = paste0(OUTPUT_folder,'PUE_meanRegion.txt'),
-              row.names = FALSE)
-  
-  colnames(MedianRegion) = colnames(MeanRegion)
-  write.table(MedianRegion, 
-              file = paste0(OUTPUT_folder,'PUE_medianRegion.txt'), 
-              row.names = FALSE)
+}
+colnames(MeanRegion)[1] ="REG"
+write.table(MeanRegion, 
+            file = paste0(OUTPUT_folder,'PUE_meanRegion.txt'),
+            row.names = FALSE)
+
+colnames(MedianRegion) = colnames(MeanRegion)
+write.table(MedianRegion, 
+            file = paste0(OUTPUT_folder,'PUE_medianRegion.txt'), 
+            row.names = FALSE)

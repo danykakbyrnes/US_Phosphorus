@@ -3,6 +3,7 @@ library(raster)
 library(tidyverse)
 library(sf)
 library(terra)
+library(dotenv)
 
 load_dot_env()
 
@@ -14,26 +15,26 @@ Regional_filepath = Sys.getenv("REGIONSHP_FILEPATH")
 INPUT_folders = Sys.getenv("CUMULATIVE_PHOS")
 OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
 RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
-
+TREND_OUTPUT_folder = Sys.getenv("POSTPROCESSED_TREND")
+  
 ComponentsName = c('Lvsk', 'Fert', 'Crop')
 Components = c('Lvst_Agriculture_LU/Lvst_', 
-               'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
-               'CropUptake_Agriculture_Agriculture_LU/CropUptake_')
+               'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_')
 
 # read in Region shapefile
-Regions = sf::read_sf(paste0(Regional_filepath, RegionalShp_filepath))
+Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 
 MeanRegion = data.frame()
 MedianRegion = data.frame()
 
   for (i in 1:length(YEARS)) {
-    Lvstk_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[1], YEARS[i],'.tif')
-    Fert_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[2], YEARS[i],'.tif')
-    Crop_tif_folders = paste0(PSURPLUS_OUTPUT_folders, Components[3], YEARS[i],'.tif')
+    Lvstk_tif_folders = paste0(TREND_OUTPUT_folder, Components[1], YEARS[i],'.tif')
+    Fert_tif_folders = paste0(TREND_OUTPUT_folder, Components[2], YEARS[i],'.tif')
     
     Lvstk_tif = terra::rast(Lvstk_tif_folders) # NaN are treated same was as NA.
     Fert_tif = terra::rast(Fert_tif_folders) # NaN are treated same was as NA.
-    Crop_tif = terra::rast(Crop_tif_folders) # NaN are treated same was as NA.
+    
+    PCT_MANU_IN = Lvstk_tif/(Fert_tif + Lvstk_tif)
     
     for (j in 1:dim(Regions)[1]) {
       
@@ -53,6 +54,7 @@ MedianRegion = data.frame()
       MedianRegion[j,i+1] = temp3
     }
   }
+
   ColNames = c(1930:2017)
   colnames(MeanRegion)[1] ="REG"
   colnames(MeanRegion)[2:ncol(MeanRegion)] = ColNames

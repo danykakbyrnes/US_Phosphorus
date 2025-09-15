@@ -32,8 +32,7 @@ LU_extc = data.frame()
         AgLand = terra::extract(clipped_raster, 
                                 Regions[j,], 
                                 fun=sum, 
-                                na.rm=TRUE, 
-                                df=TRUE)
+                                na.rm=TRUE)
         
         # Replacing all the non-cropland (0) with 1 to get total area
         temp = values(clipped_raster)
@@ -46,8 +45,7 @@ LU_extc = data.frame()
         TotalLand = terra::extract(clipped_raster, 
                                    Regions[j,], 
                                    fun=sum, 
-                                   na.rm=TRUE, 
-                                   df=TRUE)
+                                   na.rm=TRUE)
         
         # Column 1 is HUC, Column 2 is year, column 3 is AG, Col 4 is total
         row = dim(LU_extc)[1]+1
