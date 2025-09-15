@@ -79,9 +79,6 @@ These scripts must be executed first to generate the required data files for sub
 - **Input**: TIF files of categorized land use parcels in 1980 and 2017.  
 - **Language**: Python  
 
-#### `ANA_Region5_Region6_Surplus.py`
-	**Do i use this one??**
-
 #### `ANA_Region1-4_CropFertilizerUse.py`
 - **Purpose**: Analysis of fertilizer use by state for the four main field crops (corn, soy, wheat, cotton) to support analysis in Section 3.3.  
 - **Input**: Mosheim, R. (2025). Fertilizer Use and Price - Documentation and Data Sources. https://www.ers.usda.gov/data-products/fertilizer-use-and-price/documentation-and-data-sources
