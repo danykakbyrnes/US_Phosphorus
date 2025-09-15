@@ -61,6 +61,6 @@ LU_extc = data.frame()
   # Sort by Year then HUC
   LU_extc = dplyr::arrange(LU_extc, YEAR, REG)
   write.table(LU_extc, 
-              file = paste0(OUTPUT_folders,'RegionLandUse_tif.txt'), 
+              file = paste0(OUTPUT_folders,'RegionLandUse_frac.txt'), 
               row.names = FALSE)
   

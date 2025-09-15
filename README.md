@@ -53,7 +53,7 @@ These scripts must be executed first to generate the required data files for sub
 - **Output**: Text file of percent agricultural land use (1930-2017) by region.  
 - **Language**: R  
 
-#### `DATA_Regional_ProportionManure_Input`
+#### `DATA_Regional_ProportionManure_Input.R`
 - **Purpose**: Extacts regional-level proportion of total P-input from manure inputs.
 - **Input**: Annual agricultural land use TIF files.  
 - **Output**: Text file of percent agricultural land use (1930-2017) by region.  

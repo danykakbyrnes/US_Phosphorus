@@ -12,6 +12,8 @@ CUMSUMFolder = getenv('CUMULATIVE_PHOS');
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
 livestockFolder = 'Lvst_Agriculture_LU/';
 
+mkdir(OUTPUTfilepath)
+
 % These data (PUE + SURPcumu) has NaN for all cells that are not ag land. 
 % Reading in 2017 data.
 [PUE2017,~] = readgeoraster([PUEFolder, 'PUE_2017.tif']); % single
@@ -89,4 +91,4 @@ for i = 1:length(D)
     end
 end
 
-save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3')
+save([OUTPUTfilepath,'QuadrantMapping.mat'], 'D', '-v7.3') 
