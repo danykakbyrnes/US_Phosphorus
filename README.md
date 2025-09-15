@@ -1,6 +1,6 @@
 # United States Phosphorus Use Efficiency Analysis
 
-The following scripts are used to recreate data and figures required for the paper titled [TBD]. 
+The following scripts are used to recreate data and figures required for the paper titled **Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States**. 
 
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
