@@ -57,8 +57,8 @@ with rasterio.open(PUE_raster) as src:
                                                        nodata=np.nan,
                                                        crop=True)
     # Copying metadata from original raster
-    REGION_3_raster = src.meta
-    REGION_8_raster = src.meta
+    REGION_3_raster_meta = src.meta
+    REGION_8_raster_meta = src.meta
 
 # Updating the metadata for the two regions. 
 REGION_3_raster_meta.update({"driver": "GTiff",

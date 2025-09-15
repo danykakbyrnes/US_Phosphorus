@@ -6,7 +6,9 @@ clc, clear, close all
 
 % Filepaths
 loadenv(".env")
-OUTPUT_folderName = getenv('REGIONAL_ANALYSIS');
+INPUT_filepath = getenv('REGIONAL_ANALYSIS');
+OUTPUT_filepath = getenv('REGIONAL_FIGURES');
+mkdir(OUTPUT_filepath)
 
 %% Aesthetics
 YEARS = 1930:2017;
@@ -15,8 +17,8 @@ plot_dim = [100,100,350,400];
 plot_dim_small = [100,100,275,325];
 
 %% Reading in regional data
-PUE_AGHA = readmatrix([OUTPUT_folderName, 'PUE_medianRegion.txt']);
-AGS_AGHA = readmatrix([OUTPUT_folderName, 'Ag_Surplus_medianRegion.txt']);
+PUE_AGHA = readmatrix([INPUT_filepath, 'PUE_medianRegion.txt']);
+AGS_AGHA = readmatrix([INPUT_filepath, 'Ag_Surplus_medianRegion.txt']);
 
 % Isolate 1980 and 2017
 idx_1930 = find(YEARS == 1930);
@@ -71,7 +73,7 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim_small)
 
-Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_PUE_LolliChart.png'];
+Figfolderpath = [OUTPUT_filepath,'HUC_median_PUE_LolliChart.png'];
 print('-dpng','-r600', Figfolderpath)
 
 %% Plotting surplus lollichart
@@ -113,14 +115,14 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim)
 
-Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_Surplus_LolliChart.png'];
+Figfolderpath = [OUTPUT_filepath,'HUC_median_Surplus_LolliChart.png'];
 print('-dpng','-r600', Figfolderpath)
 
 %% Cumulative surplus lolli chart
 fontSize_p = 10;
 
 % Plotting regional cumulative surplus lolli chart
-SURPcumu_AGHA = readmatrix([OUTPUT_folderName, 'CumuSum_medianRegion.txt']);
+SURPcumu_AGHA = readmatrix([INPUT_filepath, 'CumuSum_medianRegion.txt']);
 SURPcumu_AGHA = sortrows(SURPcumu_AGHA, 'descend');
 SURPcumu_AGHA = [SURPcumu_AGHA, [1:size(SURPcumu_AGHA,1)]'];
 
@@ -161,5 +163,5 @@ set(a,'ZColor',[0,0,0])
 box on
 set(gcf, 'Position',plot_dim)
 
-Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_median_cumuSurplus_LolliChart.png'];
+Figfolderpath = [OUTPUT_filepath,'HUC_median_cumuSurplus_LolliChart.png'];
 print('-dpng','-r600',[Figfolderpath])

@@ -119,13 +119,6 @@ These scripts must be executed first to generate the required data files for sub
 - **Output**: **Figures 8b, 8e-f** - Quadrant plots and Sankey diagram; .mat file of vectorized data.  Uses function 'plotSankeyFlowChart.m'.
 - **Language**: MATLAB
 
-#### `FIG_quadrantDrivers.m`
-- **Purpose**: Analyzes drivers of quadrant classification.  
-- **Input**: Manure proportion data by quadrant.  
-- **Output**: Boxplots and maps of manure-derived P inputs (1980, 2017).  
-- **Language**: MATLAB
-** THIS SCRIPT MIGHT BE UNUSED. 
-
 #### `FIG_Regional_PUE_Surp_cSURP_lollicharts.m`
 - **Purpose**: Generates regional summary visualizations.  
 - **Input**: Regional median data for surplus, PUE, and cumulative surplus in 1930, 1980, and 2017. 

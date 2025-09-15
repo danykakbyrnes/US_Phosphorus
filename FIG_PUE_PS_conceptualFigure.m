@@ -7,6 +7,7 @@ INPUT_filepath = getenv('REGIONAL_ANALYSIS');
 TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUE_filepath = getenv('PHOS_USE_EFFICIENCY');
 OUTPUT_filepath = getenv('SURPLUS_PUE');
+mkdir(OUTPUT_filepath)
 
 %% Aesthetic 
 fontSize_p = 12;
@@ -22,6 +23,17 @@ RegCol =  [228,26,28; % region 9
            166,86,40;
            247,129,191;
            195,243,227]./255; % region 1
+
+RegCol =  [195,243,227;
+           247,129,191;
+           166,86,40;
+           255,255,51;
+           255,127,0;
+           152,78,163;
+           77,175,74;
+           55,126,184;
+           228,26,28;]./255; % region 9
+
 
 mSize = 10; 
 

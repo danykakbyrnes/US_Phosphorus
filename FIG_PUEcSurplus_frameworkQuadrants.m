@@ -3,6 +3,7 @@ clc, clear, close all
 % Filepaths
 loadenv(".env")
 OUTPUT_filepath = getenv('QUADRANT_ANALYSIS');
+mkdir(OUTPUT_filepath)
 
 %% FIGURE 7: Framework figure
 % Aesthetic 

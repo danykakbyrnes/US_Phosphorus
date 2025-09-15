@@ -11,6 +11,7 @@ loadenv(".env")
 TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 OUTPUT_filepath = getenv('COMPONENT_TIMESERIES');
+mkdir(OUTPUT_filepath)
 
 cropFolder = 'CropUptake_Agriculture_Agriculture_LU\';
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
@@ -18,8 +19,8 @@ livestockFolder = 'Lvst_Agriculture_LU/';
 agsurplusFolder = 'Ag_Surplus/';
 
 YEARS = 1930:2017;
-% Aesthetic attributes
-% Plot Specs
+
+% Aesthetic attributes and plot Specs
 fontSize_p = 7;
 median_LW = 1;
 xticks_p = [1930, 1970, 2010];

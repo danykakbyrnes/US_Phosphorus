@@ -6,7 +6,9 @@ clc, clear, close all
 % ------------------------------------------------------------------------
 % Filepaths
 loadenv(".env")
-OUTPUT_folderName = getenv('REGIONAL_ANALYSIS');
+INPUT_folderName = getenv('REGIONAL_ANALYSIS');
+OUTPUT_filepath = getenv('REGIONAL_FIGURES');
+mkdir(OUTPUT_filepath)
 
 %% Plot aesthetics
 smoothing_int = [5 5];
@@ -23,17 +25,17 @@ c = '#007a0c';
 YEARS = 1930:2017;
 
 %% Opening files
-MANURE_AGHA = readmatrix([OUTPUT_folderName, 'Lvsk_medianRegion.txt']);
-MANURE_AGHA = sortrows(MANURE_AGHA,'descend');
+MANURE_AGHA = readmatrix([INPUT_folderName, 'Lvsk_medianRegion.txt']);
+MANURE_AGHA = sortrows(MANURE_AGHA,'ascend');
 
-FERT_AGHA = readmatrix([OUTPUT_folderName, 'Fert_medianRegion.txt']);
-FERT_AGHA = sortrows(FERT_AGHA,'descend');
+FERT_AGHA = readmatrix([INPUT_folderName, 'Fert_medianRegion.txt']);
+FERT_AGHA = sortrows(FERT_AGHA,'ascend');
 
-CROP_AGHA = readmatrix([OUTPUT_folderName, 'Crop_medianRegion.txt']);
-CROP_AGHA = sortrows(CROP_AGHA,'descend');
+CROP_AGHA = readmatrix([INPUT_folderName, 'Crop_medianRegion.txt']);
+CROP_AGHA = sortrows(CROP_AGHA,'ascend');
 
 % Read in land use
-RegionalLU = readmatrix([OUTPUT_folderName, 'HUC2LandUse_tif.txt']);
+RegionalLU = readmatrix([INPUT_folderName, 'RegionLandUse_frac.txt']);
 
 %% Gap filling regional LU trajectories
 uniqueRegions = unique(RegionalLU(:,1)); 
@@ -85,12 +87,12 @@ for i = 1:length(uniqueRegions)
 end
 
 % Sort the regions
-REGLU = sortrows(REGLU,1,'descend');
-REGAgHA = sortrows(REGAgHA,1,'descend');
+REGLU = sortrows(REGLU,1,'ascend');
+REGAgHA = sortrows(REGAgHA,1,'ascend');
 
 %% Calculating PUE and combined inputs
-REG_PUE = readmatrix([OUTPUT_folderName, 'PUE_medianRegion.txt']);
-REG_PUE = sortrows(REG_PUE,1,'descend');
+REG_PUE = readmatrix([INPUT_folderName, 'PUE_medianRegion.txt']);
+REG_PUE = sortrows(REG_PUE,1,'ascend');
 
 for i = 1:height(REG_PUE)
 % FIGURE 4: TIMESERIES OF PUE ACROSS REGIONS
@@ -197,10 +199,10 @@ end
 
 figure(1)
 set(gcf, 'Position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'Regional_Figures/HUC_PUE_grid_panel_median.png'];
+Figfolderpath = [OUTPUT_filepath,'HUC_PUE_grid_panel_median.png'];
 print('-dpng','-r600',[Figfolderpath])
 
 figure(2)
 set(gcf, 'Position',plot_dim)
-Figfolderpath = [OUTPUT_folderName,'Regional_Figures/Component_grid_timeseries_median.png'];
+Figfolderpath = [OUTPUT_filepath,'Component_grid_timeseries_median.png'];
 print('-dpng','-r600',[Figfolderpath])

@@ -1,4 +1,4 @@
-clc, clear
+clc, clear, close all
 
 %% Finding the distribution of dominant manure inputs (vs. tot fertilizer) 
 % Filepaths
@@ -7,6 +7,7 @@ OUTPUT_filepath = getenv('PUE_DRIVERS');
 INPUT_filepath = getenv('REGIONAL_ANALYSIS');
 TREND_filepath = getenv('POSTPROCESSED_TREND');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
+mkdir(OUTPUT_filepath)
 
 % Loading in the files
 fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
@@ -47,11 +48,11 @@ PUE_AGHA = readmatrix([INPUT_filepath,'PUE_medianRegion.txt']);
 Prop_MANU = readmatrix([INPUT_filepath,'Prop_Manure_In_medianRegion.txt']);
 
 % Isolate 2017
-YEARS = 1930:2017;
+YEARS = [1930, 2017];
 Prop_MANU = Prop_MANU(:,[1, find(YEARS == 2017)+1]);
-Prop_MANU(1,:) = [];
 Prop_MANU = sortrows(Prop_MANU,'descend');
 
+YEARS = 1930:2017;
 PUE_AGHA = PUE_AGHA(:,[1, find(YEARS == 2017)+1]);
 PUE_AGHA = sortrows(PUE_AGHA,'descend');
 
@@ -133,6 +134,7 @@ Figfolderpath = [OUTPUT_filepath,'PropManureTotalInput_scatterplot_withRegions.p
 print('-dpng','-r600',Figfolderpath)
 
 %% Hex and bin plots
+% Only to be run if your computer has lots of RAM
 close all
 clearvars FERT2017 FERT2017_v LVSTK2017 LVSTK2017_v PUE2017 PUE2017_v DisnanIDX D_ss
 hexscatter(D(:,1), D(:,4), ...
