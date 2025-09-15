@@ -18,6 +18,7 @@ load_dotenv()
 
 # Filepaths to shapefile and raster (ESPG 5070)
 Regional_filepath = os.getenv("GENERAL_INPUT")
+RAW_TREND_filepath = os.getenv("TREND_INPUT")
 TREND_filepath = os.getenv("POSTPROCESSED_TREND")
 PUEDriver_filepath = os.getenv("PUE_DRIVERS")
 
@@ -38,7 +39,7 @@ itr = 0
     
 # Initializing the data
 # Pulling the files from individual folders
-rasterFile = TREND_filepath+'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1930.tif'
+rasterFile = RAW_TREND_filepath+'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1930.tif'
 
 # Reading first file in to initialize
 rf = ra.open(rasterFile)
@@ -57,7 +58,7 @@ n=n.drop(columns=["median"])
 # Loop years you are interested in and extract data         
 for file in crop_rasterFiles:
     itr = itr + 1
-    rasterFile = TREND_filepath + file
+    rasterFile = RAW_TREND_filepath + file
     rf = ra.open(rasterFile)
     affine = rf.transform
     r = rf.read(1)

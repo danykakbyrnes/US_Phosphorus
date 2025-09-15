@@ -6,13 +6,18 @@ OUTPUT_filepath = getenv('SURPLUS_CUMUSURP');
 CUMSUM_filepath = getenv('CUMULATIVE_PHOS');
 TREND_filepath = getenv('POSTPROCESSED_TREND');
 REGIONAL_filepath = getenv('REGIONAL_ANALYSIS');
+mkdir(OUTPUT_filepath)
+
+% Loading in the files
+agsurplusFolder = 'Ag_Surplus\';
 
 % reading in gridded data
 [CS2017,~] = readgeoraster([CUMSUM_filepath,'CumSum_2017.tif']);
-[SURP2017,~] = readgeoraster([TREND_filepath, 'Ag_Surplus\Ag_Surplus_2017.tif']);
+[SURP2017,~] = readgeoraster([TREND_filepath, agsurplusFolder,...
+                               'Ag_Surplus_2017.tif']);
 
 % Reading in regional medians
-SURPcumu_AGHA = readmatrix([REGIONAL_filepath, 'CumSum_medianRegion.txt']);
+SURPcumu_AGHA = readmatrix([REGIONAL_filepath, 'CumuSum_medianRegion.txt']);
 AGS_AGHA = readmatrix([REGIONAL_filepath, 'Ag_Surplus_medianRegion.txt']);
 
 % Figure aesthetic
@@ -56,15 +61,15 @@ scatter(D_ss(:,1), D_ss(:,2), 20, ...
 hold on
 
 % Adding regions
-RegCol =  [228,26,28;
-           55,126,184;
-           77,175,74;
-           152,78,163;
-           255,127,0;
-           255,255,51;
-           166,86,40;
+RegCol =  [195,243,227; % region 1
            247,129,191;
-           195,243,227]./255;
+           166,86,40;
+           255,255,51;
+           255,127,0;
+           152,78,163;
+           77,175,74;
+           55,126,184;
+           228,26,28;]./255; % region 9
 
 xlabel('Surplus (2017) [kg-P ha^-^1 yr^-^1]')
 xlim([-10,30])

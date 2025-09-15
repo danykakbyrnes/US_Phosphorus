@@ -1,18 +1,19 @@
 clc, clear
 
-% Folder names and filespaths
-OUTPUT_folderName = getenv('OUTPUT');
+loadenv('.env')
 
-% Filepath of files to load
+% Folder names and filespaths
+OUTPUT_folderName = getenv('OUTPUT_FOLDER');
+
+% Filepath of files to load 
 QuadrantINPUT_folderName = getenv('QUADRANT_ANALYSIS');
 RegionalINPUT_filepath = getenv('REGIONAL_ANALYSIS');
 PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 TRENDfilepath = getenv('POSTPROCESSED_TREND');
 CUMSUM_folderName = getenv('CUMULATIVE_PHOS');
+COMPONENT_filpath = getenv('COMPONENT_TIMESERIES');
 
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU';
-livestockFolder = 'Lvst_Agriculture_LU';
-agSFolder = 'Ag_Surplus';
+agSFolder = 'Ag_Surplus/';
 
 %% Calculating metrics for the paper
 fileID = fopen([OUTPUT_folderName,'ManuscriptMetrics.txt'],'w');
@@ -25,7 +26,7 @@ fprintf(fileID,['----------------------------------------------------' ...
 % -------------------------------------------------------------------------
 % Phosphorus component fluxes
 % -------------------------------------------------------------------------
-load([OUTPUT_folderName, 'Component_Timeseries\ComponentQuantiles.mat'])
+load([COMPONENT_filpath, 'ComponentQuantiles.mat'])
 YEAR = 1930:2017; 
 idx_1980 = find(YEAR == 1980);
 
@@ -144,7 +145,7 @@ fprintf(fileID,'Region 8 2017 PUE: %.3f \n', ...
 fprintf(fileID,'Region 2 2017 PUE: %.3f \n', ...
     PUE_Median_Region{REG_2_idx, end});
 
-fprintf(fileID,'Region 3 2017 PUE: %.3f \n', ...
+fprintf(fileID,'Region 3 2017 PUE: %.3f \n\n', ...
     PUE_Median_Region{REG_3_idx, end});
 %% ------------------------------------------------------------------------
 % 3.3 Annual phosphorus surplus 
@@ -190,7 +191,7 @@ fprintf(fileID,'Region 6 Dec. in PS from 1980 to 2017: %.2f\n\n', ...
 % -------------------------------------------------------------------------
 % Regional Cumulative Ag surplus. The format of the text file is different
 % than other files because it was run seperately.
-CS_Median_Region = readtable([RegionalINPUT_filepath, 'CumSum_medianRegion.txt']);
+CS_Median_Region = readtable([RegionalINPUT_filepath, 'CumuSum_medianRegion.txt']);
 
 % Regional Indexes for PUE
 REG_1_idx = find(CS_Median_Region.REG == 1);
@@ -203,11 +204,11 @@ REG_7_idx = find(CS_Median_Region.REG == 7);
 REG_8_idx = find(CS_Median_Region.REG == 8);
 REG_9_idx = find(CS_Median_Region.REG == 9);
 
-AgS_REG_3_idx = find(AgS_Median_Region.REG == 12);
-AgS_REG_6_idx = find(AgS_Median_Region.REG == 7);
+AgS_REG_3_idx = find(AgS_Median_Region.REG == 3);
+AgS_REG_6_idx = find(AgS_Median_Region.REG == 6);
 
 fprintf(fileID,'3.4 Cumulative Agricultural Surplus\n'); 
-fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
+fprintf(fileID,'---------------------------------------------------------------------------------------------\n');    
 fprintf(fileID,'Region 7 (2017): %.1f \n', ...
     CS_Median_Region{REG_7_idx, end});
 fprintf(fileID,'Region 8 (2017): %.1f \n', ...
@@ -221,7 +222,7 @@ fprintf(fileID,'Region 6 (2017) surplus and cumu surplus: %.2f kg/ha/y, %.2f kg/
     CS_Median_Region{REG_6_idx, end}]);
 
 % Reading in agricultural surplus 2017
-[AgSurp_tif,~] = readgeoraster([TRENDfilepath,agSFolder,'\AgSurplus_2017.tif']);
+[AgSurp_tif,~] = readgeoraster([TRENDfilepath,agSFolder,'Ag_Surplus_2017.tif']);
 
 % Calculating the area with negative phosphorus surplus
 idx_pos = find(AgSurp_tif > 0); % Ag Surp has 0 values for non-ag land
@@ -269,6 +270,18 @@ fprintf(fileID,'Percent of land with Neg aPS with positive CS in 2017: %.1f %%\n
 % -------------------------------------------------------------------------
 load([QuadrantINPUT_folderName,'QuadrantMapping.mat']) % D
 Reg_Quadrants = readmatrix([QuadrantINPUT_folderName,'Regional_Quadrants_2017.txt']);
+
+% Regional Indexes for PUE
+REG_1_idx = find(Reg_Quadrants(:,1) == 1);
+REG_2_idx = find(Reg_Quadrants(:,1) == 2);
+REG_3_idx = find(Reg_Quadrants(:,1) == 3);
+REG_4_idx = find(Reg_Quadrants(:,1) == 4);
+REG_5_idx = find(Reg_Quadrants(:,1) == 5);
+REG_6_idx = find(Reg_Quadrants(:,1) == 6);
+REG_7_idx = find(Reg_Quadrants(:,1) == 7);
+REG_8_idx = find(Reg_Quadrants(:,1) == 8);
+REG_9_idx = find(Reg_Quadrants(:,1) == 9);
+
 % Cleaning the quadrant data to only include land use that hae data in it.
 DisnanIDX = isnan(D(:,3)) + isnan(D(:,4));
 leaveOut = D(DisnanIDX ~= 0, :);
@@ -316,24 +329,26 @@ Q3_frac_2017 = length(D(find(D(:,8) == 3)))./size(D,1)*100;
 Q4_frac_1980 = length(D(find(D(:,7) == 4)))./size(D,1)*100;
 Q4_frac_2017 = length(D(find(D(:,8) == 4)))./size(D,1)*100;
 
+
+
 fprintf(fileID,'Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation\n'); 
-fprintf(fileID,'---------------------------------------------------------------------------------------------\n\n');    
+fprintf(fileID,'---------------------------------------------------------------------------------------------\n');    
 fprintf(fileID,'Q2 Fraction in 2017: %.3f \n', Q2_frac_2017);
 fprintf(fileID,'Q1 Fraction on 2017: %.3f \n', Q1_frac_2017);
-fprintf(fileID, 'Q4 proportion in Arid West (Reg 2) and Lower Miss. (Reg 5): %.3f and %.3f \n', Reg_Quadrants(2,5)/Reg_Quadrants(2,6), ...
-    Reg_Quadrants(5,5)./Reg_Quadrants(5,6));
-fprintf(fileID, 'Q3 proportion in Northern Plains (Reg 4): %.3f \n\n', Reg_Quadrants(4,4)./Reg_Quadrants(4,6));
+fprintf(fileID, 'Q4 proportion in Arid West (Reg 2) and Lower Miss. (Reg 5): %.3f and %.3f \n', Reg_Quadrants(REG_2_idx,5)/Reg_Quadrants(REG_2_idx,6), ...
+    Reg_Quadrants(REG_5_idx,5)./Reg_Quadrants(REG_5_idx,6));
+fprintf(fileID, 'Q3 proportion in Northern Plains (Reg 4): %.3f \n\n', Reg_Quadrants(REG_4_idx,4)./Reg_Quadrants(REG_4_idx,6));
 
-fprintf(fileID,'Q2 Fraction in 1980 and 2017: %.3f \n', Q2_frac_1980, Q2_frac_2017);
-fprintf(fileID,'Q1 Fraction in 1980 and 2017: %.3f \n', Q1_frac_1980, Q1_frac_2017);
+fprintf(fileID,'Q2 Percent in 1980 and 2017: %.3f \n', Q2_frac_1980, Q2_frac_2017);
+fprintf(fileID,'Q1 Percent in 1980 and 2017: %.3f \n', Q1_frac_1980, Q1_frac_2017);
 fprintf(fileID,'Land going from Q2 to Q1: %.1f%% \n\n', quadrantChangeMatrix(1,2));
 fprintf(fileID,'Propor. of MAN-derived P inputs in Q2 -> Q2: %.1f%% \n', Q2_Q2_med_2017);
 fprintf(fileID,'Propor. of MAN-derived P inputs in Q1 -> Q2: %.1f%% \n\n', Q1_Q2_med_2017);
 
-fprintf(fileID,'Q3 Fraction 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017);
+fprintf(fileID,'Q3 Percent 1980 and 2017: %.3f and %.3f \n', Q3_frac_1980, Q3_frac_2017);
 fprintf(fileID,'Land going from Q3 to Q2: %.1f%% \n', quadrantChangeMatrix(2,3));
 fprintf(fileID,'Propor. of FERT-derived P inputs in Q3 -> Q2: %.1f%% \n', 1-Q3_Q2_med_2017);
 fprintf(fileID,'Land going from Q4 to Q3: %.1f%% \n', quadrantChangeMatrix(3,4));
-fprintf(fileID,'Q4 Fraction in 1980 and 2017: %.3f \n\n', Q4_frac_1980, Q4_frac_2017);
+fprintf(fileID,'Q4 Percent in 1980 and 2017: %.3f \n\n', Q4_frac_1980, Q4_frac_2017);
 
 fclose(fileID);

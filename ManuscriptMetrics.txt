@@ -1,0 +1,83 @@
+---------------------------------------------------------------------------------------------
+     Results (Section 3) 
+---------------------------------------------------------------------------------------------
+
+3.1 Agricultural Phosphorus Usages across the Contiguous United States 
+---------------------------------------------------------------------------------------------
+Fertilizer 
+---------------------------------------------------------------------------------------------
+FERT - National median 1930: 0.68 (IQR: 0.18-1.7) 
+FERT - National median peaked in 2013: 9.011 (IQR: 5.176-14.171) 
+FERT - National median 1980: 8.7 (IQR: 5.0-14.0) 
+FERT - National median 2017: 8.3 (IQR: 4.8-13.2) 
+
+Crop 
+---------------------------------------------------------------------------------------------
+CROP - National median 1930: 4.8 (IQR: 3.639-5.972) 
+CROP - National median  2017: 12.8 (IQR: 8.716-17.990) 
+
+Manure 
+---------------------------------------------------------------------------------------------
+MANU - National median 1930: 4.1 (5th-95th: 1.6-9.4) 
+MANU - National median 1980: 5.3 (5th-95th: 0.9-15.9) 
+MANU - National median 2017: 6.5 (5th-95th: 0.7-31.0) 
+
+3.2 Phosphorus use efficiency 
+---------------------------------------------------------------------------------------------
+Region 6: 2017: 0.873 
+Region 7, 8 and 9: 2017: 0.4, 0.6, and 0.3 
+Median PUE 2017: 0.826 (IQR: 0.621-1.042) 
+
+Median PUE 1930: 0.955 (IQR: 0.703-1.237) 
+Median PUE 1980: 0.640 (IQR: 0.494-0.831) 
+Median PUE 2017: 0.826 (IQR: 0.621-1.042) 
+
+Region 7 2017 PUE: 0.430 
+Region 8 2017 PUE: 0.581 
+Region 2 2017 PUE: 0.954 
+Region 3 2017 PUE: 0.745 
+3.3 Annual phosphorus surplus
+---------------------------------------------------------------------------------------------
+Median Ag Surplus 1930: 0.252 (IQR: -0.960-1.901) 
+Median Ag Surplus Peaked in 1974: 5.846 (IQR: 2.275-10.194) 
+Median Ag Surplus 2017: 2.626 (IQR: -0.541-6.823) 
+
+Region 5 Dec. in PS from 1980 to 2017: 6.48
+Region 6 Dec. in PS from 1980 to 2017: 5.93
+
+3.4 Cumulative Agricultural Surplus
+---------------------------------------------------------------------------------------------
+
+Region 7 (2017): 441.0 
+Region 8 (2017): 419.3 
+Region 3 (2017) surplus and cumu surplus: 85.84 kg/ha/y, Region 6 (2017) surplus and cumu surplus: 9.62 kg/ha/y, 250.18 kg/ha 
+Percent of area with CS with Positive CS 2017: 78.3 
+Percent of area with CS with Negative CS 2017: 21.7 
+Percent of aPS grids with Negative aPS: 29.2 % 
+Percent of land with Neg aPS with positive CS in 2017: 61.3 %
+
+Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation
+---------------------------------------------------------------------------------------------
+
+Q2 Fraction in 2017: 60.313 
+Q1 Fraction on 2017: 20.985 
+Q4 proportion in Arid West (Reg 2) and Lower Miss. (Reg 5): 0.000 and 0.294 
+Q3 proportion in Northern Plains (Reg 4): 0.002 
+
+Q2 Fraction in 1980 and 2017: 74.121 
+Q2 Fraction in 1980 and 2017: 60.313 
+Q1 Fraction in 1980 and 2017: 2.268 
+Q1 Fraction in 1980 and 2017: 20.985 
+Land going from Q2 to Q1: 19.0% 
+
+Propor. of MAN-derived P inputs in Q2 -> Q2: 0.5% 
+Propor. of MAN-derived P inputs in Q1 -> Q2: 0.5% 
+
+Q3 Fraction 1980 and 2017: 13.901 and 8.569 
+Land going from Q3 to Q2: 6.3% 
+Propor. of FERT-derived P inputs in Q3 -> Q2: 0.6% 
+Land going from Q4 to Q3: 5.2% 
+Q4 Fraction in 1980 and 2017: 9.709 
+
+Q4 Fraction in 1980 and 2017: 10.133 
+
