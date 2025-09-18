@@ -137,4 +137,18 @@ Q_pct = [sum(D(:,7) == 1)/length(D), sum(D(:,8) == 1)/length(D);
      sum(D(:,7) == 2)/length(D), sum(D(:,8) == 2)/length(D); 
      sum(D(:,7) == 3)/length(D), sum(D(:,8) == 3)/length(D);
      sum(D(:,7) == 4)/length(D), sum(D(:,8) == 4)/length(D)]*100;
+
 save([OUTPUT_filepath,'Quadrant_Pct_Sankey.mat'], 'Q_pct')
+
+% Finding the percentage of cells that move from one quadrant to another
+quadrantChangeMatrix = zeros(4,4);
+
+for i = 1:4  % 2017 quadrants (rows)
+    for j = 1:4  % 1980 quadrants (columns)
+        quadrantChangeMatrix(i,j) = sum(D(:,7) == j & D(:,8) == i);
+    end
+end
+total_1980_cells = size(D, 1);  % Total number of grid cells in 1980
+quadrantChangeMatrix = (quadrantChangeMatrix ./ total_1980_cells) * 100;
+
+writematrix(quadrantChangeMatrix, [OUTPUT_filepath,'Pct_Quad_Transition.csv'])

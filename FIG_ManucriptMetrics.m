@@ -268,8 +268,10 @@ fprintf(fileID,'Percent of land with Neg aPS with positive CS in 2017: %.1f %%\n
 %% -------------------------------------------------------------------------
 % Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation
 % -------------------------------------------------------------------------
+% D col 1: PUE 1980, 2: PUE 2017, 3:CS 1980 , 4: CS 2017, 
+% 5: lvstk/inputs 1980, 6: lvstk/inputs 2017    
 load([QuadrantINPUT_folderName,'QuadrantMapping.mat']) % D
-Reg_Quadrants = readmatrix([QuadrantINPUT_folderName,'Regional_Quadrants_2017.txt']);
+Reg_Quadrants = readmatrix([QuadrantINPUT_folderName,'Regional_Quadrant_2017.csv']);
 
 % Regional Indexes for PUE
 REG_1_idx = find(Reg_Quadrants(:,1) == 1);
@@ -329,8 +331,6 @@ Q3_frac_2017 = length(D(find(D(:,8) == 3)))./size(D,1)*100;
 Q4_frac_1980 = length(D(find(D(:,7) == 4)))./size(D,1)*100;
 Q4_frac_2017 = length(D(find(D(:,8) == 4)))./size(D,1)*100;
 
-
-
 fprintf(fileID,'Section 3.5 Toward a holistic approach for landscape socio-environmental evaluation\n'); 
 fprintf(fileID,'---------------------------------------------------------------------------------------------\n');    
 fprintf(fileID,'Q2 Fraction in 2017: %.3f \n', Q2_frac_2017);
@@ -350,5 +350,18 @@ fprintf(fileID,'Land going from Q3 to Q2: %.1f%% \n', quadrantChangeMatrix(2,3))
 fprintf(fileID,'Propor. of FERT-derived P inputs in Q3 -> Q2: %.1f%% \n', 1-Q3_Q2_med_2017);
 fprintf(fileID,'Land going from Q4 to Q3: %.1f%% \n', quadrantChangeMatrix(3,4));
 fprintf(fileID,'Q4 Percent in 1980 and 2017: %.3f \n\n', Q4_frac_1980, Q4_frac_2017);
+
+
+%Areas experiencing P depletion decreased in Northern Plains by nearly 10
+% and Arid West by 4%, and increased in the Lower Mississippi between 1980
+%  and 2017 by 23% (Supplemental Table 2).
+Reg_Quadrants = readtable([QuadrantINPUT_folderName, 'Regional_Quadrant_combined.csv']); % fractions
+NP_transi = Reg_Quadrants.Q4(Reg_Quadrants.Region == 4)*100;
+AW_transi = Reg_Quadrants.Q4(Reg_Quadrants.Region == 2)*100;
+LMS_transi = Reg_Quadrants.Q4(Reg_Quadrants.Region == 5)*100;
+
+fprintf(fileID,'Change Q4 for Northern Plains from 1980 to 2017: %.0f %%\n', NP_transi(2) - NP_transi(1));
+fprintf(fileID,'Change Q4 for Arid West from 1980 to 2017: %.0f %%\n', AW_transi(2) - AW_transi(1));
+fprintf(fileID,'Change Q4 for Lower Miss. from 1980 to 2017: %.0f %%\n', LMS_transi(2) - LMS_transi(1));
 
 fclose(fileID);

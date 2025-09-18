@@ -96,7 +96,7 @@ for YEAR in YEARS:
     df_REGIONS_abs = pd.concat([df_REGIONS_Q_count, national_row], ignore_index=True)
     df_REGIONS_pct = df_REGIONS_abs.copy()
     # NOW convert to percentages
-    df_REGIONS_pct['Q1'] = df_REGIONS_pct['Q1'] / df_REGIONS_pct['TotCell']
+    df_REGIONS_pct['Q1'] = (df_REGIONS_pct['Q1'] / df_REGIONS_pct['TotCell'])
     df_REGIONS_pct['Q2'] = df_REGIONS_pct['Q2'] / df_REGIONS_pct['TotCell']
     df_REGIONS_pct['Q3'] = df_REGIONS_pct['Q3'] / df_REGIONS_pct['TotCell']
     df_REGIONS_pct['Q4'] = df_REGIONS_pct['Q4'] / df_REGIONS_pct['TotCell'] 
