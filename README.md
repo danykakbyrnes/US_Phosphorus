@@ -5,8 +5,8 @@ The following scripts are used to recreate data and figures required for the pap
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
 ## Data Source
-- **gTREND-phosphorus data**: Available at on Figshare (DOI forthcoming)
-
+- **gTREND-phosphorus data**: Available on Figshare (DOI forthcoming)
+- **Ancillary files**: Available on Figshare (https://figshare.com/s/14333fc40c595f4172f9; DOI forthcoming)
 ## Usage Instructions
 In all cases, set working directory to project root.
 Eg:
@@ -43,19 +43,19 @@ These scripts must be executed first to generate the required data files for sub
 	
 #### `DATA_Regional_CumultativeSurplus.R`
 - **Purpose**: Extacts regional-level cumulative surplus.  
-- **Input**: Cumulative surplus 1980 and 2017 TIF files.  
+- **Input**: Cumulative surplus 1980 and 2017 TIF files and region shapefiles.  
 - **Output**: Text file containing mean and median cumulative surplus statistics by region  for 1980 and 2017.  
 - **Language**: R  
 
 #### `DATA_Regional_AgrLandUse.R`
-- **Purpose**: Extacts regional-level agricultural land use.  
-- **Input**: Annual agricultural land use TIF files.  
-- **Output**: Text file of percent agricultural land use (1930-2017) by region.  
+- **Purpose**: Extacts regional-level agricultural land use. This script can only be run if you have the land use rasters. Otherwise you can skip this step and download required data file at https://figshare.com/s/14333fc40c595f4172f9 (DOI forthcoming)
+- **Input**: Annual agricultural land use TIF text file.  
+- **Output**: Text file (RegionLandUse_frac.txt) of percent agricultural land use (1930-2017) by region.  
 - **Language**: R  
 
 #### `DATA_Regional_ProportionManure_Input.R`
 - **Purpose**: Extacts regional-level proportion of total P-input from manure inputs.
-- **Input**: Annual agricultural land use TIF files.  
+- **Input**: Proportion of total input fom manure 1980 and 2017 TIF files and region shapefiles. 
 - **Output**: Text file of percent agricultural land use (1930-2017) by region.  
 - **Language**: R  
 
@@ -87,7 +87,7 @@ These scripts must be executed first to generate the required data files for sub
 #### `ANA_Region3_Region8_PUE.py`
 - **Purpose**: Analysis of 2017 PUE distribution in Region 3 and 8 used in Section 3.2 (Supplemental Figure 2).   
 - **Input**: gTREND 2017 crop and pasture P removal TIF files.
-- **Language**: Python  
+- **Language**: Python
 
 ### 3. Figure Generation
 
