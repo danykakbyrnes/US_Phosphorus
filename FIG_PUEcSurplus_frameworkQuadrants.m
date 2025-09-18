@@ -137,4 +137,4 @@ Q_pct = [sum(D(:,7) == 1)/length(D), sum(D(:,8) == 1)/length(D);
      sum(D(:,7) == 2)/length(D), sum(D(:,8) == 2)/length(D); 
      sum(D(:,7) == 3)/length(D), sum(D(:,8) == 3)/length(D);
      sum(D(:,7) == 4)/length(D), sum(D(:,8) == 4)/length(D)]*100;
-save([OUTPUT_filepath,'QuadrantPct.mat'], 'Q_pct')
+save([OUTPUT_filepath,'Quadrant_Pct_Sankey.mat'], 'Q_pct')
