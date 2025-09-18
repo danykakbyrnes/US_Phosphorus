@@ -23,7 +23,7 @@ TREND_filepath = os.getenv("POSTPROCESSED_TREND")
 PUEDriver_filepath = os.getenv("PUE_DRIVERS")
 
 # Filepaths to shapefile and raster (ESPG 5070)
-shpFile = Regional_filepath + 'Regions/HUC2_Merged_Regions.shp' #noLakes_merged_HUC2_5070_v3
+shpFile = Regional_filepath + 'Regions/HUC2_Merged_Regions.shp'
 
 # Read watershed shapefile
 Regions = gpd.read_file(shpFile)
