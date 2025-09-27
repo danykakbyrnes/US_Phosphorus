@@ -19,6 +19,7 @@ load_dotenv()
 # Filepaths to shapefile and raster (ESPG 5070)
 Regional_filepath = os.getenv("GENERAL_INPUT")
 PUE_filepath = os.getenv("PHOS_USE_EFFICIENCY")
+OUTPUT_filepath = os.getenv("REGIONAL_FIGURES")
 
 shpFile = Regional_filepath + 'Regions/HUC2_Merged_Regions.shp'
 PUE_raster = PUE_filepath+'PUE_2017.tif'
@@ -32,8 +33,8 @@ REGIONS.sort_values(by=['REG'],
                  ignore_index=True)
 
 # Isolating the two regions I want to compare
-REGION_3 = REGIONS.iloc[2]
-REGION_8 = REGIONS.iloc[7]
+REGION_3 = REGIONS.iloc[6]
+REGION_8 = REGIONS.iloc[1]
 
 # Reading in raster and masking using the regions.
 with rasterio.open(PUE_raster) as src:
@@ -102,7 +103,8 @@ ax.legend()
 
 # Display the plot
 plt.tight_layout()
-plt.show()
+
+plt.savefig(OUTPUT_filepath+'Region3_region8_PUE.png', format='png', dpi=600)
 
 # Calculating statistics
 REGION_3_median = np.nanmedian(REGION_3_raster_2d)
