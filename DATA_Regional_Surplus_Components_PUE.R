@@ -15,17 +15,17 @@ OUTPUT_folder = Sys.getenv("REGIONAL_ANALYSIS")
 
 # Select which gTREND components to be clipped. 
 ComponentsName = c('Lvsk', 'Fert', 'Crop', 'Ag_Surplus')
-Components = c('Lvst_Agriculture_LU/Lvst_',
-               'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
-               'CropUptake_Agriculture_Agriculture_LU/CropUptake_',
+Components = c('Livestock_Waste_P_All/Livestock_',
+               'Farm_P_Fertilizer/Fertilizer_Ag_', 
+               'Crop_and_Pasture_P_Uptake/CropUptake_Ag_',
                'Ag_Surplus/Ag_Surplus_')
 
 # read in Region shapefile files
 Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 
-YEARS = 1930:2017
+YEARS = 1930#:2017
 
-dir.create(OUTPUT_folder)
+#dir.create(OUTPUT_folder)
 for (a in 1:length(Components)) {
   
   # Creating empty dataframe to populate
@@ -44,7 +44,7 @@ for (a in 1:length(Components)) {
     #values(R) = temp
     R[R == 0] <- NA
     
-    for (j in 1:dim(Regions)[1]) {
+    for (j in 1:dim(Regions)[1]) { 
       # Calculating the mean for jth region
       mean_val = terra::extract(R, 
                                 Regions[j,],
