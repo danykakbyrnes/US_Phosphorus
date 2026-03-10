@@ -6,21 +6,22 @@ loadenv('.env')
 INPUT_filepath = getenv('POSTPROCESSED_TREND');
 OUTPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 
-cropFolder = 'CropUptake_Agriculture_Agriculture_LU/';
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
-livestockFolder = 'Lvst_Agriculture_LU/';
+cropFolder = 'Crop_and_Pasture_P_Uptake/';
+fertilizerFolder = 'Farm_P_Fertilizer/';
+livestockFolder = 'Livestock_Waste_P_All/';
 pueFolder = 'PUE/';
+mkdir([OUTPUT_filepath])
 
 YEARS = 1930:2017;
 workers = 8; % Changed based on your available CPU cores
 
 % Getting metadata for TIFF files
-[~,georef] = readgeoraster([INPUT_filepath,livestockFolder,'Lvst_1930.tif']);
-Rinfo = geotiffinfo([INPUT_filepath,livestockFolder,'Lvst_1930.tif']);
+[~,georef] = readgeoraster([INPUT_filepath,livestockFolder,'Livestock_1930.tif']);
+Rinfo = geotiffinfo([INPUT_filepath,livestockFolder,'Livestock_1930.tif']);
 
 % Calculate PUE and save the TIFF file
+delete(gcp('nocreate')); % Close any pools that might already be running
 parpool('local', workers);
-mkdir([OUTPUT_filepath, pueFolder])
 parfor i = 1:length(YEARS)
    
     YEAR_i = YEARS(i);

@@ -6,16 +6,16 @@ loadenv('.env')
 INPUT_filepath = getenv('POSTPROCESSED_TREND');
 OUTPUT_filepath = getenv('CUMULATIVE_PHOS');
 
-cropFolder = 'CropUptake_Agriculture_Agriculture_LU\';
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
-livestockFolder = 'Lvst_Agriculture_LU\';
+cropFolder = 'Crop_and_Pasture_P_Uptake/';
+fertilizerFolder = 'Farm_P_Fertilizer/';
+livestockFolder = 'Livestock_Waste_P_All/';
 csFolder = 'PUE/';
 
 YEARS = 1930:2017;
 
 % Getting metadata for TIFF files
-[~,georef] = readgeoraster([INPUT_filepath,livestockFolder,'Lvst_1930.tif']);
-Rinfo = geotiffinfo([INPUT_filepath,livestockFolder,'Lvst_1930.tif']);
+[~,georef] = readgeoraster([INPUT_filepath,livestockFolder,'Livestock_1930.tif']);
+Rinfo = geotiffinfo([INPUT_filepath,livestockFolder,'Livestock_1930.tif']);
 
 CumulativeP = zeros(georef.RasterSize);
 CumulativeP = single(CumulativeP);

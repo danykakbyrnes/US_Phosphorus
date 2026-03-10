@@ -13,67 +13,54 @@ YEARS = [1930:2017];
 workers = 12; % Changed based on your available CPU cores
 
 % Initializing the rasters.
-[D_empty,georef] = readgeoraster([INPUT_filepath,'Fertilizer_Agriculture_Agriculture_LU\Fertilizer_Ag_1930.tif']);
+[D_empty,georef] = readgeoraster([INPUT_filepath,'Farm_P_Fertilizer\Fertilizer_Ag_1930.tif']);
 D_empty(~isnan(D_empty)) = 0;
 
 % Getting raster information
-Rinfo = geotiffinfo([INPUT_filepath,'Fertilizer_Agriculture_Agriculture_LU\Fertilizer_Ag_1930.tif']);
+Rinfo = geotiffinfo([INPUT_filepath,'Farm_P_Fertilizer\Fertilizer_Ag_1930.tif']);
 
 %% Livestock -- Aggregating all livestock types
 % Creating an empty raster. 
-LVSTK_files = dir([INPUT_filepath, 'Lvst_*']);
-folderName = 'Lvst_Agriculture_LU\';
-mkdir([OUTPUT_filepath, folderName])
-
- delete(gcp('nocreate')); % Close any pools that might already be running
- parpool('local',workers);
-parfor i = 1:length(YEARS)
-   YEAR_i = YEARS(i); 
-   D = D_empty;
-    for j = 1:length(LVSTK_files)
-        folder_j = LVSTK_files(j).name; 
-        file_j = dir([INPUT_filepath, folder_j,'\*_',num2str(YEAR_i),'.tif']);
-        [A,~] = readgeoraster([INPUT_filepath, folder_j,'\',file_j.name]);
-        D = A + D; 
-    end
-    geotiffwrite([OUTPUT_filepath, folderName,'Lvst_',...
-    num2str(YEAR_i),'.tif'], D, georef, ...
-        'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
-        'TiffTags',struct('Compression',Tiff.Compression.LZW));
-end
-
-%% Crop Uptake -- Aggregating pasture and crop uptake. 
-CROP_files = dir([INPUT_filepath, 'CropUptake_*']);
-folderName = 'CropUptake_Agriculture_Agriculture_LU\';
+folderName = 'Livestock_Waste_P_All\';
 mkdir([OUTPUT_filepath, folderName])
     
-% Setting up parallel processing
 delete(gcp('nocreate')); % Close any pools that might already be running
 parpool('local',workers);
 
-parfor i = 1:length(YEARS)
-YEAR_i = YEARS(i); 
-D = D_empty;
-for j = 1:length(CROP_files)
-    folder_j = CROP_files(j).name; 
-    file_j = dir([INPUT_filepath, folder_j,'\*_',num2str(YEAR_i),'.tif']);
-    [A,~] = readgeoraster([INPUT_filepath, folder_j,'\',file_j.name]);
-    D = A + D; 
+files = dir([INPUT_filepath,folderName, '\*.tif']);
+
+parfor i = 1:length(files)
+[A,~] = readgeoraster([INPUT_filepath, folderName,'\',files(i).name]);
+geotiffwrite([OUTPUT_filepath, folderName,'\',files(i).name], A, georef, ...
+'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
+'TiffTags',struct('Compression',Tiff.Compression.LZW));
 end
-geotiffwrite([OUTPUT_filepath, folderName,'CropUptake_',...
-num2str(YEAR_i),'.tif'], D, georef, ...
-    'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
-    'TiffTags',struct('Compression',Tiff.Compression.LZW));
+
+%% Crop Uptake 
+folderName = 'Crop_and_Pasture_P_Uptake\';
+mkdir([OUTPUT_filepath, folderName])
+    
+delete(gcp('nocreate')); % Close any pools that might already be running
+parpool('local',workers);
+
+files = dir([INPUT_filepath,folderName, '\*.tif']);
+
+parfor i = 1:length(files)
+[A,~] = readgeoraster([INPUT_filepath, folderName,'\',files(i).name]);
+geotiffwrite([OUTPUT_filepath, folderName,'\',files(i).name], A, georef, ...
+'GeoKeyDirectoryTag',Rinfo.GeoTIFFTags.GeoKeyDirectoryTag, ...
+'TiffTags',struct('Compression',Tiff.Compression.LZW));
 end
+
 %% Agriculture Fertilizer
 % Agricultural fertilizer does not need aggregation. We are just moving it
 % to the project folder. 
+folderName = 'Farm_P_Fertilizer'; 
+mkdir([OUTPUT_filepath, folderName])
 
 delete(gcp('nocreate')); % Close any pools that might already be running
 parpool('local',workers);
 
-folderName = 'Fertilizer_Agriculture_Agriculture_LU'; 
-mkdir([OUTPUT_filepath, folderName])
 files = dir([INPUT_filepath,folderName, '\*.tif']);
 
 parfor i = 1:length(files)
@@ -88,9 +75,9 @@ end
 folderName = 'Ag_Surplus';
 mkdir([OUTPUT_filepath, folderName])
 
-SURP_INPUTS_files = [{'Fertilizer_Agriculture_Agriculture_LU'};
-                    {'Lvst_Agriculture_LU'}];
-SURP_OUTPUT_files = 'CropUptake_Agriculture_Agriculture_LU';
+SURP_INPUTS_files = [{'Farm_P_Fertilizer'};
+                    {'Livestock_Waste_P_All'}];
+SURP_OUTPUT_files = 'Crop_and_Pasture_P_Uptake';
 
 for i = 1:length(YEARS)
 YEAR_i = YEARS(i); 
