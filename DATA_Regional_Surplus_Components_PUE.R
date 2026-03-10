@@ -23,7 +23,7 @@ Components = c('Livestock_Waste_P_All/Livestock_',
 # read in Region shapefile files
 Regions = sf::read_sf(paste0(Regional_filepath, 'HUC2_Merged_Regions.shp'))
 
-YEARS = 1930#:2017
+YEARS = 1930:2017
 
 #dir.create(OUTPUT_folder)
 for (a in 1:length(Components)) {
@@ -46,12 +46,12 @@ for (a in 1:length(Components)) {
     
     for (j in 1:dim(Regions)[1]) { 
       # Calculating the mean for jth region
-      mean_val = terra::extract(R, 
-                                Regions[j,],
-                                fun=mean,
-                                na.rm=TRUE)
-      MeanRegion[j,1] = Regions[j,]$REG
-      MeanRegion[j,i+1] = mean_val[2]
+      #mean_val = terra::extract(R, 
+      #                          Regions[j,],
+      #                          fun=mean,
+      #                          na.rm=TRUE)
+      #MeanRegion[j,1] = Regions[j,]$REG
+      #MeanRegion[j,i+1] = mean_val[2]
       
       # Calculating the median for jth region
       RegionMask = terra::mask(R,
@@ -66,14 +66,14 @@ for (a in 1:length(Components)) {
       MedianRegion[j,i+1] = median_val
     }
   }
-  colnames(MeanRegion)[1] ="REG"
-  write.table(MeanRegion, 
-              file = paste0(OUTPUT_folder,ComponentsName[a],'_meanRegion.txt'), 
-              row.names = FALSE)
+  #colnames(MeanRegion)[1] ="REG"
+  #write.table(MeanRegion, 
+  #            file = paste0(OUTPUT_folder,ComponentsName[a],'_meanRegion.txt'), 
+  #            row.names = FALSE)
   
-  colnames(MedianRegion) = colnames(MeanRegion)
+  colnames(MedianRegion) = c("REG", paste0(ComponentsName[a], "_", YEARS))
   write.table(MedianRegion, 
-              file = paste0(OUTPUT_folder,ComponentsName[a],'_medianRegion.txt'), 
+              file = paste0(OUTPUT_folder, ComponentsName[a], '_medianRegion.txt'), 
               row.names = FALSE)
 }
 
@@ -96,12 +96,12 @@ for (i in 1:length(YEARS)) {
   
   for (j in 1:dim(Regions)[1]) {
     # Calculating the mean for jth region
-    mean_val = terra::extract(R, 
-                              Regions[j,],
-                              fun=mean,
-                              na.rm=TRUE)
-    MeanRegion[j,1] = Regions[j,]$REG
-    MeanRegion[j,i+1] = mean_val[2]
+    #mean_val = terra::extract(R, 
+    #                          Regions[j,],
+    #                          fun=mean,
+    #                          na.rm=TRUE)
+    #MeanRegion[j,1] = Regions[j,]$REG
+    #MeanRegion[j,i+1] = mean_val[2]
     
     # Calculating the median for jth region
     RegionMask = terra::mask(R,
@@ -116,12 +116,12 @@ for (i in 1:length(YEARS)) {
     MedianRegion[j,i+1] = median_val
   }
 }
-colnames(MeanRegion)[1] ="REG"
-write.table(MeanRegion, 
-            file = paste0(OUTPUT_folder,'PUE_meanRegion.txt'),
-            row.names = FALSE)
+#colnames(MeanRegion)[1] ="REG"
+#write.table(MeanRegion, 
+#            file = paste0(OUTPUT_folder,'PUE_meanRegion.txt'),
+#            row.names = FALSE)
 
-colnames(MedianRegion) = colnames(MeanRegion)
+colnames(MedianRegion) = c("REG", paste0("PUE_", YEARS))
 write.table(MedianRegion, 
-            file = paste0(OUTPUT_folder,'PUE_medianRegion.txt'), 
+            file = paste0(OUTPUT_folder, 'PUE_medianRegion.txt'), 
             row.names = FALSE)
