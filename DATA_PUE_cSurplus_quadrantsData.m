@@ -9,8 +9,8 @@ TRENDfilepath = getenv('POSTPROCESSED_TREND');
 PUEFolder = getenv('PHOS_USE_EFFICIENCY');
 CUMSUMFolder = getenv('CUMULATIVE_PHOS');
 
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
-livestockFolder = 'Lvst_Agriculture_LU/';
+fertilizerFolder = 'Farm_P_Fertilizer/';
+livestockFolder = 'Livestock_Waste_P_All/';
 
 mkdir(OUTPUTfilepath)
 
@@ -19,7 +19,7 @@ mkdir(OUTPUTfilepath)
 [PUE2017,~] = readgeoraster([PUEFolder, 'PUE_2017.tif']); % single
 [CS2017,~] = readgeoraster([CUMSUMFolder, 'CumSum_2017.tif']); % single
 [LVSTK2017,~] = readgeoraster([TRENDfilepath,livestockFolder,...
-                               'Lvst_2017.tif']);
+                               'Livestock_2017.tif']);
 [FERT2017,~] = readgeoraster([TRENDfilepath,fertilizerFolder,...
                               'Fertilizer_Ag_2017.tif']);
 
@@ -36,7 +36,7 @@ PUE1980_v = PUE1980(:);
 CS1980_v = CS1980(:);
 
 [LVSTK1980,~] = readgeoraster([TRENDfilepath,livestockFolder,...
-                                'Lvst_1980.tif']);
+                                'Livestock_1980.tif']);
 [FERT1980,~] = readgeoraster([TRENDfilepath,fertilizerFolder,...
                                 'Fertilizer_Ag_1980.tif']);
 

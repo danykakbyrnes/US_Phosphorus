@@ -8,17 +8,17 @@ PUEFolder = getenv('PHOS_USE_EFFICIENCY');
 CUMSUMFolder = getenv('CUMULATIVE_PHOS');
 
 % Getting metadata for TIFF files
-[~,georef] = readgeoraster([TRENDfilepath,'Lvst_Agriculture_LU/Lvst_1930.tif']);
-Rinfo = geotiffinfo([TRENDfilepath,'Lvst_Agriculture_LU/Lvst_1930.tif']);
+[~,georef] = readgeoraster([TRENDfilepath,'Livestock_Waste_P_All/Livestock_1930.tif']);
+Rinfo = geotiffinfo([TRENDfilepath,'Livestock_Waste_P_All/Livestock_1930.tif']);
 
 % Setting bounds of quadrant
 loadstar_CumSum = 0; 
 loadstar_PUE = 1;
 
-[PUE2017,~] = readgeoraster([PUEFolder, 'PUE/PUE_2017.tif']);
+[PUE2017,~] = readgeoraster([PUEFolder, 'PUE_2017.tif']);
 [CS2017,~] = readgeoraster([CUMSUMFolder, 'CumSum_2017.tif']);
 
-[PUE1980,~] = readgeoraster([PUEFolder, 'PUE/PUE_1980.tif']);
+[PUE1980,~] = readgeoraster([PUEFolder, 'PUE_1980.tif']);
 [CS1980,~] = readgeoraster([CUMSUMFolder, 'CumSum_1980.tif']);
 
 % Making the grid cells the same between 1980 and 2017
