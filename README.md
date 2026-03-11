@@ -7,7 +7,7 @@ The following scripts are used to recreate data and figures required for the pap
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
 ## Data Source
-[![DOI](https://zenodo.org/badge/560020146.svg)](10.25452/figshare.plus.30158131)
+[![DOI](https://img.shields.io/badge/DOI-10.25452%2Ffigshare.plus.30158131-blue)](https://doi.org/10.25452/figshare.plus.30158131)
 - **gTREND-phosphorus data**: Available on Figshare
 
 ## Usage Instructions
