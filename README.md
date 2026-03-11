@@ -51,7 +51,7 @@ These scripts must be executed first to generate the required data files for sub
 - **Language**: R  
 
 #### `DATA_Regional_AgrLandUse.R`
-- **Purpose**: Extacts regional-level agricultural land use. This script can only be run if you have the land use rasters. Otherwise you can skip this step and download required data file [![DOI](https://zenodo.org/badge/560020146.svg)](10.6084/m9.figshare.30161668)
+- **Purpose**: Extacts regional-level agricultural land use. This script can only be run if you have the land use rasters. Otherwise you can skip this step and download required data file [![DOI](https://img.shields.io/badge/DOI-10.25452%2Ffigshare.plus.30158131-blue)](https://doi.org/10.6084/m9.figshare.30161668)
 - **Input**: Annual agricultural land use TIF text file.  
 - **Output**: Text file (RegionLandUse_frac.txt) of percent agricultural land use (1930-2017) by region.  
 - **Language**: R  
