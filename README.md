@@ -6,7 +6,7 @@ The analysis of phosphorus use across the US from 1930 to 2017 using the newly p
 
 ## Data Source
 - **gTREND-phosphorus data**: Available on Figshare (DOI forthcoming)
-- **Ancillary files**: Available on Figshare (https://figshare.com/s/14333fc40c595f4172f9; DOI forthcoming)
+
 ## Usage Instructions
 In all cases, set working directory to project root.
 Eg:
