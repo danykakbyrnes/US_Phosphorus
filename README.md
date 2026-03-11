@@ -7,7 +7,7 @@ The following scripts are used to recreate data and figures required for the pap
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
 ## Data Source
-- **gTREND-phosphorus data**: Available on Figshare (DOI forthcoming)
+- **gTREND-phosphorus data**: Available on Figshare [![DOI](https://zenodo.org/badge/560020146.svg)](10.25452/figshare.plus.30158131)
 
 ## Usage Instructions
 In all cases, set working directory to project root.
@@ -50,7 +50,7 @@ These scripts must be executed first to generate the required data files for sub
 - **Language**: R  
 
 #### `DATA_Regional_AgrLandUse.R`
-- **Purpose**: Extacts regional-level agricultural land use. This script can only be run if you have the land use rasters. Otherwise you can skip this step and download required data file at https://figshare.com/s/14333fc40c595f4172f9 (DOI forthcoming)
+- **Purpose**: Extacts regional-level agricultural land use. This script can only be run if you have the land use rasters. Otherwise you can skip this step and download required data file [![DOI](https://zenodo.org/badge/560020146.svg)](10.6084/m9.figshare.30161668)
 - **Input**: Annual agricultural land use TIF text file.  
 - **Output**: Text file (RegionLandUse_frac.txt) of percent agricultural land use (1930-2017) by region.  
 - **Language**: R  
