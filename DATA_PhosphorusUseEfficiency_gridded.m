@@ -9,7 +9,6 @@ OUTPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 cropFolder = 'Crop_and_Pasture_P_Uptake/';
 fertilizerFolder = 'Farm_P_Fertilizer/';
 livestockFolder = 'Livestock_Waste_P_All/';
-pueFolder = 'PUE/';
 mkdir([OUTPUT_filepath])
 
 YEARS = 1930:2017;

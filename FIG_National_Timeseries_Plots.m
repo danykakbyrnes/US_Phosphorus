@@ -13,10 +13,11 @@ PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 OUTPUT_filepath = getenv('COMPONENT_TIMESERIES');
 mkdir(OUTPUT_filepath)
 
-cropFolder = 'CropUptake_Agriculture_Agriculture_LU\';
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU/';
-livestockFolder = 'Lvst_Agriculture_LU/';
+cropFolder = 'Crop_and_Pasture_P_Uptake/';
+fertilizerFolder = 'Farm_P_Fertilizer/';
+livestockFolder = 'Livestock_Waste_P_All/';
 agsurplusFolder = 'Ag_Surplus/';
+
 
 YEARS = 1930:2017;
 

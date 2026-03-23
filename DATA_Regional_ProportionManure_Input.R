@@ -16,10 +16,9 @@ OUTPUT_folders = Sys.getenv("REGIONAL_ANALYSIS")
 
 RegionalShp_filepath = 'Regions/HUC2_Merged_Regions.shp'
 
-ComponentsName = c('Lvsk', 'Fert', 'Crop')
-Components = c('Lvst_Agriculture_LU/Lvst_', 
-               'Fertilizer_Agriculture_Agriculture_LU/Fertilizer_Ag_', 
-               'CropUptake_Agriculture_Agriculture_LU/CropUptake_')
+Components = c('Livestock_Waste_P_All/Livestock_', 
+               'Farm_P_Fertilizer/Fertilizer_Ag_', 
+               'Crop_and_Pasture_P_Uptake/CropUptake_Ag_')
 
 # read in Region shapefile
 Regions = sf::read_sf(paste0(Regional_filepath, RegionalShp_filepath))

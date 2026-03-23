@@ -29,17 +29,17 @@ shpFile = Regional_filepath + 'Regions/HUC2_Merged_Regions.shp'
 Regions = gpd.read_file(shpFile)
 Regions = Regions.set_index("REG")
 Regions.sort_values(by='REG', ascending=False, inplace=True)
-crop_rasterFiles = ['CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1980.tif', 
-                    'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_2017.tif',
-                    'CropUptake_Pasture_Agriculture_LU/CropUptake_Pasture_1930.tif', 
-                    'CropUptake_Pasture_Agriculture_LU/CropUptake_Pasture_1980.tif',
-                    'CropUptake_Pasture_Agriculture_LU/CropUptake_Pasture_2017.tif']
+crop_rasterFiles = ['Crop_P_Uptake/CropUptake_Cropland_1980.tif', 
+                    'Crop_P_Uptake/CropUptake_Cropland_2017.tif',
+                    'Pasture_P_Uptake/CropUptake_Pasture_1930.tif', 
+                    'Pasture_P_Uptake/CropUptake_Pasture_1980.tif',
+                    'Pasture_P_Uptake/CropUptake_Pasture_2017.tif']
 cYear = ['Crop_1930', ' Crop_1980', 'Crop_2017', 'Past_1930', 'Past_1980', 'Past_2017']
 itr = 0
     
 # Initializing the data
 # Pulling the files from individual folders
-rasterFile = RAW_TREND_filepath+'CropUptake_Cropland_Agriculture_LU/CropUptake_Cropland_1930.tif'
+rasterFile = RAW_TREND_filepath+'Crop_P_Uptake/CropUptake_Cropland_1930.tif'
 
 # Reading first file in to initialize
 rf = ra.open(rasterFile)

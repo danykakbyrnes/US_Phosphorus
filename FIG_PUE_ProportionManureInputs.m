@@ -10,8 +10,8 @@ PUEINPUT_filepath = getenv('PHOS_USE_EFFICIENCY');
 mkdir(OUTPUT_filepath)
 
 % Loading in the files
-fertilizerFolder = 'Fertilizer_Agriculture_Agriculture_LU\';
-livestockFolder = 'Lvst_Agriculture_LU\';
+fertilizerFolder = 'Farm_P_Fertilizer/';
+livestockFolder = 'Livestock_Waste_P_All/';
 
 % Figure aesthetics 
 fontSize_p = 11;

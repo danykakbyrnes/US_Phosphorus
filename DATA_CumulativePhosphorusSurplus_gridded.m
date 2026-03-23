@@ -9,7 +9,6 @@ OUTPUT_filepath = getenv('CUMULATIVE_PHOS');
 cropFolder = 'Crop_and_Pasture_P_Uptake/';
 fertilizerFolder = 'Farm_P_Fertilizer/';
 livestockFolder = 'Livestock_Waste_P_All/';
-csFolder = 'PUE/';
 
 YEARS = 1930:2017;
 
@@ -20,7 +19,7 @@ Rinfo = geotiffinfo([INPUT_filepath,livestockFolder,'Livestock_1930.tif']);
 CumulativeP = zeros(georef.RasterSize);
 CumulativeP = single(CumulativeP);
 
-mkdir([OUTPUT_filepath])
+mkdir(OUTPUT_filepath)
 
 for i = 1:length(YEARS)
     YEAR_i = YEARS(i);
