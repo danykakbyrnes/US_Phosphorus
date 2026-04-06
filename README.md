@@ -1,6 +1,6 @@
 # United States Phosphorus Use Efficiency Analysis
 
-The following scripts are used to recreate data and figures required for the paper titled Byrnes, D. K., Basu, N. B., & Van Meter, K. J. (2026). Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States. Global Biogeochemical Cycles. https://doi.org/10.1029/2025GB008893.
+The following scripts are used to recreate data and figures required for the paper titled Byrnes, D. K., Van Meter, K. J., Chang, S. Y., & Basu, N. B. (2026). Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States. Global Biogeochemical Cycles. https://doi.org/10.1029/2025GB008893
 
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
@@ -149,8 +149,7 @@ These scripts must be executed first to generate the required data files for sub
 
 ## Cite this code
 If you use this dataset or its derived indicators, please cite the accompanying paper:
-
-Byrnes, D. K., Basu, N. B., & Van Meter, K. J. (2026). Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States. Global Biogeochemical Cycles. https://doi.org/10.1029/2025GB008893.
+Byrnes, D. K., Van Meter, K. J., Chang, S. Y., & Basu, N. B. (2026). Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States. Global Biogeochemical Cycles. https://doi.org/10.1029/2025GB008893
 
 If you are specifically reusing or adapting the code, please also cite this repository:
 [![DOI](https://zenodo.org/badge/560020146.svg)](https://doi.org/10.5281/zenodo.18963783)
