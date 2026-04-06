@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/560020146.svg)](https://doi.org/10.5281/zenodo.18963783)
 
-The following scripts are used to recreate data and figures required for the paper titled **Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States**. 
+The following scripts are used to recreate data and figures required for the paper titled **Balancing Legacy and Efficiency: Present and Historical Phosphorus Management Across the United States** [![DOI](https://img.shields.io/badge/DOI-10.1029%2F2025GB008893-blue)](https://doi.org/10.1029/2025GB008893).
 
 The analysis of phosphorus use across the US from 1930 to 2017 using the newly published gTREND-Phosphorus dataset.
 
